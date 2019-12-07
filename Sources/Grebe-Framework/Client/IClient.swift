@@ -1,5 +1,5 @@
 //
-//  IGrebeClient.swift
+//  IClient.swift
 //  
 //
 //  Created by Tim Mewe on 07.12.19.
@@ -14,6 +14,6 @@ import SwiftProtobuf
 protocol IClient {
     associatedtype Client: GRPCClient
     
-    var serviceClient: Client { get }
+    var serviceClient: Client? { get }
     var group: EventLoopGroup { get }
 }
