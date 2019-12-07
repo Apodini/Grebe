@@ -27,6 +27,19 @@ class UnaryCall<RequestMessage: Message, ResponseMessage: Message>: ICall {
     }
 
     func execute() -> AnyPublisher<Response, Error> {
-        fatalError()
+        let future = Future<Response, Error> { [weak self] promise in
+            guard let strongself = self else { return }
+            do {
+                let response = try strongself
+                    .callClosure(strongself.request, nil)
+                    .response
+                    .wait()
+                promise(.success(response))
+            } catch {
+                promise(.failure(error))
+            }
+        }
+        
+        return future.eraseToAnyPublisher()
     }
 }
