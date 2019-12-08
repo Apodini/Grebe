@@ -28,6 +28,17 @@ class GServerStreamingCall<RequestMessage: Message, ResponseMessage: Message>: I
     }
     
     func execute() -> AnyPublisher<Response, Error> {
-        fatalError()
+        let subject = PassthroughSubject<Response, Error>()
+        
+        let call = callClosure(request, nil) { response in
+            subject.send(response)
+        }
+        
+        let status = try! call.status.recover { _ in .processingError }.wait()
+        if status != .ok {
+            subject.send(completion: .failure(GRPCStatus.processingError))
+        }
+        
+        return subject.eraseToAnyPublisher()
     }
 }
