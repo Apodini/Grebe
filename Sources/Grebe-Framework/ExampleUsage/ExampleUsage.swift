@@ -31,4 +31,15 @@ class ExampleUsage {
                 print("Unary call received value: \(value)")
             })
     }
+    
+    private func serverStreamingCall() {
+        let call = GServerStreamingCall(request: ListTasksRequest(), closure: client.listTasks)
+        call.execute()
+            .sink(receiveCompletion: { _ in
+                print("Server streaming call completed")
+            },
+                  receiveValue: { value in
+                print("Server streaming call received value: \(value)")
+            })
+    }
 }
