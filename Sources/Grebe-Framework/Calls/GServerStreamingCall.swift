@@ -10,7 +10,7 @@ import Foundation
 import GRPC
 import SwiftProtobuf
 
-class ServerStreamingCall<RequestMessage: Message, ResponseMessage: Message>: ICall {
+class GServerStreamingCall<RequestMessage: Message, ResponseMessage: Message>: ICall {
     typealias Request = RequestMessage
     typealias Response = ResponseMessage
     typealias CallClosure = (
