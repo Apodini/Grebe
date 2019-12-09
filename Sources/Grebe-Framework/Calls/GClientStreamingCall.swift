@@ -26,6 +26,19 @@ class GClientStreamingCall<RequestMessage: Message, ResponseMessage: Message>: I
     }
     
     func execute() -> AnyPublisher<Response, Error> {
-        fatalError()
+        let future = Future<Response, Error> { [weak self] promise in
+            guard let strongself = self else { return }
+            
+            let call = strongself.callClosure(nil)
+            
+            call.response.whenSuccess { response in
+                promise(.success(response))
+            }
+            
+            call.response.whenFailure { error in
+                promise(.failure(error))
+            }
+        }
+        return future.eraseToAnyPublisher()
     }
 }
