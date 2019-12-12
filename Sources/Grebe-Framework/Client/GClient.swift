@@ -14,7 +14,7 @@ import SwiftProtobuf
 class GClient<T: GRPCClient>: IClient {
     typealias Client = T
     
-    let serviceClient: Client?
+    let service: Client
     let group: EventLoopGroup
     
     init(target: ConnectionTarget) {
@@ -22,7 +22,6 @@ class GClient<T: GRPCClient>: IClient {
         
         let config = ClientConnection.Configuration(target: target, eventLoopGroup: group)
         let connection = ClientConnection(configuration: config)
-//        serviceClient = Client(connection: connection)
-        serviceClient = nil
+        service = Client(connection: connection)
     }
 }

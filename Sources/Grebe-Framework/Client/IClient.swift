@@ -14,6 +14,6 @@ import SwiftProtobuf
 protocol IClient {
     associatedtype Client: GRPCClient
     
-    var serviceClient: Client? { get }
+    var service: Client { get }
     var group: EventLoopGroup { get }
 }
