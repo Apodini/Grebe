@@ -11,7 +11,7 @@ import GRPC
 import SwiftProtobuf
 import NIO
 
-protocol ICall {
+public protocol ICall {
     associatedtype Request: Message
     associatedtype Response: Message
     associatedtype CallClosure

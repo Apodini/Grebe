@@ -11,7 +11,7 @@ import GRPC
 import NIO
 import SwiftProtobuf
 
-protocol IClient {
+public protocol IClient {
     associatedtype Client: GRPCClient
     
     var service: Client { get }

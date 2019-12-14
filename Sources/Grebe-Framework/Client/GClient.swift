@@ -11,7 +11,7 @@ import GRPC
 import NIO
 import SwiftProtobuf
 
-class GClient<T: GRPCClient>: IClient {
+public class GClient<T: GRPCClient>: IClient {
     typealias Client = T
     
     let service: Client
