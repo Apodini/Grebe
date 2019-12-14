@@ -10,24 +10,22 @@ import Foundation
 import GRPC
 import SwiftProtobuf
 
-public class GServerStreamingCall<RequestMessage: Message, ResponseMessage: Message>: ICall {
-    typealias Request = RequestMessage
-    typealias Response = ResponseMessage
-    typealias CallClosure = (
+public class GServerStreamingCall<Request: Message, Response: Message>: ICall {
+    public typealias CallClosure = (
         _ request: Request,
         _ callOptions: CallOptions?,
         _ handler: @escaping (Response) -> Void
         ) -> GRPC.ServerStreamingCall<Request, Response>
     
-    internal var request: Request
-    internal let callClosure: CallClosure
+    public var request: Request
+    public let callClosure: CallClosure
 
     init(request: Request, closure: @escaping CallClosure) {
         self.request = request
         self.callClosure = closure
     }
     
-    func execute() -> AnyPublisher<Response, Error> {
+    public func execute() -> AnyPublisher<Response, Error> {
         let subject = PassthroughSubject<Response, Error>()
         
         let call = callClosure(request, nil) { response in

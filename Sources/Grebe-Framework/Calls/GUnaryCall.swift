@@ -10,23 +10,21 @@ import Foundation
 import GRPC
 import SwiftProtobuf
 
-public class GUnaryCall<RequestMessage: Message, ResponseMessage: Message>: ICall {
-    typealias Request = RequestMessage
-    typealias Response = ResponseMessage
-    typealias CallClosure = (
+public class GUnaryCall<Request: Message, Response: Message>: ICall {
+    public typealias CallClosure = (
         _ request: Request,
         _ callOptions: CallOptions?
     ) -> GRPC.UnaryCall<Request, Response>
 
-    internal var request: Request
-    internal let callClosure: CallClosure
+    public var request: Request
+    public let callClosure: CallClosure
 
     init(request: Request, closure: @escaping CallClosure) {
         self.request = request
         self.callClosure = closure
     }
 
-    func execute() -> AnyPublisher<Response, Error> {
+    public func execute() -> AnyPublisher<Response, Error> {
         let future = Future<Response, Error> { [weak self] promise in
             guard let strongself = self else { return }
             do {

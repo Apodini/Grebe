@@ -11,11 +11,9 @@ import GRPC
 import NIO
 import SwiftProtobuf
 
-public class GClient<T: GRPCClient>: IClient {
-    typealias Client = T
-    
-    let service: Client
-    let group: EventLoopGroup
+public class GClient<Client: GRPCClient>: IClient {    
+    public let service: Client
+    public let group: EventLoopGroup
     
     init(target: ConnectionTarget) {
         self.group = PlatformSupport.makeEventLoopGroup(loopCount: 1)
