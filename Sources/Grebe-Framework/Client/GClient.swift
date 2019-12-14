@@ -15,7 +15,7 @@ public class GClient<Client: GRPCClient>: IClient {
     public let service: Client
     public let group: EventLoopGroup
     
-    init(target: ConnectionTarget) {
+    public init(target: ConnectionTarget) {
         self.group = PlatformSupport.makeEventLoopGroup(loopCount: 1)
         
         let config = ClientConnection.Configuration(target: target, eventLoopGroup: group)

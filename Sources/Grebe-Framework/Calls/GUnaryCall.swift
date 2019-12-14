@@ -19,7 +19,7 @@ public class GUnaryCall<Request: Message, Response: Message>: ICall {
     public var request: Request
     public let callClosure: CallClosure
 
-    init(request: Request, closure: @escaping CallClosure) {
+    public init(request: Request, closure: @escaping CallClosure) {
         self.request = request
         self.callClosure = closure
     }
