@@ -27,15 +27,13 @@ public class GUnaryCall<Request: Message, Response: Message>: ICall {
     public func execute() -> AnyPublisher<Response, Error> {
         let future = Future<Response, Error> { [weak self] promise in
             guard let strongself = self else { return }
-            do {
-                let response = try strongself
-                    .callClosure(strongself.request, nil)
-                    .response
-                    .wait()
-                promise(.success(response))
-            } catch {
-                promise(.failure(error))
-            }
+            
+            strongself
+                .callClosure(strongself.request, nil)
+                .response
+                .whenComplete { response in
+                    promise(response)
+                }
         }
         
         return future.eraseToAnyPublisher()

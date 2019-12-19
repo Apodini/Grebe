@@ -32,8 +32,7 @@ public class GServerStreamingCall<Request: Message, Response: Message>: ICall {
             subject.send(response)
         }
         
-        let status = try! call.status.recover { _ in .processingError }.wait()
-        if status != .ok {
+        call.status.whenFailure { error in
             subject.send(completion: .failure(GRPCStatus.processingError))
         }
         
