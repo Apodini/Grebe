@@ -16,12 +16,12 @@ public class GUnaryCall<Request: Message, Response: Message>: ICall {
         _ callOptions: CallOptions?
     ) -> GRPC.UnaryCall<Request, Response>
 
-    public var request: Request
+    public var request: GRequestMessage<Request>
     public let callClosure: CallClosure
     public let callOptions: CallOptions?
 
     public init(
-        request: Request,
+        request: GRequestMessage<Request>,
         callOptions: CallOptions? = nil,
         closure: @escaping CallClosure
     ) {
@@ -35,7 +35,7 @@ public class GUnaryCall<Request: Message, Response: Message>: ICall {
             guard let strongself = self else { return }
 
             let call = strongself
-                .callClosure(strongself.request, strongself.callOptions)
+                .callClosure(strongself.request.message, strongself.callOptions)
 
             call.response.whenSuccess { promise(.success($0)) }
             call.status.whenSuccess { promise(.failure($0)) }

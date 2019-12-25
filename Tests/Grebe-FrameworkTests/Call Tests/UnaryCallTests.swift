@@ -29,7 +29,7 @@ final class UnaryCallTests: BaseCallTest {
         let promise = expectation(description: "Call completes successfully")
         
         let testString = "hello"
-        let request = EchoRequest.with { $0.message = testString }
+        let request = GRequestMessage(message: EchoRequest.with { $0.message = testString })
         let call = GUnaryCall(request: request, closure: client.service.ok)
         
         call.execute()
@@ -53,7 +53,7 @@ final class UnaryCallTests: BaseCallTest {
     func testFailedPrecondition() {
         let promise = expectation(description: "Call fails with failed precondition status")
         
-        let request = EchoRequest.with { $0.message = "hello" }
+        let request = GRequestMessage(message: EchoRequest.with { $0.message = "hello" })
         let call = GUnaryCall(request: request, closure: client.service.failedPrecondition)
         
         call.execute()
@@ -81,7 +81,7 @@ final class UnaryCallTests: BaseCallTest {
         let promise = expectation(description: "Call fails with deadline exceeded status")
         
         let options = CallOptions(timeout: try! .milliseconds(50))
-        let request = EchoRequest.with { $0.message = "hello" }
+        let request = GRequestMessage(message: EchoRequest.with { $0.message = "hello" })
         let call = GUnaryCall(
             request: request,
             callOptions: options,
