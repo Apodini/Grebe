@@ -11,7 +11,7 @@ import GRPC
 import NIO
 import SwiftProtobuf
 
-public class GClient<Client: GRPCClient>: IClient {    
+public class GClient<Client: GRPCClientInitializable>: IClient {    
     public let service: Client
     public let group: EventLoopGroup
     
@@ -20,6 +20,6 @@ public class GClient<Client: GRPCClient>: IClient {
         
         let config = ClientConnection.Configuration(target: target, eventLoopGroup: group)
         let connection = ClientConnection(configuration: config)
-        service = Client(connection: connection)
+        service = Client(connection: connection, defaultCallOptions: CallOptions())
     }
 }
