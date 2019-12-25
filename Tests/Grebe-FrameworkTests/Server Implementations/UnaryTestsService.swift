@@ -18,7 +18,8 @@ class UnaryTestsService: UnaryScenariosProvider {
 
     func failedPrecondition(request: EchoRequest,
                             context: StatusOnlyCallContext) -> EventLoopFuture<Empty> {
-        context.eventLoop.makeFailedFuture(GRPCStatus(code: .failedPrecondition, message: "Failed precondition message"))
+        context.eventLoop
+            .makeFailedFuture(GRPCStatus(code: .failedPrecondition, message: "Failed precondition message"))
     }
 
     func noResponse(request: EchoRequest, context: StatusOnlyCallContext) -> EventLoopFuture<Empty> {

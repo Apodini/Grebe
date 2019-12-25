@@ -38,8 +38,8 @@ public class GServerStreamingCall<Request: Message, Response: Message>: ICall {
             subject.send(response)
         }
         
-        call.status.whenFailure { _ in
-            subject.send(completion: .failure(GRPCStatus.processingError))
+        call.status.whenSuccess {
+            subject.send(completion: $0.code == .ok ? .finished : .failure($0))
         }
         
         return subject.eraseToAnyPublisher()

@@ -17,11 +17,6 @@ class BaseCallTest: XCTestCase {
     var serverEventLoopGroup: EventLoopGroup?
     var cancellables: Set<AnyCancellable> = []
 
-    override func setUp() {
-        super.setUp()
-        serverEventLoopGroup = try! makeTestServer(services: [UnaryTestsService()])
-    }
-
     override func tearDown() {
         try? serverEventLoopGroup?.syncShutdownGracefully()
         cancellables.removeAll()
@@ -34,9 +29,7 @@ class BaseCallTest: XCTestCase {
         return GClient<Client>(target: connectionTarget)
     }
     
-    //MARK: - Private functions
-
-    private func makeTestServer(
+    func makeTestServer(
         services: [CallHandlerProvider],
         eventLoopGroupSize: Int = 1
     ) throws -> EventLoopGroup {

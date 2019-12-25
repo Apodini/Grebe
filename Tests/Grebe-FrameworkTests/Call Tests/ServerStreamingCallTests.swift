@@ -1,5 +1,5 @@
 //
-//  UnaryCallTests.swift
+//  ServerStreamingCallTests.swift
 //
 //
 //  Created by Tim Mewe on 25.12.19.
@@ -11,12 +11,12 @@ import GRPC
 import NIO
 import XCTest
 
-final class UnaryCallTests: BaseCallTest {
-    var client: GClient<UnaryScenariosServiceClient>!
+final class ServerStreamingCallTests: BaseCallTest {
+    var client: GClient<ServerStreamingScenariosServiceClient>!
     
     override func setUp() {
         super.setUp()
-        serverEventLoopGroup = try! makeTestServer(services: [UnaryTestsService()])
+        serverEventLoopGroup = try! makeTestServer(services: [ServerStreamingTestService()])
         client = makeTestClient()
     }
     
@@ -30,9 +30,12 @@ final class UnaryCallTests: BaseCallTest {
         
         let testString = "hello"
         let request = EchoRequest.with { $0.message = testString }
-        let call = GUnaryCall(request: request, closure: client.service.ok)
+        let call = GServerStreamingCall(request: request, closure: client.service.ok)
         
         call.execute()
+            .print()
+            .filter { $0.message == testString }
+            .count()
             .sink(
                 receiveCompletion: {
                     switch $0 {
@@ -41,8 +44,8 @@ final class UnaryCallTests: BaseCallTest {
                     case .finished:
                         promise.fulfill()
                 } },
-                receiveValue: { response in
-                    XCTAssert(response.message == testString)
+                receiveValue: { count in
+                    XCTAssertEqual(count, 3)
                 }
             )
             .store(in: &cancellables)
@@ -54,19 +57,20 @@ final class UnaryCallTests: BaseCallTest {
         let promise = expectation(description: "Call fails with failed precondition status")
         
         let request = EchoRequest.with { $0.message = "hello" }
-        let call = GUnaryCall(request: request, closure: client.service.failedPrecondition)
+        let call = GServerStreamingCall(request: request, closure: client.service.failedPrecondition)
         
         call.execute()
             .sink(
-                receiveCompletion: { switch $0 {
-                case .failure(let status):
-                    if status.code == .failedPrecondition {
-                        promise.fulfill()
-                    } else {
-                        XCTFail("Unexpected status: " + status.localizedDescription)
-                    }
-                case .finished:
-                    XCTFail("Call should not succeed")
+                receiveCompletion: {
+                    switch $0 {
+                    case .failure(let status):
+                        if status.code == .failedPrecondition {
+                            promise.fulfill()
+                        } else {
+                            XCTFail("Unexpected status: " + status.localizedDescription)
+                        }
+                    case .finished:
+                        XCTFail("Call should not succeed")
                 } },
                 receiveValue: { _ in
                     XCTFail("Call should not return a response")
@@ -82,7 +86,7 @@ final class UnaryCallTests: BaseCallTest {
         
         let options = CallOptions(timeout: try! .milliseconds(50))
         let request = EchoRequest.with { $0.message = "hello" }
-        let call = GUnaryCall(
+        let call = GServerStreamingCall(
             request: request,
             callOptions: options,
             closure: client.service.noResponse
@@ -110,4 +114,4 @@ final class UnaryCallTests: BaseCallTest {
     }
 }
 
-extension UnaryScenariosServiceClient: GRPCClientInitializable {}
+extension ServerStreamingScenariosServiceClient: GRPCClientInitializable {}
