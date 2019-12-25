@@ -30,20 +30,14 @@ public class GClientStreamingCall<Request: Message, Response: Message>: ICall {
     }
 
     public func execute() -> AnyPublisher<Response, GRPCStatus> {
-//        let future = Future<Response, Error> { [weak self] promise in
-//            guard let strongself = self else { return }
-//
-//            let call = strongself.callClosure(nil)
-//
-//            call.response.whenSuccess { response in
-//                promise(.success(response))
-//            }
-//
-//            call.response.whenFailure { error in
-//                promise(.failure(error))
-//            }
-//        }
-//        return future.eraseToAnyPublisher()
-        fatalError()
+        let future = Future<Response, GRPCStatus> { [weak self] promise in
+            guard let strongself = self else { return }
+
+            let call = strongself.callClosure(nil)
+
+            call.response.whenSuccess { promise(.success($0)) }
+            call.status.whenSuccess { promise(.failure($0)) }
+        }
+        return future.eraseToAnyPublisher()
     }
 }
