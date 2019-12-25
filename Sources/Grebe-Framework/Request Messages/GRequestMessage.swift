@@ -12,4 +12,8 @@ import SwiftProtobuf
 
 public struct GRequestMessage<Request: Message>: IRequestMessage {
     public let message: Request
+    
+    public init(_ message: Request) {
+        self.message = message
+    }
 }

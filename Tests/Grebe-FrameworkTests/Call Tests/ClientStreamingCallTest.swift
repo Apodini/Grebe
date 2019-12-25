@@ -35,7 +35,7 @@ final class ClientStreamingCallTest: BaseCallTest {
         ).eraseToAnyPublisher()
 
         let call = GClientStreamingCall(
-            request: GRequestStream(stream: requests),
+            request: GRequestStream(requests),
             closure: client.service.ok
         )
 
@@ -67,7 +67,7 @@ final class ClientStreamingCallTest: BaseCallTest {
             .eraseToAnyPublisher()
 
         let call = GClientStreamingCall(
-            request: GRequestStream(stream: requestStream),
+            request: GRequestStream(requestStream),
             closure: client.service.failedPrecondition
         )
 
@@ -104,7 +104,7 @@ final class ClientStreamingCallTest: BaseCallTest {
             .eraseToAnyPublisher()
 
         let call = GClientStreamingCall(
-            request: GRequestStream(stream: requestStream),
+            request: GRequestStream(requestStream),
             callOptions: options,
             closure: client.service.noResponse
         )

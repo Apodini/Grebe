@@ -13,4 +13,8 @@ import Combine
 
 public struct GRequestStream<Request: Message>: IRequestStream {
     public let stream: AnyPublisher<Request, Error>
+    
+    public init(_ stream: AnyPublisher<Request, Error>) {
+        self.stream = stream
+    }
 }

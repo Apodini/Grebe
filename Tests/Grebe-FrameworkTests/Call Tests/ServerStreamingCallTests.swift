@@ -29,7 +29,7 @@ final class ServerStreamingCallTests: BaseCallTest {
         let promise = expectation(description: "Call completes successfully")
         
         let testString = "hello"
-        let request = GRequestMessage(message: EchoRequest.with { $0.message = testString })
+        let request = GRequestMessage(EchoRequest.with { $0.message = testString })
         let call = GServerStreamingCall(request: request, closure: client.service.ok)
         
         call.execute()
@@ -56,7 +56,7 @@ final class ServerStreamingCallTests: BaseCallTest {
     func testFailedPrecondition() {
         let promise = expectation(description: "Call fails with failed precondition status")
         
-        let request = GRequestMessage(message: EchoRequest.with { $0.message = "hello" })
+        let request = GRequestMessage(EchoRequest.with { $0.message = "hello" })
         let call = GServerStreamingCall(request: request, closure: client.service.failedPrecondition)
         
         call.execute()
@@ -85,7 +85,7 @@ final class ServerStreamingCallTests: BaseCallTest {
         let promise = expectation(description: "Call fails with deadline exceeded status")
         
         let options = CallOptions(timeout: try! .milliseconds(50))
-        let request = GRequestMessage(message: EchoRequest.with { $0.message = "hello" })
+        let request = GRequestMessage(EchoRequest.with { $0.message = "hello" })
         let call = GServerStreamingCall(
             request: request,
             callOptions: options,
