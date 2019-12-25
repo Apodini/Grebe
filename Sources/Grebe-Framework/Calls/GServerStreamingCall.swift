@@ -1,6 +1,6 @@
 //
 //  ServerStreamingCall.swift
-//  
+//
 //
 //  Created by Tim Mewe on 07.12.19.
 //
@@ -15,24 +15,30 @@ public class GServerStreamingCall<Request: Message, Response: Message>: ICall {
         _ request: Request,
         _ callOptions: CallOptions?,
         _ handler: @escaping (Response) -> Void
-        ) -> GRPC.ServerStreamingCall<Request, Response>
+    ) -> GRPC.ServerStreamingCall<Request, Response>
     
     public var request: Request
     public let callClosure: CallClosure
-
-    public init(request: Request, closure: @escaping CallClosure) {
+    public let callOptions: CallOptions?
+    
+    public init(
+        request: Request,
+        callOptions: CallOptions? = nil,
+        closure: @escaping CallClosure
+    ) {
         self.request = request
         self.callClosure = closure
+        self.callOptions = callOptions
     }
     
-    public func execute() -> AnyPublisher<Response, Error> {
-        let subject = PassthroughSubject<Response, Error>()
+    public func execute() -> AnyPublisher<Response, GRPCStatus> {
+        let subject = PassthroughSubject<Response, GRPCStatus>()
         
-        let call = callClosure(request, nil) { response in
+        let call = callClosure(request, callOptions) { response in
             subject.send(response)
         }
         
-        call.status.whenFailure { error in
+        call.status.whenFailure { _ in
             subject.send(completion: .failure(GRPCStatus.processingError))
         }
         

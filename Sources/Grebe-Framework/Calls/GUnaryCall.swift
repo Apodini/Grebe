@@ -18,24 +18,29 @@ public class GUnaryCall<Request: Message, Response: Message>: ICall {
 
     public var request: Request
     public let callClosure: CallClosure
+    public let callOptions: CallOptions?
 
-    public init(request: Request, closure: @escaping CallClosure) {
+    public init(
+        request: Request,
+        callOptions: CallOptions? = nil,
+        closure: @escaping CallClosure
+    ) {
         self.request = request
         self.callClosure = closure
+        self.callOptions = callOptions
     }
 
-    public func execute() -> AnyPublisher<Response, Error> {
-        let future = Future<Response, Error> { [weak self] promise in
+    public func execute() -> AnyPublisher<Response, GRPCStatus> {
+        let future = Future<Response, GRPCStatus> { [weak self] promise in
             guard let strongself = self else { return }
-            
-            strongself
-                .callClosure(strongself.request, nil)
-                .response
-                .whenComplete { response in
-                    promise(response)
-                }
+
+            let call = strongself
+                .callClosure(strongself.request, strongself.callOptions)
+
+            call.response.whenSuccess { promise(.success($0)) }
+            call.status.whenSuccess { promise(.failure($0)) }
         }
-        
+
         return future.eraseToAnyPublisher()
     }
 }

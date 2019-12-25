@@ -15,11 +15,11 @@ public class GClient<Client: GRPCClientInitializable>: IClient {
     public let service: Client
     public let group: EventLoopGroup
     
-    public init(target: ConnectionTarget) {
+    public init(target: ConnectionTarget, callOptions: CallOptions = CallOptions()) {
         self.group = PlatformSupport.makeEventLoopGroup(loopCount: 1)
         
         let config = ClientConnection.Configuration(target: target, eventLoopGroup: group)
         let connection = ClientConnection(configuration: config)
-        service = Client(connection: connection, defaultCallOptions: CallOptions())
+        service = Client(connection: connection, defaultCallOptions: callOptions)
     }
 }

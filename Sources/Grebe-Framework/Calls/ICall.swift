@@ -18,6 +18,7 @@ public protocol ICall {
     
     var request: Request { get }
     var callClosure: CallClosure { get }
+    var callOptions: CallOptions? { get }
     
-    func execute() -> AnyPublisher<Response, Error>
+    func execute() -> AnyPublisher<Response, GRPCStatus>
 }

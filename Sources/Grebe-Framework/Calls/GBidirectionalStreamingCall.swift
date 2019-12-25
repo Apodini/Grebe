@@ -1,6 +1,6 @@
 //
 //  BidirectionalStreamingCall.swift
-//  
+//
 //
 //  Created by Tim Mewe on 07.12.19.
 //
@@ -14,17 +14,23 @@ public class GBidirectionalStreamingCall<Request: Message, Response: Message>: I
     public typealias CallClosure = (
         _ callOptions: CallOptions?,
         _ handler: @escaping (Response) -> Void
-        ) -> GRPC.BidirectionalStreamingCall<Request, Response>
-        
+    ) -> GRPC.BidirectionalStreamingCall<Request, Response>
+
     public var request: Request
     public let callClosure: CallClosure
+    public let callOptions: CallOptions?
 
-    public init(request: Request, closure: @escaping CallClosure) {
+    public init(
+        request: Request,
+        callOptions: CallOptions? = nil,
+        closure: @escaping CallClosure
+    ) {
         self.request = request
         self.callClosure = closure
+        self.callOptions = callOptions
     }
-    
-    public func execute() -> AnyPublisher<Response, Error> {
+
+    public func execute() -> AnyPublisher<Response, GRPCStatus> {
         fatalError()
     }
 }
