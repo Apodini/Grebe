@@ -37,12 +37,15 @@ public class GClientStreamingCall<Request: Message, Response: Message>: ICall {
 
             let call = strongself.callClosure(strongself.callOptions)
             strongself.request.stream
-                .sink(receiveCompletion: { _ in
-                    call.sendEnd(promise: nil)
+                .sink(receiveCompletion: { completion in
+                    switch completion {
+                        case .finished: call.sendEnd(promise: nil)
+                        case .failure: _ = call.cancel()
+                    }
                 }) { message in
                     call.sendMessage(message, promise: nil)
                 }
-            .store(in: &strongself.cancellables)
+                .store(in: &strongself.cancellables)
 
             call.response.whenSuccess { promise(.success($0)) }
             call.status.whenSuccess { promise(.failure($0)) }

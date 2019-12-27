@@ -16,7 +16,7 @@ final class UnaryCallTests: BaseCallTest {
     
     override func setUp() {
         super.setUp()
-        serverEventLoopGroup = try! makeTestServer(services: [UnaryTestsService()])
+        serverEventLoopGroup = try? makeTestServer(services: [UnaryTestsService()])
         client = makeTestClient()
     }
     

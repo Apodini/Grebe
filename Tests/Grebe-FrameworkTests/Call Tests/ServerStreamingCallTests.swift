@@ -16,7 +16,7 @@ final class ServerStreamingCallTests: BaseCallTest {
     
     override func setUp() {
         super.setUp()
-        serverEventLoopGroup = try! makeTestServer(services: [ServerStreamingTestService()])
+        serverEventLoopGroup = try? makeTestServer(services: [ServerStreamingTestService()])
         client = makeTestClient()
     }
     
