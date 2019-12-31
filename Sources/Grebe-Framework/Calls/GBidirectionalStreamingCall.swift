@@ -21,7 +21,7 @@ public class GBidirectionalStreamingCall<Request: Message, Response: Message>: I
     public let callOptions: CallOptions?
 
     private var cancellables: Set<AnyCancellable> = []
-    
+
     public init(
         request: AnyPublisher<Request, Error>,
         callOptions: CallOptions? = nil,
@@ -34,11 +34,11 @@ public class GBidirectionalStreamingCall<Request: Message, Response: Message>: I
 
     public func execute() -> AnyPublisher<Response, GRPCStatus> {
         let subject = PassthroughSubject<Response, GRPCStatus>()
-        
+
         let call = callClosure(callOptions) { response in
             subject.send(response)
         }
-        
+
         request
             .sink(receiveCompletion: { completion in
                 switch completion {
@@ -48,12 +48,12 @@ public class GBidirectionalStreamingCall<Request: Message, Response: Message>: I
             }) { message in
                 call.sendMessage(message, promise: nil)
             }
-        .store(in: &cancellables)
-        
+            .store(in: &cancellables)
+
         call.status.whenSuccess {
             subject.send(completion: $0.code == .ok ? .finished : .failure($0))
         }
-        
+
         return subject.eraseToAnyPublisher()
     }
 }

@@ -32,24 +32,24 @@ public class GClientStreamingCall<Request: Message, Response: Message>: ICall {
     }
 
     public func execute() -> AnyPublisher<Response, GRPCStatus> {
-        let future = Future<Response, GRPCStatus> { [weak self] promise in
-            guard let strongself = self else { return }
+        let subject = PassthroughSubject<Response, GRPCStatus>()
+        let call = callClosure(callOptions)
 
-            let call = strongself.callClosure(strongself.callOptions)
-            strongself.request
-                .sink(receiveCompletion: { completion in
-                    switch completion {
-                        case .finished: call.sendEnd(promise: nil)
-                        case .failure: _ = call.cancel()
-                    }
-                }) { message in
-                    call.sendMessage(message, promise: nil)
+        request
+            .sink(receiveCompletion: { completion in
+                switch completion {
+                    case .finished: call.sendEnd(promise: nil)
+                    case .failure: _ = call.cancel()
                 }
-                .store(in: &strongself.cancellables)
+            }) { message in
+                call.sendMessage(message, promise: nil)
+            }
+            .store(in: &cancellables)
 
-            call.response.whenSuccess { promise(.success($0)) }
-            call.status.whenSuccess { promise(.failure($0)) }
+        call.status.whenSuccess {
+            subject.send(completion: $0.code == .ok ? .finished : .failure($0))
         }
-        return future.eraseToAnyPublisher()
+
+        return subject.eraseToAnyPublisher()
     }
 }

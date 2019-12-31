@@ -55,6 +55,37 @@ final class ClientStreamingCallTests: BaseCallTest {
         wait(for: [promise], timeout: 0.2)
     }
 
+    func testStreamInputOk() {
+        let promise = expectation(description: "Call completes successfully")
+        let stream = PassthroughSubject<EchoRequest, Error>()
+        let call = GClientStreamingCall(
+            request: stream.eraseToAnyPublisher(),
+            closure: client.service.ok
+        )
+
+        call.execute()
+            .sink(
+                receiveCompletion: { completion in
+                    switch completion {
+                    case .failure(let status):
+                        XCTFail("Unexpected status: " + status.localizedDescription)
+                    case .finished:
+                        promise.fulfill()
+                    }
+                },
+                receiveValue: { response in
+                    XCTAssert(response.message == "world!")
+                }
+            )
+            .store(in: &cancellables)
+        
+        stream.send(EchoRequest.with { $0.message = "hello" })
+        stream.send(EchoRequest.with { $0.message = "world" })
+        stream.send(completion: .finished)
+
+        wait(for: [promise], timeout: 0.2)
+    }
+
     func testFailedPrecondition() {
         let promise = expectation(description: "Call fails with failed precondition status")
 
@@ -135,7 +166,7 @@ final class ClientStreamingCallTests: BaseCallTest {
         struct ClientStreamError: Error {}
         let requests = Fail<EchoRequest, Error>(error: ClientStreamError()).eraseToAnyPublisher()
         let call = GClientStreamingCall(request: requests, closure: client.service.ok)
-        
+
         call.execute()
             .sink(
                 receiveCompletion: { completion in
