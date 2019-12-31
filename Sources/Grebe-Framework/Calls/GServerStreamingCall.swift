@@ -17,12 +17,12 @@ public class GServerStreamingCall<Request: Message, Response: Message>: ICall {
         _ handler: @escaping (Response) -> Void
     ) -> GRPC.ServerStreamingCall<Request, Response>
     
-    public var request: GRequestMessage<Request>
+    public var request: Request
     public let callClosure: CallClosure
     public let callOptions: CallOptions?
     
     public init(
-        request: GRequestMessage<Request>,
+        request: Request,
         callOptions: CallOptions? = nil,
         closure: @escaping CallClosure
     ) {
@@ -34,7 +34,7 @@ public class GServerStreamingCall<Request: Message, Response: Message>: ICall {
     public func execute() -> AnyPublisher<Response, GRPCStatus> {
         let subject = PassthroughSubject<Response, GRPCStatus>()
         
-        let call = callClosure(request.message, callOptions) { response in
+        let call = callClosure(request, callOptions) { response in
             subject.send(response)
         }
         

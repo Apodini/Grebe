@@ -15,14 +15,14 @@ public class GClientStreamingCall<Request: Message, Response: Message>: ICall {
         _ callOptions: CallOptions?
     ) -> GRPC.ClientStreamingCall<Request, Response>
 
-    public var request: GRequestStream<Request>
+    public var request: AnyPublisher<Request, Error>
     public let callClosure: CallClosure
     public let callOptions: CallOptions?
 
     private var cancellables: Set<AnyCancellable> = []
 
     public init(
-        request: GRequestStream<Request>,
+        request: AnyPublisher<Request, Error>,
         callOptions: CallOptions? = nil,
         closure: @escaping CallClosure
     ) {
@@ -36,7 +36,7 @@ public class GClientStreamingCall<Request: Message, Response: Message>: ICall {
             guard let strongself = self else { return }
 
             let call = strongself.callClosure(strongself.callOptions)
-            strongself.request.stream
+            strongself.request
                 .sink(receiveCompletion: { completion in
                     switch completion {
                         case .finished: call.sendEnd(promise: nil)

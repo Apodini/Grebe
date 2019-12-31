@@ -34,10 +34,7 @@ final class ClientStreamingCallTests: BaseCallTest {
              EchoRequest.with { $0.message = "world!" }]
         ).eraseToAnyPublisher()
 
-        let call = GClientStreamingCall(
-            request: GRequestStream(requests),
-            closure: client.service.ok
-        )
+        let call = GClientStreamingCall(request: requests, closure: client.service.ok)
 
         call.execute()
             .sink(
@@ -67,7 +64,7 @@ final class ClientStreamingCallTests: BaseCallTest {
             .eraseToAnyPublisher()
 
         let call = GClientStreamingCall(
-            request: GRequestStream(requestStream),
+            request: requestStream,
             closure: client.service.failedPrecondition
         )
 
@@ -104,7 +101,7 @@ final class ClientStreamingCallTests: BaseCallTest {
             .eraseToAnyPublisher()
 
         let call = GClientStreamingCall(
-            request: GRequestStream(requestStream),
+            request: requestStream,
             callOptions: options,
             closure: client.service.noResponse
         )
@@ -137,10 +134,8 @@ final class ClientStreamingCallTests: BaseCallTest {
 
         struct ClientStreamError: Error {}
         let requests = Fail<EchoRequest, Error>(error: ClientStreamError()).eraseToAnyPublisher()
-        let call = GClientStreamingCall(
-            request: GRequestStream(requests),
-            closure: client.service.ok
-        )
+        let call = GClientStreamingCall(request: requests, closure: client.service.ok)
+        
         call.execute()
             .sink(
                 receiveCompletion: { completion in

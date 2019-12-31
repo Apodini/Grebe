@@ -16,7 +16,6 @@ public protocol ICall {
     associatedtype Response: Message
     associatedtype CallClosure
     
-//    var request: (Request) { get }
     var callClosure: CallClosure { get }
     var callOptions: CallOptions? { get }
     

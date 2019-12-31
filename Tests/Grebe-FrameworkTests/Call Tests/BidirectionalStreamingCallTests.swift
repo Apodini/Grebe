@@ -32,11 +32,7 @@ final class BidirectionalStreamingCallTests: BaseCallTest {
         let requestStream = Publishers
             .Sequence<Repeated<EchoRequest>, Error>(sequence: requests)
             .eraseToAnyPublisher()
-
-        let call = GBidirectionalStreamingCall(
-            request: GRequestStream(requestStream),
-            closure: client.service.ok
-        )
+        let call = GBidirectionalStreamingCall(request: requestStream, closure: client.service.ok)
 
         call.execute()
             .filter { $0.message == "hello" }
@@ -67,7 +63,7 @@ final class BidirectionalStreamingCallTests: BaseCallTest {
             .eraseToAnyPublisher()
 
         let call = GBidirectionalStreamingCall(
-            request: GRequestStream(requestStream),
+            request: requestStream,
             closure: client.service.failedPrecondition
         )
 
@@ -104,7 +100,7 @@ final class BidirectionalStreamingCallTests: BaseCallTest {
             .eraseToAnyPublisher()
 
         let call = GBidirectionalStreamingCall(
-            request: GRequestStream(requestStream),
+            request: requestStream,
             callOptions: options,
             closure: client.service.noResponse
         )
@@ -137,10 +133,8 @@ final class BidirectionalStreamingCallTests: BaseCallTest {
 
         struct ClientStreamError: Error {}
         let requests = Fail<EchoRequest, Error>(error: ClientStreamError()).eraseToAnyPublisher()
-        let call = GBidirectionalStreamingCall(
-            request: GRequestStream(requests),
-            closure: client.service.ok
-        )
+        let call = GBidirectionalStreamingCall(request: requests, closure: client.service.ok)
+        
         call.execute()
             .sink(
                 receiveCompletion: { completion in
