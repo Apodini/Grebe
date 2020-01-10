@@ -1,5 +1,5 @@
 //
-//  UnaryServiceMockClient.swift
+//  File.swift
 //
 //
 //  Created by Tim Mewe on 10.01.20.
@@ -10,20 +10,21 @@ import NIO
 import SwiftProtobuf
 import XCTest
 
-internal final class UnaryServiceMockClient: BaseMockClient, UnaryMockService {
-    typealias UnaryMockCall = MockNetworkCall<EchoRequest, EchoResponse>
+internal final class ServerStreamingMockClient: BaseMockClient, ServerStreamingMockService {
+    typealias ServerStreamingMockCall = MockNetworkCall<EchoRequest, EchoResponse>
 
-    var mockNetworkCalls: [UnaryMockCall]
+    var mockNetworkCalls: [ServerStreamingMockCall]
 
-    init(mockNetworkCalls: [UnaryMockCall]) {
+    init(mockNetworkCalls: [ServerStreamingMockCall]) {
         self.mockNetworkCalls = mockNetworkCalls
         super.init()
     }
 
     func ok(
         _ request: EchoRequest,
-        callOptions: CallOptions?
-    ) -> UnaryCall<EchoRequest, EchoResponse> {
+        callOptions: CallOptions?,
+        handler: @escaping (EchoResponse) -> Void
+    ) -> ServerStreamingCall<EchoRequest, EchoResponse> {
         let networkCall = mockNetworkCalls.removeFirst()
 
         guard networkCall.request == request else {
@@ -31,19 +32,16 @@ internal final class UnaryServiceMockClient: BaseMockClient, UnaryMockService {
             fatalError()
         }
         networkCall.expectation.fulfill()
-        let unaryCall = UnaryCall<EchoRequest, EchoResponse>(
+        let call = ServerStreamingCall<EchoRequest, EchoResponse>(
             connection: connection,
             path: "/ok",
             request: request,
             callOptions: defaultCallOptions,
-            errorDelegate: nil
+            errorDelegate: nil,
+            handler: handler
         )
 
         let promise = try! eventLoop.makeSucceededFuture(networkCall.response.get())
-        
-        //Assign mocked response to unary call
-        //unaryCall.response = promise
-        
-        return unaryCall
+        return call
     }
 }

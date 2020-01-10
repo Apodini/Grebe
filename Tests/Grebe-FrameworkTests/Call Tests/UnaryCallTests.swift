@@ -20,7 +20,7 @@ final class UnaryCallTests: XCTestCase {
     
     lazy var okMockCall: UnaryMockCall = {
         let request = EchoRequest(id: 1)
-        let response = EchoResponse(id: 1)
+        let response: Result<EchoResponse, GRPCError> = Result.success(EchoResponse(id: 1))
         let expectation = XCTestExpectation(description: "Unary call completes successfully")
         return UnaryMockCall(request: request, response: response, expectation: expectation)
     }()
@@ -51,7 +51,13 @@ final class UnaryCallTests: XCTestCase {
                         mockCall.expectation.fulfill()
                 } },
                 receiveValue: { response in
-                    XCTAssert(response.id == mockCall.response.id)
+                    switch mockCall.response {
+                    case .success(let mockResponse):
+                        XCTAssert(response.id == mockResponse.id)
+                    default:
+                        XCTFail("Respones do not match")
+                    }
+                    
                 }
             )
             .store(in: &cancellables)
