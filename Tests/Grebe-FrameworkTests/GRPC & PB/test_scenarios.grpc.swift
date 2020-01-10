@@ -27,18 +27,16 @@ import NIOHTTP1
 import SwiftProtobuf
 
 
-/// Usage: instantiate UnaryScenariosServiceClient, then call methods of this protocol to make API calls.
-internal protocol UnaryScenariosService {
+/// Usage: instantiate UnaryMockServiceClient, then call methods of this protocol to make API calls.
+internal protocol UnaryMockService {
   func ok(_ request: EchoRequest, callOptions: CallOptions?) -> UnaryCall<EchoRequest, EchoResponse>
-  func failedPrecondition(_ request: EchoRequest, callOptions: CallOptions?) -> UnaryCall<EchoRequest, Empty>
-  func noResponse(_ request: EchoRequest, callOptions: CallOptions?) -> UnaryCall<EchoRequest, Empty>
 }
 
-internal final class UnaryScenariosServiceClient: GRPCClient, UnaryScenariosService {
+internal final class UnaryMockServiceClient: GRPCClient, UnaryMockService {
   internal let connection: ClientConnection
   internal var defaultCallOptions: CallOptions
 
-  /// Creates a client for the UnaryScenarios service.
+  /// Creates a client for the UnaryMock service.
   ///
   /// - Parameters:
   ///   - connection: `ClientConnection` to the service host.
@@ -55,49 +53,58 @@ internal final class UnaryScenariosServiceClient: GRPCClient, UnaryScenariosServ
   ///   - callOptions: Call options; `self.defaultCallOptions` is used if `nil`.
   /// - Returns: A `UnaryCall` with futures for the metadata, status and response.
   internal func ok(_ request: EchoRequest, callOptions: CallOptions? = nil) -> UnaryCall<EchoRequest, EchoResponse> {
-    return self.makeUnaryCall(path: "/UnaryScenarios/Ok",
-                              request: request,
-                              callOptions: callOptions ?? self.defaultCallOptions)
-  }
-
-  /// Asynchronous unary call to FailedPrecondition.
-  ///
-  /// - Parameters:
-  ///   - request: Request to send to FailedPrecondition.
-  ///   - callOptions: Call options; `self.defaultCallOptions` is used if `nil`.
-  /// - Returns: A `UnaryCall` with futures for the metadata, status and response.
-  internal func failedPrecondition(_ request: EchoRequest, callOptions: CallOptions? = nil) -> UnaryCall<EchoRequest, Empty> {
-    return self.makeUnaryCall(path: "/UnaryScenarios/FailedPrecondition",
-                              request: request,
-                              callOptions: callOptions ?? self.defaultCallOptions)
-  }
-
-  /// Asynchronous unary call to NoResponse.
-  ///
-  /// - Parameters:
-  ///   - request: Request to send to NoResponse.
-  ///   - callOptions: Call options; `self.defaultCallOptions` is used if `nil`.
-  /// - Returns: A `UnaryCall` with futures for the metadata, status and response.
-  internal func noResponse(_ request: EchoRequest, callOptions: CallOptions? = nil) -> UnaryCall<EchoRequest, Empty> {
-    return self.makeUnaryCall(path: "/UnaryScenarios/NoResponse",
+    return self.makeUnaryCall(path: "/UnaryMock/Ok",
                               request: request,
                               callOptions: callOptions ?? self.defaultCallOptions)
   }
 
 }
 
-/// Usage: instantiate ClientStreamingScenariosServiceClient, then call methods of this protocol to make API calls.
-internal protocol ClientStreamingScenariosService {
-  func ok(callOptions: CallOptions?) -> ClientStreamingCall<EchoRequest, EchoResponse>
-  func failedPrecondition(callOptions: CallOptions?) -> ClientStreamingCall<EchoRequest, Empty>
-  func noResponse(callOptions: CallOptions?) -> ClientStreamingCall<EchoRequest, Empty>
+/// Usage: instantiate ServerStreamingMockServiceClient, then call methods of this protocol to make API calls.
+internal protocol ServerStreamingMockService {
+  func ok(_ request: EchoRequest, callOptions: CallOptions?, handler: @escaping (EchoResponse) -> Void) -> ServerStreamingCall<EchoRequest, EchoResponse>
 }
 
-internal final class ClientStreamingScenariosServiceClient: GRPCClient, ClientStreamingScenariosService {
+internal final class ServerStreamingMockServiceClient: GRPCClient, ServerStreamingMockService {
   internal let connection: ClientConnection
   internal var defaultCallOptions: CallOptions
 
-  /// Creates a client for the ClientStreamingScenarios service.
+  /// Creates a client for the ServerStreamingMock service.
+  ///
+  /// - Parameters:
+  ///   - connection: `ClientConnection` to the service host.
+  ///   - defaultCallOptions: Options to use for each service call if the user doesn't provide them.
+  internal init(connection: ClientConnection, defaultCallOptions: CallOptions = CallOptions()) {
+    self.connection = connection
+    self.defaultCallOptions = defaultCallOptions
+  }
+
+  /// Asynchronous server-streaming call to Ok.
+  ///
+  /// - Parameters:
+  ///   - request: Request to send to Ok.
+  ///   - callOptions: Call options; `self.defaultCallOptions` is used if `nil`.
+  ///   - handler: A closure called when each response is received from the server.
+  /// - Returns: A `ServerStreamingCall` with futures for the metadata and status.
+  internal func ok(_ request: EchoRequest, callOptions: CallOptions? = nil, handler: @escaping (EchoResponse) -> Void) -> ServerStreamingCall<EchoRequest, EchoResponse> {
+    return self.makeServerStreamingCall(path: "/ServerStreamingMock/Ok",
+                                        request: request,
+                                        callOptions: callOptions ?? self.defaultCallOptions,
+                                        handler: handler)
+  }
+
+}
+
+/// Usage: instantiate ClientStreamingMockServiceClient, then call methods of this protocol to make API calls.
+internal protocol ClientStreamingMockService {
+  func ok(callOptions: CallOptions?) -> ClientStreamingCall<EchoRequest, EchoResponse>
+}
+
+internal final class ClientStreamingMockServiceClient: GRPCClient, ClientStreamingMockService {
+  internal let connection: ClientConnection
+  internal var defaultCallOptions: CallOptions
+
+  /// Creates a client for the ClientStreamingMock service.
   ///
   /// - Parameters:
   ///   - connection: `ClientConnection` to the service host.
@@ -116,115 +123,22 @@ internal final class ClientStreamingScenariosServiceClient: GRPCClient, ClientSt
   ///   - callOptions: Call options; `self.defaultCallOptions` is used if `nil`.
   /// - Returns: A `ClientStreamingCall` with futures for the metadata, status and response.
   internal func ok(callOptions: CallOptions? = nil) -> ClientStreamingCall<EchoRequest, EchoResponse> {
-    return self.makeClientStreamingCall(path: "/ClientStreamingScenarios/Ok",
-                                        callOptions: callOptions ?? self.defaultCallOptions)
-  }
-
-  /// Asynchronous client-streaming call to FailedPrecondition.
-  ///
-  /// Callers should use the `send` method on the returned object to send messages
-  /// to the server. The caller should send an `.end` after the final message has been sent.
-  ///
-  /// - Parameters:
-  ///   - callOptions: Call options; `self.defaultCallOptions` is used if `nil`.
-  /// - Returns: A `ClientStreamingCall` with futures for the metadata, status and response.
-  internal func failedPrecondition(callOptions: CallOptions? = nil) -> ClientStreamingCall<EchoRequest, Empty> {
-    return self.makeClientStreamingCall(path: "/ClientStreamingScenarios/FailedPrecondition",
-                                        callOptions: callOptions ?? self.defaultCallOptions)
-  }
-
-  /// Asynchronous client-streaming call to NoResponse.
-  ///
-  /// Callers should use the `send` method on the returned object to send messages
-  /// to the server. The caller should send an `.end` after the final message has been sent.
-  ///
-  /// - Parameters:
-  ///   - callOptions: Call options; `self.defaultCallOptions` is used if `nil`.
-  /// - Returns: A `ClientStreamingCall` with futures for the metadata, status and response.
-  internal func noResponse(callOptions: CallOptions? = nil) -> ClientStreamingCall<EchoRequest, Empty> {
-    return self.makeClientStreamingCall(path: "/ClientStreamingScenarios/NoResponse",
+    return self.makeClientStreamingCall(path: "/ClientStreamingMock/Ok",
                                         callOptions: callOptions ?? self.defaultCallOptions)
   }
 
 }
 
-/// Usage: instantiate ServerStreamingScenariosServiceClient, then call methods of this protocol to make API calls.
-internal protocol ServerStreamingScenariosService {
-  func ok(_ request: EchoRequest, callOptions: CallOptions?, handler: @escaping (EchoResponse) -> Void) -> ServerStreamingCall<EchoRequest, EchoResponse>
-  func failedPrecondition(_ request: EchoRequest, callOptions: CallOptions?, handler: @escaping (Empty) -> Void) -> ServerStreamingCall<EchoRequest, Empty>
-  func noResponse(_ request: EchoRequest, callOptions: CallOptions?, handler: @escaping (Empty) -> Void) -> ServerStreamingCall<EchoRequest, Empty>
-}
-
-internal final class ServerStreamingScenariosServiceClient: GRPCClient, ServerStreamingScenariosService {
-  internal let connection: ClientConnection
-  internal var defaultCallOptions: CallOptions
-
-  /// Creates a client for the ServerStreamingScenarios service.
-  ///
-  /// - Parameters:
-  ///   - connection: `ClientConnection` to the service host.
-  ///   - defaultCallOptions: Options to use for each service call if the user doesn't provide them.
-  internal init(connection: ClientConnection, defaultCallOptions: CallOptions = CallOptions()) {
-    self.connection = connection
-    self.defaultCallOptions = defaultCallOptions
-  }
-
-  /// Asynchronous server-streaming call to Ok.
-  ///
-  /// - Parameters:
-  ///   - request: Request to send to Ok.
-  ///   - callOptions: Call options; `self.defaultCallOptions` is used if `nil`.
-  ///   - handler: A closure called when each response is received from the server.
-  /// - Returns: A `ServerStreamingCall` with futures for the metadata and status.
-  internal func ok(_ request: EchoRequest, callOptions: CallOptions? = nil, handler: @escaping (EchoResponse) -> Void) -> ServerStreamingCall<EchoRequest, EchoResponse> {
-    return self.makeServerStreamingCall(path: "/ServerStreamingScenarios/Ok",
-                                        request: request,
-                                        callOptions: callOptions ?? self.defaultCallOptions,
-                                        handler: handler)
-  }
-
-  /// Asynchronous server-streaming call to FailedPrecondition.
-  ///
-  /// - Parameters:
-  ///   - request: Request to send to FailedPrecondition.
-  ///   - callOptions: Call options; `self.defaultCallOptions` is used if `nil`.
-  ///   - handler: A closure called when each response is received from the server.
-  /// - Returns: A `ServerStreamingCall` with futures for the metadata and status.
-  internal func failedPrecondition(_ request: EchoRequest, callOptions: CallOptions? = nil, handler: @escaping (Empty) -> Void) -> ServerStreamingCall<EchoRequest, Empty> {
-    return self.makeServerStreamingCall(path: "/ServerStreamingScenarios/FailedPrecondition",
-                                        request: request,
-                                        callOptions: callOptions ?? self.defaultCallOptions,
-                                        handler: handler)
-  }
-
-  /// Asynchronous server-streaming call to NoResponse.
-  ///
-  /// - Parameters:
-  ///   - request: Request to send to NoResponse.
-  ///   - callOptions: Call options; `self.defaultCallOptions` is used if `nil`.
-  ///   - handler: A closure called when each response is received from the server.
-  /// - Returns: A `ServerStreamingCall` with futures for the metadata and status.
-  internal func noResponse(_ request: EchoRequest, callOptions: CallOptions? = nil, handler: @escaping (Empty) -> Void) -> ServerStreamingCall<EchoRequest, Empty> {
-    return self.makeServerStreamingCall(path: "/ServerStreamingScenarios/NoResponse",
-                                        request: request,
-                                        callOptions: callOptions ?? self.defaultCallOptions,
-                                        handler: handler)
-  }
-
-}
-
-/// Usage: instantiate BidirectionalStreamingScenariosServiceClient, then call methods of this protocol to make API calls.
-internal protocol BidirectionalStreamingScenariosService {
+/// Usage: instantiate BidirectionalStreamingMockServiceClient, then call methods of this protocol to make API calls.
+internal protocol BidirectionalStreamingMockService {
   func ok(callOptions: CallOptions?, handler: @escaping (EchoResponse) -> Void) -> BidirectionalStreamingCall<EchoRequest, EchoResponse>
-  func failedPrecondition(callOptions: CallOptions?, handler: @escaping (Empty) -> Void) -> BidirectionalStreamingCall<EchoRequest, Empty>
-  func noResponse(callOptions: CallOptions?, handler: @escaping (Empty) -> Void) -> BidirectionalStreamingCall<EchoRequest, Empty>
 }
 
-internal final class BidirectionalStreamingScenariosServiceClient: GRPCClient, BidirectionalStreamingScenariosService {
+internal final class BidirectionalStreamingMockServiceClient: GRPCClient, BidirectionalStreamingMockService {
   internal let connection: ClientConnection
   internal var defaultCallOptions: CallOptions
 
-  /// Creates a client for the BidirectionalStreamingScenarios service.
+  /// Creates a client for the BidirectionalStreamingMock service.
   ///
   /// - Parameters:
   ///   - connection: `ClientConnection` to the service host.
@@ -244,98 +158,20 @@ internal final class BidirectionalStreamingScenariosServiceClient: GRPCClient, B
   ///   - handler: A closure called when each response is received from the server.
   /// - Returns: A `ClientStreamingCall` with futures for the metadata and status.
   internal func ok(callOptions: CallOptions? = nil, handler: @escaping (EchoResponse) -> Void) -> BidirectionalStreamingCall<EchoRequest, EchoResponse> {
-    return self.makeBidirectionalStreamingCall(path: "/BidirectionalStreamingScenarios/Ok",
+    return self.makeBidirectionalStreamingCall(path: "/BidirectionalStreamingMock/Ok",
                                                callOptions: callOptions ?? self.defaultCallOptions,
                                                handler: handler)
-  }
-
-  /// Asynchronous bidirectional-streaming call to FailedPrecondition.
-  ///
-  /// Callers should use the `send` method on the returned object to send messages
-  /// to the server. The caller should send an `.end` after the final message has been sent.
-  ///
-  /// - Parameters:
-  ///   - callOptions: Call options; `self.defaultCallOptions` is used if `nil`.
-  ///   - handler: A closure called when each response is received from the server.
-  /// - Returns: A `ClientStreamingCall` with futures for the metadata and status.
-  internal func failedPrecondition(callOptions: CallOptions? = nil, handler: @escaping (Empty) -> Void) -> BidirectionalStreamingCall<EchoRequest, Empty> {
-    return self.makeBidirectionalStreamingCall(path: "/BidirectionalStreamingScenarios/FailedPrecondition",
-                                               callOptions: callOptions ?? self.defaultCallOptions,
-                                               handler: handler)
-  }
-
-  /// Asynchronous bidirectional-streaming call to NoResponse.
-  ///
-  /// Callers should use the `send` method on the returned object to send messages
-  /// to the server. The caller should send an `.end` after the final message has been sent.
-  ///
-  /// - Parameters:
-  ///   - callOptions: Call options; `self.defaultCallOptions` is used if `nil`.
-  ///   - handler: A closure called when each response is received from the server.
-  /// - Returns: A `ClientStreamingCall` with futures for the metadata and status.
-  internal func noResponse(callOptions: CallOptions? = nil, handler: @escaping (Empty) -> Void) -> BidirectionalStreamingCall<EchoRequest, Empty> {
-    return self.makeBidirectionalStreamingCall(path: "/BidirectionalStreamingScenarios/NoResponse",
-                                               callOptions: callOptions ?? self.defaultCallOptions,
-                                               handler: handler)
-  }
-
-}
-
-/// Usage: instantiate RetryScenariosServiceClient, then call methods of this protocol to make API calls.
-internal protocol RetryScenariosService {
-  func failThenSucceed(_ request: FailThenSucceedRequest, callOptions: CallOptions?) -> UnaryCall<FailThenSucceedRequest, FailThenSucceedResponse>
-  func authenticatedRpc(_ request: EchoRequest, callOptions: CallOptions?) -> UnaryCall<EchoRequest, EchoResponse>
-}
-
-internal final class RetryScenariosServiceClient: GRPCClient, RetryScenariosService {
-  internal let connection: ClientConnection
-  internal var defaultCallOptions: CallOptions
-
-  /// Creates a client for the RetryScenarios service.
-  ///
-  /// - Parameters:
-  ///   - connection: `ClientConnection` to the service host.
-  ///   - defaultCallOptions: Options to use for each service call if the user doesn't provide them.
-  internal init(connection: ClientConnection, defaultCallOptions: CallOptions = CallOptions()) {
-    self.connection = connection
-    self.defaultCallOptions = defaultCallOptions
-  }
-
-  /// Asynchronous unary call to FailThenSucceed.
-  ///
-  /// - Parameters:
-  ///   - request: Request to send to FailThenSucceed.
-  ///   - callOptions: Call options; `self.defaultCallOptions` is used if `nil`.
-  /// - Returns: A `UnaryCall` with futures for the metadata, status and response.
-  internal func failThenSucceed(_ request: FailThenSucceedRequest, callOptions: CallOptions? = nil) -> UnaryCall<FailThenSucceedRequest, FailThenSucceedResponse> {
-    return self.makeUnaryCall(path: "/RetryScenarios/FailThenSucceed",
-                              request: request,
-                              callOptions: callOptions ?? self.defaultCallOptions)
-  }
-
-  /// Asynchronous unary call to AuthenticatedRpc.
-  ///
-  /// - Parameters:
-  ///   - request: Request to send to AuthenticatedRpc.
-  ///   - callOptions: Call options; `self.defaultCallOptions` is used if `nil`.
-  /// - Returns: A `UnaryCall` with futures for the metadata, status and response.
-  internal func authenticatedRpc(_ request: EchoRequest, callOptions: CallOptions? = nil) -> UnaryCall<EchoRequest, EchoResponse> {
-    return self.makeUnaryCall(path: "/RetryScenarios/AuthenticatedRpc",
-                              request: request,
-                              callOptions: callOptions ?? self.defaultCallOptions)
   }
 
 }
 
 /// To build a server, implement a class that conforms to this protocol.
-internal protocol UnaryScenariosProvider: CallHandlerProvider {
+internal protocol UnaryMockProvider: CallHandlerProvider {
   func ok(request: EchoRequest, context: StatusOnlyCallContext) -> EventLoopFuture<EchoResponse>
-  func failedPrecondition(request: EchoRequest, context: StatusOnlyCallContext) -> EventLoopFuture<Empty>
-  func noResponse(request: EchoRequest, context: StatusOnlyCallContext) -> EventLoopFuture<Empty>
 }
 
-extension UnaryScenariosProvider {
-  internal var serviceName: String { return "UnaryScenarios" }
+extension UnaryMockProvider {
+  internal var serviceName: String { return "UnaryMock" }
 
   /// Determines, calls and returns the appropriate request handler, depending on the request's method.
   /// Returns nil for methods not handled by this service.
@@ -348,68 +184,18 @@ extension UnaryScenariosProvider {
         }
       }
 
-    case "FailedPrecondition":
-      return UnaryCallHandler(callHandlerContext: callHandlerContext) { context in
-        return { request in
-          self.failedPrecondition(request: request, context: context)
-        }
-      }
-
-    case "NoResponse":
-      return UnaryCallHandler(callHandlerContext: callHandlerContext) { context in
-        return { request in
-          self.noResponse(request: request, context: context)
-        }
-      }
-
     default: return nil
     }
   }
 }
 
 /// To build a server, implement a class that conforms to this protocol.
-internal protocol ClientStreamingScenariosProvider: CallHandlerProvider {
-  func ok(context: UnaryResponseCallContext<EchoResponse>) -> EventLoopFuture<(StreamEvent<EchoRequest>) -> Void>
-  func failedPrecondition(context: UnaryResponseCallContext<Empty>) -> EventLoopFuture<(StreamEvent<EchoRequest>) -> Void>
-  func noResponse(context: UnaryResponseCallContext<Empty>) -> EventLoopFuture<(StreamEvent<EchoRequest>) -> Void>
-}
-
-extension ClientStreamingScenariosProvider {
-  internal var serviceName: String { return "ClientStreamingScenarios" }
-
-  /// Determines, calls and returns the appropriate request handler, depending on the request's method.
-  /// Returns nil for methods not handled by this service.
-  internal func handleMethod(_ methodName: String, callHandlerContext: CallHandlerContext) -> GRPCCallHandler? {
-    switch methodName {
-    case "Ok":
-      return ClientStreamingCallHandler(callHandlerContext: callHandlerContext) { context in
-        return self.ok(context: context)
-      }
-
-    case "FailedPrecondition":
-      return ClientStreamingCallHandler(callHandlerContext: callHandlerContext) { context in
-        return self.failedPrecondition(context: context)
-      }
-
-    case "NoResponse":
-      return ClientStreamingCallHandler(callHandlerContext: callHandlerContext) { context in
-        return self.noResponse(context: context)
-      }
-
-    default: return nil
-    }
-  }
-}
-
-/// To build a server, implement a class that conforms to this protocol.
-internal protocol ServerStreamingScenariosProvider: CallHandlerProvider {
+internal protocol ServerStreamingMockProvider: CallHandlerProvider {
   func ok(request: EchoRequest, context: StreamingResponseCallContext<EchoResponse>) -> EventLoopFuture<GRPCStatus>
-  func failedPrecondition(request: EchoRequest, context: StreamingResponseCallContext<Empty>) -> EventLoopFuture<GRPCStatus>
-  func noResponse(request: EchoRequest, context: StreamingResponseCallContext<Empty>) -> EventLoopFuture<GRPCStatus>
 }
 
-extension ServerStreamingScenariosProvider {
-  internal var serviceName: String { return "ServerStreamingScenarios" }
+extension ServerStreamingMockProvider {
+  internal var serviceName: String { return "ServerStreamingMock" }
 
   /// Determines, calls and returns the appropriate request handler, depending on the request's method.
   /// Returns nil for methods not handled by this service.
@@ -422,18 +208,26 @@ extension ServerStreamingScenariosProvider {
         }
       }
 
-    case "FailedPrecondition":
-      return ServerStreamingCallHandler(callHandlerContext: callHandlerContext) { context in
-        return { request in
-          self.failedPrecondition(request: request, context: context)
-        }
-      }
+    default: return nil
+    }
+  }
+}
 
-    case "NoResponse":
-      return ServerStreamingCallHandler(callHandlerContext: callHandlerContext) { context in
-        return { request in
-          self.noResponse(request: request, context: context)
-        }
+/// To build a server, implement a class that conforms to this protocol.
+internal protocol ClientStreamingMockProvider: CallHandlerProvider {
+  func ok(context: UnaryResponseCallContext<EchoResponse>) -> EventLoopFuture<(StreamEvent<EchoRequest>) -> Void>
+}
+
+extension ClientStreamingMockProvider {
+  internal var serviceName: String { return "ClientStreamingMock" }
+
+  /// Determines, calls and returns the appropriate request handler, depending on the request's method.
+  /// Returns nil for methods not handled by this service.
+  internal func handleMethod(_ methodName: String, callHandlerContext: CallHandlerContext) -> GRPCCallHandler? {
+    switch methodName {
+    case "Ok":
+      return ClientStreamingCallHandler(callHandlerContext: callHandlerContext) { context in
+        return self.ok(context: context)
       }
 
     default: return nil
@@ -442,14 +236,12 @@ extension ServerStreamingScenariosProvider {
 }
 
 /// To build a server, implement a class that conforms to this protocol.
-internal protocol BidirectionalStreamingScenariosProvider: CallHandlerProvider {
+internal protocol BidirectionalStreamingMockProvider: CallHandlerProvider {
   func ok(context: StreamingResponseCallContext<EchoResponse>) -> EventLoopFuture<(StreamEvent<EchoRequest>) -> Void>
-  func failedPrecondition(context: StreamingResponseCallContext<Empty>) -> EventLoopFuture<(StreamEvent<EchoRequest>) -> Void>
-  func noResponse(context: StreamingResponseCallContext<Empty>) -> EventLoopFuture<(StreamEvent<EchoRequest>) -> Void>
 }
 
-extension BidirectionalStreamingScenariosProvider {
-  internal var serviceName: String { return "BidirectionalStreamingScenarios" }
+extension BidirectionalStreamingMockProvider {
+  internal var serviceName: String { return "BidirectionalStreamingMock" }
 
   /// Determines, calls and returns the appropriate request handler, depending on the request's method.
   /// Returns nil for methods not handled by this service.
@@ -458,48 +250,6 @@ extension BidirectionalStreamingScenariosProvider {
     case "Ok":
       return BidirectionalStreamingCallHandler(callHandlerContext: callHandlerContext) { context in
         return self.ok(context: context)
-      }
-
-    case "FailedPrecondition":
-      return BidirectionalStreamingCallHandler(callHandlerContext: callHandlerContext) { context in
-        return self.failedPrecondition(context: context)
-      }
-
-    case "NoResponse":
-      return BidirectionalStreamingCallHandler(callHandlerContext: callHandlerContext) { context in
-        return self.noResponse(context: context)
-      }
-
-    default: return nil
-    }
-  }
-}
-
-/// To build a server, implement a class that conforms to this protocol.
-internal protocol RetryScenariosProvider: CallHandlerProvider {
-  func failThenSucceed(request: FailThenSucceedRequest, context: StatusOnlyCallContext) -> EventLoopFuture<FailThenSucceedResponse>
-  func authenticatedRpc(request: EchoRequest, context: StatusOnlyCallContext) -> EventLoopFuture<EchoResponse>
-}
-
-extension RetryScenariosProvider {
-  internal var serviceName: String { return "RetryScenarios" }
-
-  /// Determines, calls and returns the appropriate request handler, depending on the request's method.
-  /// Returns nil for methods not handled by this service.
-  internal func handleMethod(_ methodName: String, callHandlerContext: CallHandlerContext) -> GRPCCallHandler? {
-    switch methodName {
-    case "FailThenSucceed":
-      return UnaryCallHandler(callHandlerContext: callHandlerContext) { context in
-        return { request in
-          self.failThenSucceed(request: request, context: context)
-        }
-      }
-
-    case "AuthenticatedRpc":
-      return UnaryCallHandler(callHandlerContext: callHandlerContext) { context in
-        return { request in
-          self.authenticatedRpc(request: request, context: context)
-        }
       }
 
     default: return nil

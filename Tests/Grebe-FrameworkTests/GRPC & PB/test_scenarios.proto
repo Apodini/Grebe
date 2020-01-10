@@ -5,33 +5,20 @@
 
 syntax = "proto3";
 
-service UnaryScenarios {
-  rpc Ok (EchoRequest) returns (EchoResponse);
-  rpc FailedPrecondition (EchoRequest) returns (Empty);
-  rpc NoResponse (EchoRequest) returns (Empty);
+service UnaryMock {
+    rpc Ok (EchoRequest) returns (EchoResponse);
 }
 
-service ClientStreamingScenarios {
-  rpc Ok (stream EchoRequest) returns (EchoResponse);
-  rpc FailedPrecondition (stream EchoRequest) returns (Empty);
-  rpc NoResponse (stream EchoRequest) returns (Empty);
+service ServerStreamingMock {
+    rpc Ok (EchoRequest) returns (stream EchoResponse);
 }
 
-service ServerStreamingScenarios {
-  rpc Ok (EchoRequest) returns (stream EchoResponse);
-  rpc FailedPrecondition (EchoRequest) returns (stream Empty);
-  rpc NoResponse (EchoRequest) returns (stream Empty);
+service ClientStreamingMock {
+    rpc Ok (stream EchoRequest) returns (EchoResponse);
 }
 
-service BidirectionalStreamingScenarios {
-  rpc Ok (stream EchoRequest) returns (stream EchoResponse);
-  rpc FailedPrecondition (stream EchoRequest) returns (stream Empty);
-  rpc NoResponse (stream EchoRequest) returns (stream Empty);
-}
-
-service RetryScenarios {
-  rpc FailThenSucceed (FailThenSucceedRequest) returns (FailThenSucceedResponse);
-  rpc AuthenticatedRpc (EchoRequest) returns (EchoResponse);
+service BidirectionalStreamingMock {
+    rpc Ok (stream EchoRequest) returns (stream EchoResponse);
 }
 
 message EchoRequest {
@@ -40,18 +27,4 @@ message EchoRequest {
 
 message EchoResponse {
   string message = 1;
-}
-
-message Empty {}
-
-message FailThenSucceedRequest {
-  // Key used to partition failure counts
-  string key = 1;
-  // Number of failures that the service should respond with before succeeding
-  uint32 num_failures = 2;
-}
-
-message FailThenSucceedResponse {
-  // Number of failures recorded before succeeding
-  uint32 num_failures = 1;
 }
