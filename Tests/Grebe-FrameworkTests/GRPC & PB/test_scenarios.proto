@@ -22,9 +22,9 @@ service BidirectionalStreamingMock {
 }
 
 message EchoRequest {
-  string message = 1;
+  int32 id = 1;
 }
 
 message EchoResponse {
-  string message = 1;
+  int32 id = 1;
 }
