@@ -22,7 +22,6 @@ internal final class ClientStreamingMockClient: BaseMockClient, ClientStreamingM
 
     func ok(callOptions: CallOptions?) -> ClientStreamingCall<EchoRequest, EchoResponse> {
         let networkCall = mockNetworkCalls.removeFirst()
-        networkCall.expectation.fulfill()
         
         let call = ClientStreamingCall<EchoRequest, EchoResponse>(
             connection: connection,

@@ -31,7 +31,7 @@ internal final class ServerStreamingMockClient: BaseMockClient, ServerStreamingM
             XCTFail("Could not match the network call to the next MockNetworkCall.")
             fatalError()
         }
-        networkCall.expectation.fulfill()
+        networkCall.rightRequestExpectation.fulfill()
         let call = ServerStreamingCall<EchoRequest, EchoResponse>(
             connection: connection,
             path: "/ok",

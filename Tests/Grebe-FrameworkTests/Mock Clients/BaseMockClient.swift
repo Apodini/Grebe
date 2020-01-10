@@ -15,13 +15,14 @@ import Combine
 internal struct MockNetworkCall<Request: Message & Equatable, Response: Message> {
     let request: Request
     let response: Result<Response, GRPCError>
-    let expectation: XCTestExpectation
+    let rightRequestExpectation = XCTestExpectation(description: "Request matches next request in queue")
+    let rightResponseExpectation = XCTestExpectation(description: "Right response received")
 }
 
 internal struct MockNetworkStream<Request: Message & Equatable, Response: Message> {
     let request: AnyPublisher<Request, Error>
     let response: Result<Response, GRPCError>
-    let expectation: XCTestExpectation
+    let rightResponseExpectation = XCTestExpectation(description: "Right response received")
 }
 
 internal class BaseMockClient: GRPCClient {

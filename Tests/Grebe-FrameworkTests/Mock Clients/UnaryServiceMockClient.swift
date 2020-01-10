@@ -30,7 +30,7 @@ internal final class UnaryServiceMockClient: BaseMockClient, UnaryMockService {
             XCTFail("Could not match the network call to the next MockNetworkCall.")
             fatalError()
         }
-        networkCall.expectation.fulfill()
+        networkCall.rightRequestExpectation.fulfill()
         let unaryCall = UnaryCall<EchoRequest, EchoResponse>(
             connection: connection,
             path: "/ok",

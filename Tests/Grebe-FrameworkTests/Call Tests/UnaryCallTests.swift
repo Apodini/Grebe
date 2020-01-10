@@ -21,8 +21,7 @@ final class UnaryCallTests: XCTestCase {
     lazy var okMockCall: UnaryMockCall = {
         let request = EchoRequest(id: 1)
         let response: Result<EchoResponse, GRPCError> = Result.success(EchoResponse(id: 1))
-        let expectation = XCTestExpectation(description: "Unary call completes successfully")
-        return UnaryMockCall(request: request, response: response, expectation: expectation)
+        return UnaryMockCall(request: request, response: response)
     }()
     
     override func setUp() {
@@ -41,7 +40,7 @@ final class UnaryCallTests: XCTestCase {
         }
         
         let call = GUnaryCall(request: mockCall.request, closure: mockClient.ok)
-        var receivedResponse: EchoResponse? = nil
+        var receivedResponse: EchoResponse?
         
         call.execute()
             .sink(
@@ -52,11 +51,17 @@ final class UnaryCallTests: XCTestCase {
                     case .finished:
                         XCTAssertNotNil(receivedResponse)
                         XCTAssertEqual(receivedResponse!.id, try! mockCall.response.get().id)
+                        mockCall.rightResponseExpectation.fulfill()
                 } },
                 receiveValue: { response in
                     receivedResponse = response
                 }
             )
             .store(in: &cancellables)
+        
+        wait(
+            for: [mockCall.rightRequestExpectation, mockCall.rightResponseExpectation],
+            timeout: 0.2
+        )
     }
 }

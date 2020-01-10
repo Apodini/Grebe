@@ -25,7 +25,6 @@ internal final class BidrectionalStreamingMockClient: BaseMockClient, Bidirectio
         handler: @escaping (EchoResponse) -> Void
     ) -> BidirectionalStreamingCall<EchoRequest, EchoResponse> {
         let networkCall = mockNetworkCalls.removeFirst()
-        networkCall.expectation.fulfill()
 
         let call = BidirectionalStreamingCall<EchoRequest, EchoResponse>(
             connection: connection,
