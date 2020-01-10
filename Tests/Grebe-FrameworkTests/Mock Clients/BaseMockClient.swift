@@ -10,9 +10,16 @@ import GRPC
 import NIO
 import SwiftProtobuf
 import XCTest
+import Combine
 
 internal struct MockNetworkCall<Request: Message & Equatable, Response: Message> {
     let request: Request
+    let response: Result<Response, GRPCError>
+    let expectation: XCTestExpectation
+}
+
+internal struct MockNetworkStream<Request: Message & Equatable, Response: Message> {
+    let request: AnyPublisher<Request, Error>
     let response: Result<Response, GRPCError>
     let expectation: XCTestExpectation
 }

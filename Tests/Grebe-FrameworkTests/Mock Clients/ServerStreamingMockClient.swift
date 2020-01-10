@@ -1,5 +1,5 @@
 //
-//  File.swift
+//  ServerStreamingMockClient.swift
 //
 //
 //  Created by Tim Mewe on 10.01.20.

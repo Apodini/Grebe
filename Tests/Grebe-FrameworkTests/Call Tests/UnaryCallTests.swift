@@ -41,6 +41,8 @@ final class UnaryCallTests: XCTestCase {
         }
         
         let call = GUnaryCall(request: mockCall.request, closure: mockClient.ok)
+        var receivedResponse: EchoResponse? = nil
+        
         call.execute()
             .sink(
                 receiveCompletion: {
@@ -48,16 +50,11 @@ final class UnaryCallTests: XCTestCase {
                     case .failure(let status):
                         XCTFail("Unexpected status: " + status.localizedDescription)
                     case .finished:
-                        mockCall.expectation.fulfill()
+                        XCTAssertNotNil(receivedResponse)
+                        XCTAssertEqual(receivedResponse!.id, try! mockCall.response.get().id)
                 } },
                 receiveValue: { response in
-                    switch mockCall.response {
-                    case .success(let mockResponse):
-                        XCTAssert(response.id == mockResponse.id)
-                    default:
-                        XCTFail("Respones do not match")
-                    }
-                    
+                    receivedResponse = response
                 }
             )
             .store(in: &cancellables)
