@@ -21,6 +21,7 @@ extension Generator {
 
     private func printGrebeImplementation() {
         for method in service.methods {
+            self.method = method
             switch streamingType(method) {
                 case .unary:
                     println("func \(methodFunctionName)(request: \(methodInputName), callOptions: CallOptions?, callClosure: CallClosure) -> AnyPublisher<Response, GRPCStatus> {")

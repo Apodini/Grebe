@@ -12,6 +12,7 @@ class Generator {
     private var printer: CodePrinter
     internal var file: FileDescriptor
     internal var service: ServiceDescriptor! // context during generation
+    internal var method: MethodDescriptor! // context during generation
     internal let protobufNamer: SwiftProtobufNamer
 
     init(_ file: FileDescriptor) {
@@ -25,7 +26,11 @@ class Generator {
         printMain()
     }
 
-    func printMain() {
+    public var code: String {
+        return printer.content
+    }
+
+    private func printMain() {
         printer.print("""
         //
         // DO NOT EDIT.
@@ -39,9 +44,26 @@ class Generator {
             "Grebe_Framework"
         ]
 
+        for moduleName in moduleNames.sorted() {
+            println("import \(moduleName)")
+        }
+
         for service in file.services {
             self.service = service
             printGrebe()
         }
+    }
+
+    internal func println(_ text: String = "") {
+        printer.print(text)
+        printer.print("\n")
+    }
+
+    internal func indent() {
+        printer.indent()
+    }
+
+    internal func outdent() {
+        printer.outdent()
     }
 }

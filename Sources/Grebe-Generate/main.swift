@@ -51,7 +51,7 @@ do {
 }
 
 enum FileNaming: String {
-  case FullPath
-  case PathToUnderscores
-  case DropPath
+    case FullPath
+    case PathToUnderscores
+    case DropPath
 }
