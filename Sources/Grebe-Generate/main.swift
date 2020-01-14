@@ -20,7 +20,7 @@ private let protoFilePath = parser.add(
     completion: .filename
 )
 
-private let destinationPath = parser.add(
+private let destinationFilePath = parser.add(
     option: "--destination",
     shortName: "-d",
     kind: String.self,
@@ -28,9 +28,24 @@ private let destinationPath = parser.add(
     completion: .filename
 )
 
-let tool = CommandLineTool()
+// The first argument specifies the path of the executable file
+private let currentPath = CommandLine.arguments.removeFirst()
 do {
-    try tool.run()
+    let result = try parser.parse(CommandLine.arguments)
+    guard let protoPath = result.get(protoFilePath) else {
+        throw ArgumentParserError.expectedValue(option: "--proto")
+    }
+    let destinationPath = result.get(destinationFilePath) ?? currentPath
+
+    let tool = CommandLineTool()
+    do {
+        try tool.run()
+    } catch {
+        print("Whoops! An error occurred: \(error)")
+    }
+
+} catch let error as ArgumentParserError {
+    print(error.description)
 } catch {
-    print("Whoops! An error occurred: \(error)")
+    print(error.localizedDescription)
 }
