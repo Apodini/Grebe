@@ -8,10 +8,12 @@
 import Foundation
 
 public final class CommandLineTool {
-    private let arguments: [String]
+    private let protoPath: String
+    private let destinationPath: String
     
-    public init(arguments: [String] = CommandLine.arguments) {
-        self.arguments = arguments
+    public init(protoPath: String, destinationPath: String) {
+        self.protoPath = protoPath
+        self.destinationPath = destinationPath
     }
     
     public func run() throws {

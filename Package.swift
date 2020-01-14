@@ -15,10 +15,15 @@ let package = Package(
     dependencies: [
         .package(url: "https://github.com/grpc/grpc-swift.git", from: "1.0.0-alpha.7"),
         .package(url: "https://github.com/apple/swift-package-manager.git", from: "0.5.0"),
+        .package(url: "https://github.com/apple/swift-protobuf.git", from: "1.7.0"),
     ],
     targets: [
         .target(name: "Grebe-Framework", dependencies: ["GRPC"]),
-        .target(name: "Grebe-Generate", dependencies: ["Grebe-Framework", "SPMUtility"]),
+        .target(name: "Grebe-Generate", dependencies: [
+            "Grebe-Framework",
+            "SPMUtility",
+            "SwiftProtobuf",
+            "SwiftProtobufPluginLibrary"]),
         .testTarget(name: "Grebe-FrameworkTests", dependencies: ["Grebe-Framework"]),
     ]
 )

@@ -37,7 +37,7 @@ do {
     }
     let destinationPath = result.get(destinationFilePath) ?? currentPath
 
-    let tool = CommandLineTool()
+    let tool = CommandLineTool(protoPath: protoPath, destinationPath: destinationPath)
     do {
         try tool.run()
     } catch {
@@ -48,4 +48,10 @@ do {
     print(error.description)
 } catch {
     print(error.localizedDescription)
+}
+
+enum FileNaming: String {
+  case FullPath
+  case PathToUnderscores
+  case DropPath
 }
