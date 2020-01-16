@@ -19,32 +19,26 @@ public final class CommandLineTool {
     }
     
     public func run() throws {
-        print("Hello World!")
+        let protoName = splitPath(pathname: protoPath).base
         let protoString = try String(contentsOfFile: protoPath)
-        var response = Google_Protobuf_Compiler_CodeGeneratorResponse()
-        let protoDesriptor = try Google_Protobuf_FileDescriptorProto(textFormatString: protoString)
-        let descriptorSet = DescriptorSet(protos: [protoDesriptor])
+        let protoFile = ProtoFile(name: protoName, content: protoString)
+        let generator = Generator(protoFile)
         
-        for fileDesriptor in descriptorSet.files {
-            guard !fileDesriptor.services.isEmpty else { return }
-            
-            let fileName = outputFileName(fileDescriptor: fileDesriptor)
-            let generator = Generator(fileDesriptor)
-            
-            var file = Google_Protobuf_Compiler_CodeGeneratorResponse.File()
-            file.name = fileName
-            file.content = generator.code
-            response.file.append(file)
-        }
-        
-        let serializedResponse = try response.serializedData()
-        Stdout.write(bytes: serializedResponse)
+        try writeFile(name: protoName, content: generator.code)
     }
     
-    private func outputFileName(fileDescriptor: FileDescriptor) -> String {
-        let ext = "." + "grebe" + ".swift"
-        let pathParts = splitPath(pathname: fileDescriptor.name)
-        return pathParts.base + ext
+    private func writeFile(name: String, content: String) throws {
+        let outputFile = outputFileName(name: name, path: destinationPath)
+        try content.write(
+            toFile: outputFile,
+            atomically: true,
+            encoding: .utf8
+        )
+    }
+    
+    private func outputFileName(name: String, path: String) -> String {
+        let ext = name + "." + "grebe" + ".swift"
+        return path + "/" + ext
     }
     
     // from apple/swift-protobuf/Sources/protoc-gen-swift/StringUtils.swift

@@ -20,31 +20,32 @@ extension Generator {
     }
 
     private func printGrebeImplementation() {
-        for method in service.methods {
+        for method in service.functions {
             self.method = method
-            switch streamingType(method) {
+            switch method.stramingType {
                 case .unary:
-                    println("func \(methodFunctionName)(request: \(methodInputName), callOptions: CallOptions?, callClosure: CallClosure) -> AnyPublisher<Response, GRPCStatus> {")
+                    println("func \(method.name)(request: \(method.request), callOptions: CallOptions?, callClosure: CallClosure) -> AnyPublisher<\(method.response), GRPCStatus> {")
                     indent()
                     println("GUnaryCall(request: request, callOptions: callOptions, closure: callClosure).execute()")
 
                 case .serverStreaming:
-                    println("func \(methodFunctionName)(request: \(methodInputName), callOptions: CallOptions?, callClosure: CallClosure) -> AnyPublisher<Response, GRPCStatus> {")
+                    println("func \(method.name)(request: \(method.request), callOptions: CallOptions?, callClosure: CallClosure) -> AnyPublisher<\(method.response), GRPCStatus> {")
                     indent()
                     println("GServerStreamingCall(request: request, callOptions: callOptions, closure: callClosure).execute()")
 
                 case .clientStreaming:
-                    println("func \(methodFunctionName)(request: AnyPublisher<\(methodInputName),Error> , callOptions: CallOptions?, callClosure: CallClosure) -> AnyPublisher<Response, GRPCStatus> {")
+                    println("func \(method.name)(request: AnyPublisher<\(method.request),Error> , callOptions: CallOptions?, callClosure: CallClosure) -> AnyPublisher<\(method.response), GRPCStatus> {")
                     indent()
                     println("GClientStreamingCall(request: request, callOptions: callOptions, closure: callClosure).execute()")
 
                 case .bidirectionalStreaming:
-                    println("func \(methodFunctionName)(request: AnyPublisher<\(methodInputName),Error> , callOptions: CallOptions?, callClosure: CallClosure) -> AnyPublisher<Response, GRPCStatus> {")
+                    println("func \(method.name)(request: AnyPublisher<\(method.request),Error> , callOptions: CallOptions?, callClosure: CallClosure) -> AnyPublisher<\(method.response), GRPCStatus> {")
                     indent()
                     println("GBidirectionalStreamingCall(request: request, callOptions: callOptions, closure: callClosure).execute()")
             }
+            outdent()
+            println("}")
+            println()
         }
-        outdent()
-        println("}")
     }
 }

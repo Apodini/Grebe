@@ -10,18 +10,13 @@ import SwiftProtobufPluginLibrary
 
 class Generator {
     private var printer: CodePrinter
-    internal var file: FileDescriptor
-    internal var service: ServiceDescriptor! // context during generation
-    internal var method: MethodDescriptor! // context during generation
-    internal let protobufNamer: SwiftProtobufNamer
+    internal var file: ProtoFile
+    internal var service: ProtoService! // context during generation
+    internal var method: ProtoFunction! // context during generation
 
-    init(_ file: FileDescriptor) {
+    init(_ file: ProtoFile) {
         self.file = file
         printer = CodePrinter()
-        protobufNamer = SwiftProtobufNamer(
-            currentFile: file,
-            protoFileToModuleMappings: ProtoFileToModuleMappings()
-        )
 
         printMain()
     }
