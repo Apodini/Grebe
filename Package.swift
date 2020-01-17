@@ -10,7 +10,8 @@ let package = Package(
     ],
     products: [
         .library(name: "Grebe-Framework", targets: ["Grebe-Framework"]),
-        .executable(name: "Grebe-Generate", targets: ["Grebe-Generate"])
+        .executable(name: "Grebe-Generate", targets: ["Grebe-Generate"]),
+        .executable(name: "Grebe-CLI", targets: ["Grebe-CLI"])
     ],
     dependencies: [
         .package(url: "https://github.com/grpc/grpc-swift.git", from: "1.0.0-alpha.7"),
@@ -23,6 +24,7 @@ let package = Package(
             "Grebe-Framework",
             "SPMUtility",
             "SwiftProtobufPluginLibrary"]),
+        .target(name: "Grebe-CLI"),
         .testTarget(name: "Grebe-FrameworkTests", dependencies: ["Grebe-Framework"]),
     ]
 )
