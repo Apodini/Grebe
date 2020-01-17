@@ -54,6 +54,8 @@ struct ProtoFunction {
         }
         self.response = String(responsePart)
         self.stramingType = type
+        
+        print("Found Method: \(name) - request: \(request) - response: \(response) - type: \(type)")
     }
     
     enum StreamType {
