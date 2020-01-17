@@ -15,7 +15,10 @@ struct ProtoFile {
     init(name: String, content: String) {
         print("New Proto File")
         self.name = name
-        let linesArray = content.components(separatedBy: "\n").dropFirst()
+        let linesArray = content.components(separatedBy: "\n")
+            .filter { !$0.starts(with: "//") }
+            .filter { !$0.isEmpty }
+            .dropFirst()
         let noFirstLine = linesArray.joined(separator: "\n")
         let noLineBreaks = noFirstLine.filter { $0 != "\n" }
         let contentArray = noLineBreaks.components(separatedBy: "}").filter { $0 != "" }
