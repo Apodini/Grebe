@@ -1,5 +1,5 @@
 //
-//  File.swift
+//  ProtoService.swift
 //
 //
 //  Created by Tim Mewe on 16.01.20.
@@ -9,26 +9,25 @@ import Foundation
 
 struct ProtoService {
     let name: String
-    var functions = [ProtoFunction]()
+    var methods = [ProtoMethod]()
     
     init?(content: String) {
-        let array = content.components(separatedBy: "{")
+        let array = content.components(separatedBy: "{") // Seperate service name and methods
         
         // Parse Name
         guard let declaration = array.first else { return nil }
-        let name = declaration.replacingOccurrences(of: "service", with: "")
-        self.name = name.replacingOccurrences(of: " ", with: "")
+        self.name = declaration
+            .replacingOccurrences(of: "service", with: "") // Remove the service declaration
+            .replacingOccurrences(of: " ", with: "") // Remove spaces
         
-        print("\nFound Service: \(name)")
+        print("\nFound Service: \(self.name)")
         
-        guard let functionsContent = array.last else { return }
-        let functions = functionsContent.components(separatedBy: ";")
-            .filter { !$0.isEmpty }
-            .map { $0.dropFirst(2) }
-        
-        for function in functions {
-            guard let f = ProtoFunction(content: String(function)) else { continue }
-            self.functions.append(f)
-        }
+        // Parse functions
+        guard let methodsContent = array.last else { return }
+        self.methods = methodsContent
+            .split(separator: ";") // Seperates each method
+            .map(String.init) // Map to String
+            .map(ProtoMethod.init) // Create ProtoMethod
+            .compactMap { $0 } // Filter nil objects
     }
 }

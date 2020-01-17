@@ -1,5 +1,5 @@
 //
-//  File.swift
+//  Generator.swift
 //
 //
 //  Created by Tim Mewe on 14.01.20.
@@ -12,7 +12,7 @@ class Generator {
     private var printer: CodePrinter
     internal var file: ProtoFile
     internal var service: ProtoService! // context during generation
-    internal var method: ProtoFunction! // context during generation
+    internal var method: ProtoMethod! // context during generation
 
     init(_ file: ProtoFile) {
         self.file = file
@@ -34,7 +34,7 @@ class Generator {
         // Source: \(file.name)
         //\n
         """)
-        
+
         let moduleNames = [
             "Grebe_Framework"
         ]
@@ -60,5 +60,11 @@ class Generator {
 
     internal func outdent() {
         printer.outdent()
+    }
+}
+
+extension Generator {
+    internal var serviceClassName: String {
+        return service.name + "Service"
     }
 }

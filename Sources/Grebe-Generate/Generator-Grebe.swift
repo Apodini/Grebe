@@ -1,5 +1,5 @@
 //
-//  File.swift
+//  Generator-Grebe.swift
 //
 //
 //  Created by Tim Mewe on 14.01.20.
@@ -20,7 +20,7 @@ extension Generator {
     }
 
     private func printGrebeImplementation() {
-        for method in service.functions {
+        for method in service.methods {
             self.method = method
             switch method.stramingType {
                 case .unary:

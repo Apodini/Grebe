@@ -1,5 +1,5 @@
 //
-//  File.swift
+//  CommandLineTool.swift
 //
 //
 //  Created by Tim Mewe on 14.01.20.
