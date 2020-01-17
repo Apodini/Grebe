@@ -6,8 +6,6 @@
 //
 
 import Foundation
-import SwiftProtobuf
-import SwiftProtobufPluginLibrary
 
 public final class CommandLineTool {
     private let protoPath: String
