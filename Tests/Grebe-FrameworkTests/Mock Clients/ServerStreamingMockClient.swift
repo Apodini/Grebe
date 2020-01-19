@@ -11,7 +11,7 @@ import SwiftProtobuf
 import XCTest
 
 internal final class ServerStreamingMockClient: BaseMockClient, ServerStreamingMockService {
-    typealias ServerStreamingMockCall = MockNetworkCall<EchoRequest, EchoResponse>
+    typealias ServerStreamingMockCall = UnaryMock<EchoRequest, EchoResponse>
 
     var mockNetworkCalls: [ServerStreamingMockCall]
 
@@ -31,7 +31,8 @@ internal final class ServerStreamingMockClient: BaseMockClient, ServerStreamingM
             XCTFail("Could not match the network call to the next MockNetworkCall.")
             fatalError()
         }
-        networkCall.rightRequestExpectation.fulfill()
+        networkCall.expectation.fulfill()
+        
         let call = ServerStreamingCall<EchoRequest, EchoResponse>(
             connection: connection,
             path: "/ok",
@@ -41,7 +42,7 @@ internal final class ServerStreamingMockClient: BaseMockClient, ServerStreamingM
             handler: handler
         )
 
-        let promise = try! eventLoop.makeSucceededFuture(networkCall.response.get())
+        let promise = try! channel.eventLoop.makeSucceededFuture(networkCall.response.get())
         return call
     }
 }

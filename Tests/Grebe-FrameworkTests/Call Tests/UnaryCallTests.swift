@@ -13,19 +13,15 @@ import SwiftProtobuf
 import XCTest
 
 final class UnaryCallTests: XCTestCase {
-    typealias UnaryMockCall = MockNetworkCall<EchoRequest, EchoResponse>
+    typealias Request = EchoRequest
+    typealias Response = EchoResponse
     
-    private var mockClient: UnaryServiceMockClient!
+    private var mockClient: UnaryMockClient<Request, Response> = UnaryMockClient()
     private var cancellables: Set<AnyCancellable> = []
     
-    lazy var okMockCall: UnaryMockCall = {
-        let request = EchoRequest(id: 1)
-        let response: Result<EchoResponse, GRPCError> = Result.success(EchoResponse(id: 1))
-        return UnaryMockCall(request: request, response: response)
-    }()
-    
     override func setUp() {
-        mockClient = UnaryServiceMockClient(mockNetworkCalls: [okMockCall])
+        mockClient.mockNetworkCalls = []
+        super.setUp()
     }
     
     override func tearDown() {
@@ -33,35 +29,31 @@ final class UnaryCallTests: XCTestCase {
         super.tearDown()
     }
     
-    func testOk() {
-        guard let mockCall = mockClient.mockNetworkCalls.first else {
-            XCTFail("No mock network calls left")
-            return
-        }
+    func test() {
+        let expectedRequest = EchoRequest(id: 1)
+        let expectedResponse = EchoResponse(id: 1)
+        let unaryMock = UnaryMock(request: expectedRequest, response: .success(expectedResponse))
         
-        let call = GUnaryCall(request: mockCall.request, closure: mockClient.ok)
-        var receivedResponse: EchoResponse?
+        mockClient.mockNetworkCalls = [unaryMock]
         
+        let responseExpectation = XCTestExpectation(description: "Correct Response")
+        responseExpectation.expectedFulfillmentCount = 2
+        
+        let call = GUnaryCall(request: expectedRequest, closure: mockClient.test)
         call.execute()
-            .sink(
-                receiveCompletion: {
-                    switch $0 {
-                    case .failure(let status):
-                        XCTFail("Unexpected status: " + status.localizedDescription)
-                    case .finished:
-                        XCTAssertNotNil(receivedResponse)
-                        XCTAssertEqual(receivedResponse!.id, try! mockCall.response.get().id)
-                        mockCall.rightResponseExpectation.fulfill()
-                } },
-                receiveValue: { response in
-                    receivedResponse = response
+            .sink(receiveCompletion: {
+                switch $0 {
+                case .failure(let status):
+                    XCTFail("Unexpected status: " + status.localizedDescription)
+                case .finished:
+                    responseExpectation.fulfill()
                 }
-            )
-            .store(in: &cancellables)
+            }, receiveValue: { response in
+                XCTAssert(response == expectedResponse)
+                responseExpectation.fulfill()
+            }
+        ).store(in: &cancellables)
         
-        wait(
-            for: [mockCall.rightRequestExpectation, mockCall.rightResponseExpectation],
-            timeout: 0.2
-        )
+        wait(for: [unaryMock.expectation, responseExpectation], timeout: 0.1, enforceOrder: true)
     }
 }

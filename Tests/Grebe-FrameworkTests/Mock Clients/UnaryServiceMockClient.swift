@@ -5,45 +5,93 @@
 //  Created by Tim Mewe on 10.01.20.
 //
 
-import GRPC
+import XCTest
 import NIO
 import SwiftProtobuf
-import XCTest
 
-internal final class UnaryServiceMockClient: BaseMockClient, UnaryMockService {
-    typealias UnaryMockCall = MockNetworkCall<EchoRequest, EchoResponse>
+@testable import GRPC
 
-    var mockNetworkCalls: [UnaryMockCall]
+internal final class UnaryMockClient<Request: Message & Equatable, Response: Message>: BaseMockClient {
+    typealias UnaryMockCall = UnaryMock<Request, Response>
 
-    init(mockNetworkCalls: [UnaryMockCall]) {
-        self.mockNetworkCalls = mockNetworkCalls
-        super.init()
-    }
+    var mockNetworkCalls: [UnaryMockCall] = []
 
-    func ok(
-        _ request: EchoRequest,
-        callOptions: CallOptions?
-    ) -> UnaryCall<EchoRequest, EchoResponse> {
+    func test(_ request: Request, callOptions: CallOptions?) -> UnaryCall<Request, Response> {
         let networkCall = mockNetworkCalls.removeFirst()
 
+        // Check if the Request correspons to the expected Response
         guard networkCall.request == request else {
             XCTFail("Could not match the network call to the next MockNetworkCall.")
             fatalError()
         }
-        networkCall.rightRequestExpectation.fulfill()
-        let unaryCall = UnaryCall<EchoRequest, EchoResponse>(
+        
+        networkCall.expectation.fulfill()
+        
+        // Create our UnaryCall and advance the EventLoop to register all nescessary ChannelHanders
+        let unaryCall = UnaryCall<Request, Response>(
             connection: connection,
-            path: "/ok",
+            path: "/test",
             request: request,
             callOptions: defaultCallOptions,
             errorDelegate: nil
         )
-
-        let promise = try! eventLoop.makeSucceededFuture(networkCall.response.get())
+        channel.embeddedEventLoop.advanceTime(by: .nanoseconds(1))
         
-        //Assign mocked response to unary call
-        //unaryCall.response = promise
+        // Creates a subchannel for handling HTTP2 Streams with the following setup:
+        //                                                 [I] ↓↑ [O]
+        // GRPCClientChannelHandler<EchoRequest, EchoResponse> ↓↑ GRPCClientChannelHandler<EchoRequest, EchoResponse> [handler0]
+        // GRPCClientUnaryResponseChannelHandler<EchoResponse> ↓↑                                                     [handler1]
+        //             UnaryRequestChannelHandler<EchoRequest> ↓↑                                                     [handler2]
+        //
+        // We need to inject our `UnaryMockInboundHandler` after the GRPCClientChannelHandler because a
+        // GRPCClientChannelHandler has the following Inbound Types:
+        //     public typealias InboundIn = HTTP2Frame
+        //     public typealias InboundOut = GRPCClientResponsePart<Response>
+        // --> We get the subchannel, get the position of the GRPCClientChannelHandler and add our mock handler after that:
+        let unaryMockInboundHandler = UnaryMockInboundHandler<Response>()
+        unaryCall.subchannel
+            .map { subchannel in
+                subchannel.pipeline.handler(type: GRPCClientChannelHandler<Request, Response>.self).map { clientChannelHandler in
+                    subchannel.pipeline.addHandler(unaryMockInboundHandler, position: .after(clientChannelHandler))
+                }
+            }.whenSuccess { _ in }
+        channel.embeddedEventLoop.advanceTime(by: .nanoseconds(1))
+        
+        // State after injecting our UnaryMockInboundHandler:
+        //                                                 [I] ↓↑ [O]
+        // GRPCClientChannelHandler<EchoRequest, EchoResponse> ↓↑ GRPCClientChannelHandler<EchoRequest, EchoResponse> [handler0]
+        //               UnaryMockInboundHandler<EchoResponse> ↓↑                                                     [handler3]
+        // GRPCClientUnaryResponseChannelHandler<EchoResponse> ↓↑                                                     [handler1]
+        //             UnaryRequestChannelHandler<EchoRequest> ↓↑                                                     [handler2]
+        
+        // Trigger our `fireChannelRead` that is going to propagate inbound.
+        unaryMockInboundHandler.respondWithMock(networkCall.response)
         
         return unaryCall
+    }
+}
+
+/// UnaryMockInboundHandler
+/// Allows us to inject mock responses into the subchannel pipeline setup by a UnaryCall.
+public class UnaryMockInboundHandler<Response: Message>: ChannelInboundHandler {
+    public typealias InboundIn = Any
+    public typealias InboundOut = GRPCClientResponsePart<Response>
+    
+    private var context: ChannelHandlerContext? = nil
+    
+    public func handlerAdded(context: ChannelHandlerContext) {
+        self.context = context
+    }
+    
+    func respondWithMock(_ mock: Result<Response, GRPCError>) {
+        let response: GRPCClientResponsePart<Response>
+        switch mock {
+        case let .success(success):
+            response = .message(_Box(success))
+        case let .failure(error):
+            response = .status(error.asGRPCStatus())
+        }
+        
+        context?.fireChannelRead(wrapInboundOut(response))
     }
 }
