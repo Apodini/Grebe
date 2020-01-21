@@ -21,6 +21,15 @@ internal struct UnaryMock<Request: Message & Equatable, Response: Message> {
     let expectation = XCTestExpectation(description: "Request matches the expected UnaryMock Request")
 }
 
+internal struct ServerStreamingMock<Request: Message & Equatable, Response: Message> {
+    typealias Request = Request
+    typealias Response = Response
+    
+    let request: Request
+    let response: Result<Response, GRPCError>
+    let expectation = XCTestExpectation(description: "Request matches the expected ServerStreamingMock Request")
+}
+
 internal struct MockNetworkStream<Request: Message & Equatable, Response: Message> {
     let request: AnyPublisher<Request, Error>
     let response: Result<Response, GRPCError>

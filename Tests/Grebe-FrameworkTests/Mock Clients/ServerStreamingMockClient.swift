@@ -10,21 +10,16 @@ import NIO
 import SwiftProtobuf
 import XCTest
 
-internal final class ServerStreamingMockClient: BaseMockClient, ServerStreamingMockService {
-    typealias ServerStreamingMockCall = UnaryMock<EchoRequest, EchoResponse>
+internal final class ServerStreamingMockClient<Request: Message & Equatable, Response: Message>: BaseMockClient {
+    typealias ServerStreamingMockCall = ServerStreamingMock<Request, Response>
 
-    var mockNetworkCalls: [ServerStreamingMockCall]
+    var mockNetworkCalls: [ServerStreamingMockCall] = []
 
-    init(mockNetworkCalls: [ServerStreamingMockCall]) {
-        self.mockNetworkCalls = mockNetworkCalls
-        super.init()
-    }
-
-    func ok(
-        _ request: EchoRequest,
+    func test(
+        _ request: Request,
         callOptions: CallOptions?,
-        handler: @escaping (EchoResponse) -> Void
-    ) -> ServerStreamingCall<EchoRequest, EchoResponse> {
+        handler: @escaping (Response) -> Void
+    ) -> ServerStreamingCall<Request, Response> {
         let networkCall = mockNetworkCalls.removeFirst()
 
         guard networkCall.request == request else {
@@ -32,17 +27,34 @@ internal final class ServerStreamingMockClient: BaseMockClient, ServerStreamingM
             fatalError()
         }
         networkCall.expectation.fulfill()
-        
-        let call = ServerStreamingCall<EchoRequest, EchoResponse>(
+
+        let call = ServerStreamingCall<Request, Response>(
             connection: connection,
-            path: "/ok",
+            path: "/test",
             request: request,
             callOptions: defaultCallOptions,
             errorDelegate: nil,
             handler: handler
         )
 
-        let promise = try! channel.eventLoop.makeSucceededFuture(networkCall.response.get())
+        channel.embeddedEventLoop.advanceTime(by: .nanoseconds(1))
+
+        let unaryMockInboundHandler = UnaryMockInboundHandler<Response>()
+        call.subchannel
+            .map { subchannel in
+                subchannel.pipeline.handler(type: GRPCClientChannelHandler<Request, Response>.self).map { clientChannelHandler in
+                    subchannel.pipeline.addHandler(unaryMockInboundHandler, position: .after(clientChannelHandler))
+                }
+            }.whenSuccess { _ in }
+        channel.embeddedEventLoop.advanceTime(by: .nanoseconds(1))
+
+        unaryMockInboundHandler.respondWithMock(networkCall.response)
+
         return call
     }
+}
+
+public class ServerStreamingMockInboundHandler<Response: Message>: ChannelInboundHandler {
+    public typealias InboundIn = Any
+    public typealias InboundOut = GRPCClientResponsePart<Response>
 }

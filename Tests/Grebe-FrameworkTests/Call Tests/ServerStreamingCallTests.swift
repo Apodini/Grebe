@@ -1,117 +1,62 @@
-////
-////  ServerStreamingCallTests.swift
-////
-////
-////  Created by Tim Mewe on 25.12.19.
-////
 //
-//import Combine
-//@testable import Grebe_Framework
-//import GRPC
-//import NIO
-//import XCTest
+//  ServerStreamingCallTests.swift
 //
-//final class ServerStreamingCallTests: BaseCallTest {
-//    var client: GClient<ServerStreamingScenariosServiceClient>!
-//    
-//    override func setUp() {
-//        super.setUp()
-//        serverEventLoopGroup = try? makeTestServer(services: [ServerStreamingTestService()])
-//        client = makeTestClient()
-//    }
-//    
-//    override func tearDown() {
-//        try? client.service.connection.close().wait()
-//        super.tearDown()
-//    }
-//    
-//    func testOk() {
-//        let promise = expectation(description: "Call completes successfully")
-//        
-//        let testString = "hello"
-//        let request = EchoRequest.with { $0.message = testString }
-//        let call = GServerStreamingCall(request: request, closure: client.service.ok)
-//        
-//        call.execute()
-//            .print()
-//            .filter { $0.message == testString }
-//            .count()
-//            .sink(
-//                receiveCompletion: {
-//                    switch $0 {
-//                    case .failure(let status):
-//                        XCTFail("Unexpected status: " + status.localizedDescription)
-//                    case .finished:
-//                        promise.fulfill()
-//                } },
-//                receiveValue: { count in
-//                    XCTAssertEqual(count, 3)
-//                }
-//            )
-//            .store(in: &cancellables)
-//        
-//        wait(for: [promise], timeout: 0.2)
-//    }
-//    
-//    func testFailedPrecondition() {
-//        let promise = expectation(description: "Call fails with failed precondition status")
-//        
-//        let request = EchoRequest.with { $0.message = "hello" }
-//        let call = GServerStreamingCall(request: request, closure: client.service.failedPrecondition)
-//        
-//        call.execute()
-//            .sink(
-//                receiveCompletion: {
-//                    switch $0 {
-//                    case .failure(let status):
-//                        if status.code == .failedPrecondition {
-//                            promise.fulfill()
-//                        } else {
-//                            XCTFail("Unexpected status: " + status.localizedDescription)
-//                        }
-//                    case .finished:
-//                        XCTFail("Call should not succeed")
-//                } },
-//                receiveValue: { _ in
-//                    XCTFail("Call should not return a response")
-//                }
-//            )
-//            .store(in: &cancellables)
-//        
-//        wait(for: [promise], timeout: 0.2)
-//    }
-//    
-//    func testNoResponse() {
-//        let promise = expectation(description: "Call fails with deadline exceeded status")
-//        
-//        let options = CallOptions(timeout: try! .milliseconds(50))
-//        let request = EchoRequest.with { $0.message = "hello" }
-//        let call = GServerStreamingCall(
-//            request: request,
-//            callOptions: options,
-//            closure: client.service.noResponse
-//        )
-//        
-//        call.execute()
-//            .sink(
-//                receiveCompletion: { switch $0 {
-//                case .failure(let status):
-//                    if status.code == .deadlineExceeded {
-//                        promise.fulfill()
-//                    } else {
-//                        XCTFail("Unexpected status: " + status.localizedDescription)
-//                    }
-//                case .finished:
-//                    XCTFail("Call should not succeed")
-//                } },
-//                receiveValue: { _ in
-//                    XCTFail("Call should not return a response")
-//                }
-//            )
-//            .store(in: &cancellables)
-//        
-//        wait(for: [promise], timeout: 0.2)
-//    }
-//}
 //
-//extension ServerStreamingScenariosServiceClient: GRPCClientInitializable {}
+//  Created by Tim Mewe on 25.12.19.
+//
+
+import Combine
+@testable import Grebe_Framework
+import GRPC
+import NIO
+import XCTest
+
+final class ServerStreamingCallTests: XCTestCase {
+    typealias Request = EchoRequest
+    typealias Response = EchoResponse
+    
+    private var mockClient: ServerStreamingMockClient<Request, Response> = ServerStreamingMockClient()
+    private var cancellables: Set<AnyCancellable> = []
+    
+    override func setUp() {
+        mockClient.mockNetworkCalls = []
+        super.setUp()
+    }
+    
+    override func tearDown() {
+        XCTAssert(mockClient.mockNetworkCalls.isEmpty)
+        super.tearDown()
+    }
+    
+    func test() {
+        let expectedRequest = EchoRequest(id: 1)
+        let expectedResponse = EchoResponse(id: 1)
+        let serverStreamingMock = ServerStreamingMock(request: expectedRequest, response: .success(expectedResponse))
+        
+        mockClient.mockNetworkCalls = [serverStreamingMock]
+        
+        let responseExpectation = XCTestExpectation(description: "Correct Response")
+        responseExpectation.expectedFulfillmentCount = 2
+        
+        let call = GServerStreamingCall(request: expectedRequest, closure: mockClient.test)
+        
+        call.execute()
+            .sink(
+                receiveCompletion: {
+                    switch $0 {
+                    case .failure(let status):
+                        XCTFail("Unexpected status: " + status.localizedDescription)
+                    case .finished:
+                        responseExpectation.fulfill()
+                    }
+                },
+                receiveValue: { response in
+                    XCTAssert(response == expectedResponse)
+                    responseExpectation.fulfill()
+                }
+            )
+            .store(in: &cancellables)
+        
+        wait(for: [serverStreamingMock.expectation, responseExpectation], timeout: 0.1, enforceOrder: true)
+    }
+}
