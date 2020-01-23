@@ -9,7 +9,6 @@ import Combine
 @testable import Grebe_Framework
 import GRPC
 import NIO
-import SwiftProtobuf
 import XCTest
 
 final class UnaryCallTests: XCTestCase {
@@ -51,8 +50,7 @@ final class UnaryCallTests: XCTestCase {
             }, receiveValue: { response in
                 XCTAssert(response == expectedResponse)
                 responseExpectation.fulfill()
-            }
-        ).store(in: &cancellables)
+            }).store(in: &cancellables)
         
         wait(for: [unaryMock.expectation, responseExpectation], timeout: 0.1, enforceOrder: true)
     }

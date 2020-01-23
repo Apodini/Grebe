@@ -24,11 +24,10 @@ internal final class UnaryMockClient<Request: Message & Equatable, Response: Mes
             XCTFail("Could not match the network call to the next MockNetworkCall.")
             fatalError()
         }
-        
         networkCall.expectation.fulfill()
         
         // Create our UnaryCall and advance the EventLoop to register all nescessary ChannelHanders
-        let unaryCall = UnaryCall<Request, Response>(
+        let call = UnaryCall<Request, Response>(
             connection: connection,
             path: "/test",
             request: request,
@@ -49,7 +48,7 @@ internal final class UnaryMockClient<Request: Message & Equatable, Response: Mes
         //     public typealias InboundOut = GRPCClientResponsePart<Response>
         // --> We get the subchannel, get the position of the GRPCClientChannelHandler and add our mock handler after that:
         let unaryMockInboundHandler = UnaryMockInboundHandler<Response>()
-        unaryCall.subchannel
+        call.subchannel
             .map { subchannel in
                 subchannel.pipeline.handler(type: GRPCClientChannelHandler<Request, Response>.self).map { clientChannelHandler in
                     subchannel.pipeline.addHandler(unaryMockInboundHandler, position: .after(clientChannelHandler))
@@ -67,7 +66,7 @@ internal final class UnaryMockClient<Request: Message & Equatable, Response: Mes
         // Trigger our `fireChannelRead` that is going to propagate inbound.
         unaryMockInboundHandler.respondWithMock(networkCall.response)
         
-        return unaryCall
+        return call
     }
 }
 
@@ -93,5 +92,9 @@ public class UnaryMockInboundHandler<Response: Message>: ChannelInboundHandler {
         }
         
         context?.fireChannelRead(wrapInboundOut(response))
+    }
+    
+    func respondWithStatus(_ status: GRPCStatus) {
+        context?.fireChannelRead(wrapInboundOut(.status(status)))
     }
 }

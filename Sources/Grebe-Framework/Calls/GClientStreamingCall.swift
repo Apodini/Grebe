@@ -46,6 +46,9 @@ public class GClientStreamingCall<Request: Message, Response: Message>: ICall {
             }
             .store(in: &cancellables)
 
+        call.response.whenSuccess {
+            subject.send($0)
+        }
         call.status.whenSuccess {
             subject.send(completion: $0.code == .ok ? .finished : .failure($0))
         }

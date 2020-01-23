@@ -11,7 +11,7 @@ import SwiftProtobuf
 import XCTest
 
 internal final class ServerStreamingMockClient<Request: Message & Equatable, Response: Message>: BaseMockClient {
-    typealias ServerStreamingMockCall = ServerStreamingMock<Request, Response>
+    typealias ServerStreamingMockCall = UnaryMock<Request, Response>
 
     var mockNetworkCalls: [ServerStreamingMockCall] = []
 
@@ -49,6 +49,8 @@ internal final class ServerStreamingMockClient<Request: Message & Equatable, Res
         channel.embeddedEventLoop.advanceTime(by: .nanoseconds(1))
 
         unaryMockInboundHandler.respondWithMock(networkCall.response)
+        channel.embeddedEventLoop.advanceTime(by: .nanoseconds(1))
+        unaryMockInboundHandler.respondWithStatus(.ok)
 
         return call
     }

@@ -16,7 +16,7 @@ final class ServerStreamingCallTests: XCTestCase {
     typealias Response = EchoResponse
     
     private var mockClient: ServerStreamingMockClient<Request, Response> = ServerStreamingMockClient()
-    private var cancellables: Set<AnyCancellable> = []
+    private var cancellables = Set<AnyCancellable>()
     
     override func setUp() {
         mockClient.mockNetworkCalls = []
@@ -31,7 +31,7 @@ final class ServerStreamingCallTests: XCTestCase {
     func test() {
         let expectedRequest = EchoRequest(id: 1)
         let expectedResponse = EchoResponse(id: 1)
-        let serverStreamingMock = ServerStreamingMock(request: expectedRequest, response: .success(expectedResponse))
+        let serverStreamingMock = UnaryMock(request: expectedRequest, response: .success(expectedResponse))
         
         mockClient.mockNetworkCalls = [serverStreamingMock]
         

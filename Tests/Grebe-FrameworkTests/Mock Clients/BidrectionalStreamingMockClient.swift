@@ -11,7 +11,7 @@ import SwiftProtobuf
 import XCTest
 
 internal final class BidrectionalStreamingMockClient: BaseMockClient, BidirectionalStreamingMockService {
-    typealias BidirectionalStreamingMockCall = MockNetworkStream<EchoRequest, EchoResponse>
+    typealias BidirectionalStreamingMockCall = StreamMock<EchoRequest, EchoResponse>
 
     var mockNetworkCalls: [BidirectionalStreamingMockCall]
 
