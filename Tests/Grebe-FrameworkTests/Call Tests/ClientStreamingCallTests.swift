@@ -26,9 +26,7 @@ final class ClientStreamingCallTests: BaseCallTest {
 
     func testOk() {
         let expectedRequests = Publishers.Sequence<[EchoRequest], Error>(
-            sequence:
-            [EchoRequest.with { $0.id = 0 },
-             EchoRequest.with { $0.id = 1 }]
+            sequence: [EchoRequest(id: 0), EchoRequest(id: 1)]
         ).eraseToAnyPublisher()
         let expectedResponse = EchoResponse(id: 1)
 

@@ -28,7 +28,7 @@ internal final class ClientStreamingMockClient<Request: Message & Equatable, Res
         )
         channel.embeddedEventLoop.advanceTime(by: .nanoseconds(1))
 
-        let unaryMockInboundHandler = UnaryMockInboundHandler<Response>()
+        let unaryMockInboundHandler = MockInboundHandler<Response>()
         call.subchannel
             .map { subchannel in
                 subchannel.pipeline.handler(type: GRPCClientChannelHandler<Request, Response>.self).map { clientChannelHandler in

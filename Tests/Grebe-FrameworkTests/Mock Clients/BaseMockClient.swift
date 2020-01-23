@@ -34,3 +34,32 @@ internal class BaseMockClient: GRPCClient {
         connection = ClientConnection(channel: channel, configuration: configuration)
     }
 }
+
+/// MockInboundHandler
+/// Allows us to inject mock responses into the subchannel pipeline setup by a Call.
+internal class MockInboundHandler<Response: Message>: ChannelInboundHandler {
+    public typealias InboundIn = Any
+    public typealias InboundOut = GRPCClientResponsePart<Response>
+    
+    private var context: ChannelHandlerContext? = nil
+    
+    public func handlerAdded(context: ChannelHandlerContext) {
+        self.context = context
+    }
+    
+    func respondWithMock(_ mock: Result<Response, GRPCStatus>) {
+        let response: GRPCClientResponsePart<Response>
+        switch mock {
+        case let .success(success):
+            response = .message(_Box(success))
+        case let .failure(error):
+            response = .status(error)
+        }
+        
+        context?.fireChannelRead(wrapInboundOut(response))
+    }
+    
+    func respondWithStatus(_ status: GRPCStatus) {
+        context?.fireChannelRead(wrapInboundOut(.status(status)))
+    }
+}

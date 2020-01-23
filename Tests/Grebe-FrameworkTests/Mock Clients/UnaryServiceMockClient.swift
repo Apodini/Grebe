@@ -47,7 +47,7 @@ internal final class UnaryMockClient<Request: Message & Equatable, Response: Mes
         //     public typealias InboundIn = HTTP2Frame
         //     public typealias InboundOut = GRPCClientResponsePart<Response>
         // --> We get the subchannel, get the position of the GRPCClientChannelHandler and add our mock handler after that:
-        let unaryMockInboundHandler = UnaryMockInboundHandler<Response>()
+        let unaryMockInboundHandler = MockInboundHandler<Response>()
         call.subchannel
             .map { subchannel in
                 subchannel.pipeline.handler(type: GRPCClientChannelHandler<Request, Response>.self).map { clientChannelHandler in
@@ -67,34 +67,5 @@ internal final class UnaryMockClient<Request: Message & Equatable, Response: Mes
         unaryMockInboundHandler.respondWithMock(networkCall.response)
         
         return call
-    }
-}
-
-/// UnaryMockInboundHandler
-/// Allows us to inject mock responses into the subchannel pipeline setup by a UnaryCall.
-public class UnaryMockInboundHandler<Response: Message>: ChannelInboundHandler {
-    public typealias InboundIn = Any
-    public typealias InboundOut = GRPCClientResponsePart<Response>
-    
-    private var context: ChannelHandlerContext? = nil
-    
-    public func handlerAdded(context: ChannelHandlerContext) {
-        self.context = context
-    }
-    
-    func respondWithMock(_ mock: Result<Response, GRPCStatus>) {
-        let response: GRPCClientResponsePart<Response>
-        switch mock {
-        case let .success(success):
-            response = .message(_Box(success))
-        case let .failure(error):
-            response = .status(error)
-        }
-        
-        context?.fireChannelRead(wrapInboundOut(response))
-    }
-    
-    func respondWithStatus(_ status: GRPCStatus) {
-        context?.fireChannelRead(wrapInboundOut(.status(status)))
     }
 }

@@ -39,7 +39,7 @@ internal final class ServerStreamingMockClient<Request: Message & Equatable, Res
 
         channel.embeddedEventLoop.advanceTime(by: .nanoseconds(1))
 
-        let unaryMockInboundHandler = UnaryMockInboundHandler<Response>()
+        let unaryMockInboundHandler = MockInboundHandler<Response>()
         call.subchannel
             .map { subchannel in
                 subchannel.pipeline.handler(type: GRPCClientChannelHandler<Request, Response>.self).map { clientChannelHandler in
@@ -54,9 +54,4 @@ internal final class ServerStreamingMockClient<Request: Message & Equatable, Res
 
         return call
     }
-}
-
-public class ServerStreamingMockInboundHandler<Response: Message>: ChannelInboundHandler {
-    public typealias InboundIn = Any
-    public typealias InboundOut = GRPCClientResponsePart<Response>
 }
