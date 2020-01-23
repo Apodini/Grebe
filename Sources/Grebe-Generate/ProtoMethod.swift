@@ -12,6 +12,7 @@ struct ProtoMethod {
     let request: String
     let response: String
     let stramingType: StreamType
+    var callClosure: String { name.firstLowercased }
     
     enum StreamType {
         case unary
@@ -59,5 +60,11 @@ struct ProtoMethod {
         self.stramingType = type
         
         print("Found Method: \(self.name) - request: \(self.request) - response: \(self.response) - type: \(type)")
+    }
+}
+
+extension StringProtocol {
+    var firstLowercased: String {
+        return prefix(1).lowercased() + dropFirst()
     }
 }
