@@ -11,12 +11,8 @@ import GRPC
 import NIO
 import XCTest
 
-final class ServerStreamingCallTests: XCTestCase {
-    typealias Request = EchoRequest
-    typealias Response = EchoResponse
-    
+final class ServerStreamingCallTests: BaseCallTest {
     private var mockClient: ServerStreamingMockClient<Request, Response> = ServerStreamingMockClient()
-    private var cancellables = Set<AnyCancellable>()
     
     override func setUp() {
         mockClient.mockNetworkCalls = []
@@ -28,7 +24,7 @@ final class ServerStreamingCallTests: XCTestCase {
         super.tearDown()
     }
     
-    func test() {
+    func testOk() {
         let expectedRequest = EchoRequest(id: 1)
         let expectedResponse = EchoResponse(id: 1)
         let serverStreamingMock = UnaryMock(request: expectedRequest, response: .success(expectedResponse))

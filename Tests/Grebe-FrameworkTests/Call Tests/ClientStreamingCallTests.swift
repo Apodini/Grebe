@@ -11,12 +11,8 @@ import GRPC
 import NIO
 import XCTest
 
-final class ClientStreamingCallTests: XCTestCase {
-    typealias Request = EchoRequest
-    typealias Response = EchoResponse
-
+final class ClientStreamingCallTests: BaseCallTest {
     var mockClient: ClientStreamingMockClient<Request, Response> = ClientStreamingMockClient()
-    private var cancellables: Set<AnyCancellable> = []
 
     override func setUp() {
         mockClient.mockNetworkCalls = []

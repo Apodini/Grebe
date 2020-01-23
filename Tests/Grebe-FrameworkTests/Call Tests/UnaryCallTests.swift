@@ -11,12 +11,8 @@ import GRPC
 import NIO
 import XCTest
 
-final class UnaryCallTests: XCTestCase {
-    typealias Request = EchoRequest
-    typealias Response = EchoResponse
-    
+final class UnaryCallTests: BaseCallTest {
     private var mockClient: UnaryMockClient<Request, Response> = UnaryMockClient()
-    private var cancellables: Set<AnyCancellable> = []
     
     override func setUp() {
         mockClient.mockNetworkCalls = []
@@ -28,7 +24,7 @@ final class UnaryCallTests: XCTestCase {
         super.tearDown()
     }
     
-    func test() {
+    func testOk() {
         let expectedRequest = EchoRequest(id: 1)
         let expectedResponse = EchoResponse(id: 1)
         let unaryMock = UnaryMock(request: expectedRequest, response: .success(expectedResponse))
