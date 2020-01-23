@@ -82,13 +82,13 @@ public class UnaryMockInboundHandler<Response: Message>: ChannelInboundHandler {
         self.context = context
     }
     
-    func respondWithMock(_ mock: Result<Response, GRPCError>) {
+    func respondWithMock(_ mock: Result<Response, GRPCStatus>) {
         let response: GRPCClientResponsePart<Response>
         switch mock {
         case let .success(success):
             response = .message(_Box(success))
         case let .failure(error):
-            response = .status(error.asGRPCStatus())
+            response = .status(error)
         }
         
         context?.fireChannelRead(wrapInboundOut(response))

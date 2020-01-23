@@ -14,13 +14,13 @@ import XCTest
 
 internal struct UnaryMock<Request: Message & Equatable, Response: Message> {
     let request: Request
-    let response: Result<Response, GRPCError>
+    let response: Result<Response, GRPCStatus>
     let expectation = XCTestExpectation(description: "Request matches the expected UnaryMock Request")
 }
 
 internal struct StreamMock<Request: Message & Equatable, Response: Message> {
     let request: AnyPublisher<Request, Error>
-    let response: Result<Response, GRPCError>
+    let response: Result<Response, GRPCStatus>
 }
 
 internal class BaseMockClient: GRPCClient {
