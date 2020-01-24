@@ -24,7 +24,7 @@ let package = Package(
             "Grebe-Framework",
             "SPMUtility",
             "SwiftProtobufPluginLibrary"]),
-        .target(name: "Grebe-CLI"),
+        .target(name: "Grebe-CLI", dependencies: ["SPMUtility"]),
         .testTarget(name: "Grebe-FrameworkTests", dependencies: ["Grebe-Framework"]),
     ]
 )
