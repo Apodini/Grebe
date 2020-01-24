@@ -16,8 +16,8 @@ internal final class CommandLineTool: IExecutableCommand {
     private let versionNumber: String?
     private let grebeGenerate: String?
     private let grpcGenerate: String?
-    
-    //MARK: - Lifecycle
+
+    // MARK: - Lifecycle
 
     internal init(
         command: Command,
@@ -35,14 +35,18 @@ internal final class CommandLineTool: IExecutableCommand {
         self.grpcGenerate = grpcGenerate
     }
 
-    //MARK: - ICommand
-    
+    // MARK: - ICommand
+
     public func run() throws {
         switch command {
         case .setup:
             print("setup")
         case .generate:
-            try GenerateCommand(protoPath: protoPath, destinationPath: destinationPath).run()
+            try GenerateCommand(
+                protoPath: protoPath,
+                destinationPath: destinationPath,
+                version: versionNumber ?? "1.0" //TODO: Get latest version
+            ).run()
         }
     }
 }
