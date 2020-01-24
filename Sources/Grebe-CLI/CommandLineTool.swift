@@ -10,43 +10,22 @@ import Foundation
 internal final class CommandLineTool: IExecutableCommand {
     // MARK: - External Dependencies
 
-    private let command: Command
-    private let protoPath: String
-    private let destinationPath: String
-    private let versionNumber: String?
-    private let grebeGenerate: String?
-    private let grpcGenerate: String?
+    let arguments: Arguments
 
     // MARK: - Lifecycle
 
-    internal init(
-        command: Command,
-        protoPath: String,
-        destinationPath: String,
-        versionNumber: String?,
-        grebeGenerate: String?,
-        grpcGenerate: String?
-    ) {
-        self.command = command
-        self.protoPath = protoPath
-        self.destinationPath = destinationPath
-        self.versionNumber = versionNumber
-        self.grebeGenerate = grebeGenerate
-        self.grpcGenerate = grpcGenerate
+    internal init(arguments: Arguments) {
+        self.arguments = arguments
     }
 
     // MARK: - ICommand
 
     public func run() throws {
-        switch command {
+        switch arguments.command {
         case .setup:
             print("setup")
         case .generate:
-            try GenerateCommand(
-                protoPath: protoPath,
-                destinationPath: destinationPath,
-                version: versionNumber ?? "1.0" //TODO: Get latest version
-            ).run()
+            try GenerateCommand(arguments: arguments).run()
         }
     }
 }

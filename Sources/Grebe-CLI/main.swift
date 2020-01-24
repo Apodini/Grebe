@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import Logging
 import SPMUtility
 
 private let parser = ArgumentParser(usage: "-p <path>", overview: "Grebe Command Line Interface")
@@ -69,15 +68,16 @@ do {
     let grebe = result.get(grebeGenerate)
     let grpc = result.get(grpcGenerate)
 
-    let tool = CommandLineTool(
+    let arguments = Arguments(
         command: command,
         protoPath: protoPath,
         destinationPath: destinationPath,
-        versionNumber: version,
-        grebeGenerate: grebe,
-        grpcGenerate: grpc
+        versionNumber: version ?? "1.0", //TODO: Get latest version number
+        grebeGenerate: grebe != nil ? true : false,
+        grpcGenerate: grpc != nil ? true : false
     )
 
+    let tool = CommandLineTool(arguments: arguments)
     do {
         try tool.run()
     } catch {

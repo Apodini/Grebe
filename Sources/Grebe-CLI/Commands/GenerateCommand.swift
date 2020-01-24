@@ -8,20 +8,16 @@
 import Foundation
 
 internal class GenerateCommand: IExecutableCommand {
-    private var basePath: String { destinationPath + "/Grebe" }
+    private var basePath: String { arguments.destinationPath + "/Grebe" }
 
     // MARK: - External Dependencies
 
-    private let protoPath: String
-    private let destinationPath: String
-    private let version: String
+    let arguments: Arguments
 
     // MARK: - Lifecycle
 
-    internal init(protoPath: String, destinationPath: String, version: String) {
-        self.protoPath = protoPath
-        self.destinationPath = destinationPath
-        self.version = version
+    internal init(arguments: Arguments) {
+        self.arguments = arguments
     }
 
     // MARK: - ICommand
@@ -30,7 +26,7 @@ internal class GenerateCommand: IExecutableCommand {
         try createDirectories()
         try createDefaultFiles()
     }
-    
+
     // MARK: - Private Functions
 
     private func createDirectories() throws {
@@ -48,7 +44,7 @@ internal class GenerateCommand: IExecutableCommand {
             encoding: .utf8
         )
 
-        let package = PackageSwift(version: version)
+        let package = PackageSwift(version: arguments.versionNumber)
         try package.content.write(
             toFile: basePath + package.name,
             atomically: true,
