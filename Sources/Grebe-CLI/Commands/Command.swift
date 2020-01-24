@@ -7,6 +7,10 @@
 
 import Foundation
 
+internal protocol IExecutableCommand {
+    func run() throws
+}
+
 internal enum Command: String {
     case setup
     case generate

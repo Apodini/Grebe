@@ -7,17 +7,17 @@
 
 import Foundation
 
-internal protocol ICommand {
-    func run() throws
-}
+internal final class CommandLineTool: IExecutableCommand {
+    // MARK: - External Dependencies
 
-internal final class CommandLineTool: ICommand {
     private let command: Command
     private let protoPath: String
     private let destinationPath: String
     private let versionNumber: String?
     private let grebeGenerate: String?
     private let grpcGenerate: String?
+    
+    //MARK: - Lifecycle
 
     internal init(
         command: Command,
@@ -35,6 +35,8 @@ internal final class CommandLineTool: ICommand {
         self.grpcGenerate = grpcGenerate
     }
 
+    //MARK: - ICommand
+    
     public func run() throws {
         switch command {
         case .setup:
