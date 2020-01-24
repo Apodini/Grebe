@@ -31,24 +31,21 @@ private let versionNumber = parser.add(
     option: "--version",
     shortName: "-v",
     kind: String.self,
-    usage: "The version number of Grebe",
-    completion: ShellCompletion.none
+    usage: "The version number of Grebe"
 )
 
 private let grebeGenerate = parser.add(
     option: "--grebe",
     shortName: "-g",
     kind: String.self,
-    usage: "Generate only Grebe files",
-    completion: ShellCompletion.none
+    usage: "Generate only Grebe files"
 )
 
 private let grpcGenerate = parser.add(
     option: "--swiftgrpc",
     shortName: "-s",
     kind: String.self,
-    usage: "Generate only gRPC-Swift files",
-    completion: ShellCompletion.none
+    usage: "Generate only gRPC-Swift files"
 )
 
 // The first argument specifies the path of the executable file
@@ -88,4 +85,19 @@ do {
     print(error.description)
 } catch {
     print(error.localizedDescription)
+}
+
+internal func shell(_ args: String..., launchPath: String = "/usr/bin/env") throws {
+    let process = Process()
+    process.arguments = args
+    process.launchPath = launchPath
+    
+    let pipe = Pipe()
+    process.standardOutput = pipe
+    process.launch()
+    process.waitUntilExit()
+    
+    let data = pipe.fileHandleForReading.readDataToEndOfFile()
+    let output: String = NSString(data: data, encoding: String.Encoding.utf8.rawValue)! as String
+    print(output)
 }
