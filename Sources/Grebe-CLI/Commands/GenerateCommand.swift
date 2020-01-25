@@ -1,5 +1,5 @@
 //
-//  File.swift
+//  GenerateCommand.swift
 //
 //
 //  Created by Tim Mewe on 24.01.20.
@@ -11,6 +11,7 @@ internal class GenerateCommand: IExecutableCommand {
     private var basePath: String { arguments.destinationPath + "/Grebe" }
     private var frameworkPath: String { basePath + "/Grebe-Framework" }
     private var generatedDestinationPath: String { basePath + "/Sources/Grebe" }
+    private let envPath = "/usr/local/bin"
     private let frameworkRemoteURL = "https://ge24zaz:Qojzon-jatxu8-saxvaq@bitbucket.ase.in.tum.de/scm/batimmewe/grebe-framework.git"
 
     // MARK: - External Dependencies
@@ -61,9 +62,9 @@ internal class GenerateCommand: IExecutableCommand {
     // MARK: - Generate Code
 
     private func generateCode() throws {
-//        try loadBuildExecutable()
+        try loadBuildExecutable()
         try generateGRPC()
-//        try generateGrebe()
+        try generateGrebe()
     }
 
     private func loadBuildExecutable() throws {
@@ -82,7 +83,7 @@ internal class GenerateCommand: IExecutableCommand {
         try shell(
             "cp",
             "-f", "\(frameworkPath)/.build/release/Grebe-Generate",
-            "/usr/local/bin/grebe-generate"
+            "\(envPath)/grebe-generate"
         )
 
         // Delete Grebe-Framework Repo
@@ -100,9 +101,9 @@ internal class GenerateCommand: IExecutableCommand {
             protoName, "--proto_path=\(protoPath)",
             "--grpc-swift_out=\(generatedDestinationPath)",
             "--swift_out=\(generatedDestinationPath)",
-            "--plugin=protoc-gen-grpc-swift=/usr/local/bin/protoc-gen-grpc-swift",
-            "--plugin=protoc-gen-swift=/usr/local/bin/protoc-gen-swift",
-            launchPath: "/usr/local/bin/protoc"
+            "--plugin=protoc-gen-grpc-swift=\(envPath)/protoc-gen-grpc-swift",
+            "--plugin=protoc-gen-swift=\(envPath)/protoc-gen-swift",
+            launchPath: "\(envPath)/protoc"
         )
     }
 
@@ -113,7 +114,7 @@ internal class GenerateCommand: IExecutableCommand {
         try shell(
             "-p", arguments.protoPath,
             "-d", generatedDestinationPath,
-            launchPath: "/usr/local/bin/grebe-generate"
+            launchPath: "\(envPath)/grebe-generate"
         )
     }
 }

@@ -23,7 +23,7 @@ internal final class CommandLineTool: IExecutableCommand {
     public func run() throws {
         switch arguments.command {
         case .setup:
-            print("setup")
+            try SetupCommand(v)
         case .generate:
             try GenerateCommand(arguments: arguments).run()
         }
