@@ -11,6 +11,26 @@ internal protocol IExecutableCommand {
     func run() throws
 }
 
+internal func shell(_ args: String..., launchPath: String = "/usr/bin/env") throws {
+    let process = Process()
+    process.arguments = args
+    process.executableURL = URL(fileURLWithPath: launchPath)
+    
+    let outputPipe = Pipe()
+    let errorPipe = Pipe()
+    process.standardOutput = outputPipe
+    process.standardError = errorPipe
+    
+    try process.run()
+    
+    let outputData = outputPipe.fileHandleForReading.readDataToEndOfFile()
+    let errorData = errorPipe.fileHandleForReading.readDataToEndOfFile()
+    print(String(decoding: outputData, as: UTF8.self))
+    print(String(decoding: errorData, as: UTF8.self))
+    
+    process.waitUntilExit()
+}
+
 internal enum Command: String {
     case setup
     case generate

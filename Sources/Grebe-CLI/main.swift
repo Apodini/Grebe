@@ -64,14 +64,16 @@ do {
     let version = result.get(versionNumber)
     let grebe = result.get(grebeGenerate)
     let grpc = result.get(grpcGenerate)
+    
+    let generateAll = (grebe == nil && grpc == nil)
 
     let arguments = Arguments(
         command: command,
         protoPath: protoPath,
         destinationPath: destinationPath,
         versionNumber: version ?? "1.0", //TODO: Get latest version number
-        grebeGenerate: grebe != nil ? true : false,
-        grpcGenerate: grpc != nil ? true : false
+        grebeGenerate: grebe != nil ? true : generateAll,
+        grpcGenerate: grpc != nil ? true : generateAll
     )
 
     let tool = CommandLineTool(arguments: arguments)
@@ -85,19 +87,4 @@ do {
     print(error.description)
 } catch {
     print(error.localizedDescription)
-}
-
-internal func shell(_ args: String..., launchPath: String = "/usr/bin/env") throws {
-    let process = Process()
-    process.arguments = args
-    process.launchPath = launchPath
-    
-    let pipe = Pipe()
-    process.standardOutput = pipe
-    process.launch()
-    process.waitUntilExit()
-    
-    let data = pipe.fileHandleForReading.readDataToEndOfFile()
-    let output: String = NSString(data: data, encoding: String.Encoding.utf8.rawValue)! as String
-    print(output)
 }

@@ -10,6 +10,7 @@ import Foundation
 internal class GenerateCommand: IExecutableCommand {
     private var basePath: String { arguments.destinationPath + "/Grebe" }
     private var frameworkPath: String { basePath + "/Grebe-Framework" }
+    private let frameworkRemoteURL = "https://ge24zaz:Qojzon-jatxu8-saxvaq@bitbucket.ase.in.tum.de/scm/batimmewe/grebe-framework.git"
 
     // MARK: - External Dependencies
 
@@ -30,6 +31,8 @@ internal class GenerateCommand: IExecutableCommand {
     }
 
     // MARK: - Private Functions
+
+    // MARK: - Create Swift Package
 
     private func createDirectories() throws {
         try FileManager.default.createDirectory(
@@ -54,26 +57,17 @@ internal class GenerateCommand: IExecutableCommand {
         )
     }
 
+    // MARK: - Generate Code
+
     private func generateCode() throws {
-        // Load grebe-generate executable
-        // Build executable
         try loadBuildExecutable()
-
-        // Generate grpc code
         try generateGRPC()
-
-        // Generate grebe code
         try generateGrebe()
     }
 
     private func loadBuildExecutable() throws {
         // Clone Grebe-Framework Repo
-        try shell(
-            "git",
-            "clone",
-            "https://ge24zaz:Qojzon-jatxu8-saxvaq@bitbucket.ase.in.tum.de/scm/batimmewe/grebe-framework.git",
-            basePath + "/Grebe-Framework"
-        )
+        try shell("git", "clone", frameworkRemoteURL, frameworkPath)
 
         // Build Grebe-Generate executable
         try shell(
@@ -100,5 +94,12 @@ internal class GenerateCommand: IExecutableCommand {
 
     private func generateGrebe() throws {
         guard arguments.grebeGenerate else { return }
+
+        // Generate Grebe code
+        try shell(
+            "-p", arguments.protoPath,
+            "-d", "\(basePath)/Sources/Grebe",
+            launchPath: "/usr/local/bin/grebe-generate"
+        )
     }
 }
