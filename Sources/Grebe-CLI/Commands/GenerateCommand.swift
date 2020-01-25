@@ -80,10 +80,9 @@ internal class GenerateCommand: IExecutableCommand {
         )
 
         // Add executable to path
-        try shell(
-            "cp",
-            "-f", "\(frameworkPath)/.build/release/Grebe-Generate",
-            "\(envPath)/grebe-generate"
+        try moveFile(
+            from: "\(frameworkPath)/.build/release/Grebe-Generate",
+            to: "\(envPath)/grebe-generate"
         )
 
         // Delete Grebe-Framework Repo
@@ -92,7 +91,7 @@ internal class GenerateCommand: IExecutableCommand {
 
     private func generateGRPC() throws {
         guard arguments.grpcGenerate else { return }
-        
+
         var pathComponents = arguments.protoPath.components(separatedBy: "/")
         let protoName = pathComponents.removeLast()
         let protoPath = pathComponents.joined(separator: "/")
