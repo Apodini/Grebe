@@ -50,21 +50,23 @@ internal final class ServerStreamingMockClient<Request: Message & Equatable, Res
             }.whenSuccess { _ in }
         channel.embeddedEventLoop.advanceTime(by: .nanoseconds(1))
 
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
-            networkCall.responses
-                .sink(receiveCompletion: { completion in
+        networkCall.responseStream
+            .sink(receiveCompletion: { completion in
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
                     switch completion {
                     case .failure(let status):
                         unaryMockInboundHandler.respondWithStatus(status)
                     case .finished:
                         unaryMockInboundHandler.respondWithStatus(.ok)
                     }
-                }, receiveValue: { message in
+                }
+            }, receiveValue: { message in
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
                     unaryMockInboundHandler.respondWithMock(.success(message))
-                })
-                .store(in: &self.cancellables)
-        }
-        
+                }
+            })
+            .store(in: &self.cancellables)
+
         return call
     }
 }

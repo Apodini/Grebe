@@ -36,7 +36,7 @@ internal final class ClientStreamingMockClient<Request: Message & Equatable, Res
                 }
             }.whenSuccess { _ in }
 
-        networkCall.requests
+        networkCall.requestStream
             .sink(receiveCompletion: { [weak self] completion in
                 self?.channel.embeddedEventLoop.advanceTime(by: .nanoseconds(1))
                 switch completion {

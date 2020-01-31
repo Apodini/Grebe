@@ -31,7 +31,7 @@ final class ClientStreamingCallTests: BaseCallTest {
         let expectedResponse = EchoResponse(id: 1)
 
         let clientStreamingMock = ClientStreamMock(
-            requests: expectedRequests,
+            requestStream: expectedRequests,
             response: .success(expectedResponse)
         )
 
@@ -68,7 +68,7 @@ final class ClientStreamingCallTests: BaseCallTest {
         let expectedResponse: GRPCStatus = .init(code: .failedPrecondition, message: nil)
         
         let clientStreamingMock = ClientStreamMock<EchoRequest, EchoResponse>(
-            requests: expectedRequests,
+            requestStream: expectedRequests,
             response: .failure(expectedResponse)
         )
 
