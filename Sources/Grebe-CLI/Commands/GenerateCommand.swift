@@ -82,7 +82,7 @@ internal class GenerateCommand: IExecutableCommand {
         // Add executable to path
         try moveFile(
             from: "\(frameworkPath)/.build/release/Grebe-Generate",
-            to: "\(envPath)/grebe-generate"
+            to: "\(envPath)/protoc-gen-grebe-swift"
         )
 
         // Delete Grebe-Framework Repo
