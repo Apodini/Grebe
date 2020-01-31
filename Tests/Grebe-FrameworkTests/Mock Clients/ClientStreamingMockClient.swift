@@ -43,9 +43,11 @@ internal final class ClientStreamingMockClient<Request: Message & Equatable, Res
                 case .failure:
                     unaryMockInboundHandler.respondWithStatus(.processingError)
                 case .finished:
-                    unaryMockInboundHandler.respondWithMock(networkCall.response)
-                    self?.channel.embeddedEventLoop.advanceTime(by: .nanoseconds(1))
-                    unaryMockInboundHandler.respondWithStatus(.ok)
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
+                        unaryMockInboundHandler.respondWithMock(networkCall.response)
+                        self?.channel.embeddedEventLoop.advanceTime(by: .nanoseconds(1))
+                        unaryMockInboundHandler.respondWithStatus(.ok)
+                    }
                 }
             }, receiveValue: { _ in })
             .store(in: &cancellables)

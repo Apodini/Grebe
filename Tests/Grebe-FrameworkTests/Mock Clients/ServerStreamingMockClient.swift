@@ -48,10 +48,12 @@ internal final class ServerStreamingMockClient<Request: Message & Equatable, Res
             }.whenSuccess { _ in }
         channel.embeddedEventLoop.advanceTime(by: .nanoseconds(1))
 
-        unaryMockInboundHandler.respondWithMock(networkCall.response)
-        channel.embeddedEventLoop.advanceTime(by: .nanoseconds(1))
-        unaryMockInboundHandler.respondWithStatus(.ok)
-
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
+            unaryMockInboundHandler.respondWithMock(networkCall.response)
+            self.channel.embeddedEventLoop.advanceTime(by: .nanoseconds(1))
+            unaryMockInboundHandler.respondWithStatus(.ok)
+        }
+        
         return call
     }
 }
