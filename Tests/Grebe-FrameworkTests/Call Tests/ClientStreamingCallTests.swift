@@ -30,8 +30,8 @@ final class ClientStreamingCallTests: BaseCallTest {
         ).eraseToAnyPublisher()
         let expectedResponse = EchoResponse(id: 1)
 
-        let clientStreamingMock = StreamMock(
-            request: expectedRequests,
+        let clientStreamingMock = ClientStreamMock(
+            requests: expectedRequests,
             response: .success(expectedResponse)
         )
 
@@ -67,8 +67,8 @@ final class ClientStreamingCallTests: BaseCallTest {
         ).eraseToAnyPublisher()
         let expectedResponse: GRPCStatus = .init(code: .failedPrecondition, message: nil)
         
-        let clientStreamingMock = StreamMock<EchoRequest, EchoResponse>(
-            request: expectedRequests,
+        let clientStreamingMock = ClientStreamMock<EchoRequest, EchoResponse>(
+            requests: expectedRequests,
             response: .failure(expectedResponse)
         )
 

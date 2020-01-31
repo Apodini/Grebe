@@ -26,8 +26,13 @@ final class ServerStreamingCallTests: BaseCallTest {
     
     func testOk() {
         let expectedRequest = EchoRequest(id: 1)
-        let expectedResponse = EchoResponse(id: 1)
-        let serverStreamingMock = UnaryMock(request: expectedRequest, response: .success(expectedResponse))
+        let expectedResponses = Publishers.Sequence<[EchoResponse], GRPCStatus>(
+            sequence: [EchoResponse(id: 0), EchoResponse(id: 1)]
+        ).eraseToAnyPublisher()
+        let serverStreamingMock = ServerStreamMock(
+            request: expectedRequest,
+            responses: expectedResponses
+        )
         
         mockClient.mockNetworkCalls = [serverStreamingMock]
         
@@ -47,7 +52,6 @@ final class ServerStreamingCallTests: BaseCallTest {
                     }
                 },
                 receiveValue: { response in
-                    XCTAssert(response == expectedResponse)
                     responseExpectation.fulfill()
                 }
             )
@@ -58,10 +62,12 @@ final class ServerStreamingCallTests: BaseCallTest {
     
     func testFailedPrecondition() {
         let expectedRequest = EchoRequest(id: 1)
-        let expectedResponse: GRPCStatus = .init(code: .failedPrecondition, message: nil)
-        let serverStreamingMock = UnaryMock<EchoRequest, EchoResponse>(
+        let expectedResponse = Fail<EchoResponse, GRPCStatus>(
+            error: .init(code: .failedPrecondition, message: nil)
+        ).eraseToAnyPublisher()
+        let serverStreamingMock = ServerStreamMock(
             request: expectedRequest,
-            response: .failure(expectedResponse)
+            responses: expectedResponse
         )
         
         mockClient.mockNetworkCalls = [serverStreamingMock]
@@ -72,7 +78,7 @@ final class ServerStreamingCallTests: BaseCallTest {
             .sink(receiveCompletion: {
                 switch $0 {
                 case .failure(let status):
-                    XCTAssertEqual(status, expectedResponse)
+                    XCTAssertEqual(status, GRPCStatus(code: .failedPrecondition, message: nil))
                     errorExpectation.fulfill()
                 case .finished:
                     XCTFail("Call should fail")

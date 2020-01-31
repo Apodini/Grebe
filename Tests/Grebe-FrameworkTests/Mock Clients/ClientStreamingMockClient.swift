@@ -12,7 +12,7 @@ import SwiftProtobuf
 import XCTest
 
 internal final class ClientStreamingMockClient<Request: Message & Equatable, Response: Message>: BaseMockClient {
-    typealias ClientStreamingMockCall = StreamMock<Request, Response>
+    typealias ClientStreamingMockCall = ClientStreamMock<Request, Response>
 
     var mockNetworkCalls: [ClientStreamingMockCall] = []
     var cancellables = Set<AnyCancellable>()
@@ -36,7 +36,7 @@ internal final class ClientStreamingMockClient<Request: Message & Equatable, Res
                 }
             }.whenSuccess { _ in }
 
-        networkCall.request
+        networkCall.requests
             .sink(receiveCompletion: { [weak self] completion in
                 self?.channel.embeddedEventLoop.advanceTime(by: .nanoseconds(1))
                 switch completion {

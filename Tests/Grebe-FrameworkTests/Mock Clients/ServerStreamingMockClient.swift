@@ -5,15 +5,17 @@
 //  Created by Tim Mewe on 10.01.20.
 //
 
+import Combine
 import GRPC
 import NIO
 import SwiftProtobuf
 import XCTest
 
 internal final class ServerStreamingMockClient<Request: Message & Equatable, Response: Message>: BaseMockClient {
-    typealias ServerStreamingMockCall = UnaryMock<Request, Response>
+    typealias ServerStreamingMockCall = ServerStreamMock<Request, Response>
 
     var mockNetworkCalls: [ServerStreamingMockCall] = []
+    var cancellables = Set<AnyCancellable>()
 
     func test(
         _ request: Request,
@@ -49,9 +51,18 @@ internal final class ServerStreamingMockClient<Request: Message & Equatable, Res
         channel.embeddedEventLoop.advanceTime(by: .nanoseconds(1))
 
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
-            unaryMockInboundHandler.respondWithMock(networkCall.response)
-            self.channel.embeddedEventLoop.advanceTime(by: .nanoseconds(1))
-            unaryMockInboundHandler.respondWithStatus(.ok)
+            networkCall.responses
+                .sink(receiveCompletion: { completion in
+                    switch completion {
+                    case .failure(let status):
+                        unaryMockInboundHandler.respondWithStatus(status)
+                    case .finished:
+                        unaryMockInboundHandler.respondWithStatus(.ok)
+                    }
+                }, receiveValue: { message in
+                    unaryMockInboundHandler.respondWithMock(.success(message))
+                })
+                .store(in: &self.cancellables)
         }
         
         return call
