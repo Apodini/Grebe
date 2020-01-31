@@ -55,32 +55,31 @@ do {
         let command = Command(rawValue: CommandLine.arguments.removeFirst()) else {
         throw CLIError.noCommand(expected: "setup or generate")
     }
-
-    let result = try parser.parse(CommandLine.arguments)
-    guard let protoPath = result.get(protoFilePath) else {
-        throw ArgumentParserError.expectedValue(option: "--proto")
-    }
-    let destinationPath = result.get(destinationFilePath) ?? currentPath
-    let version = result.get(versionNumber)
-    let grebe = result.get(grebeGenerate)
-    let grpc = result.get(grpcGenerate)
     
-    let generateAll = (grebe == nil && grpc == nil)
+    switch command {
+    case .setup:
+        try SetupCommand(path: currentPath).run()
+    case .generate:
+        let result = try parser.parse(CommandLine.arguments)
+        guard let protoPath = result.get(protoFilePath) else {
+            throw ArgumentParserError.expectedValue(option: "--proto")
+        }
+        let destinationPath = result.get(destinationFilePath) ?? currentPath
+        let version = result.get(versionNumber)
+        let grebe = result.get(grebeGenerate)
+        let grpc = result.get(grpcGenerate)
+        
+        let generateAll = (grebe == nil && grpc == nil)
 
-    let arguments = Arguments(
-        command: command,
-        protoPath: protoPath,
-        destinationPath: destinationPath,
-        versionNumber: version ?? "1.0", //TODO: Get latest version number
-        grebeGenerate: grebe != nil ? true : generateAll,
-        grpcGenerate: grpc != nil ? true : generateAll
-    )
+        let arguments = Arguments(
+            protoPath: protoPath,
+            destinationPath: destinationPath,
+            versionNumber: version ?? "1.0", //TODO: Get latest version number
+            grebeGenerate: grebe != nil ? true : generateAll,
+            grpcGenerate: grpc != nil ? true : generateAll
+        )
 
-    let tool = CommandLineTool(arguments: arguments)
-    do {
-        try tool.run()
-    } catch {
-        print("Whoops! An error occurred: \(error)")
+        try GenerateCommand(arguments: arguments).run()
     }
 
 } catch let error as ArgumentParserError {
