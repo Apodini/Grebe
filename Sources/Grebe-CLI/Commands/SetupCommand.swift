@@ -27,7 +27,10 @@ internal class SetupCommand: IExecutableCommand {
     // MARK: - ICommand
     
     func run() throws {
-        // Install swift protobuf
+        // Install protobuf via brew
+        try shell("reinstall", "protobuf", launchPath: "\(envPath)/brew")
+        
+        // Install swift protobuf via brew
         try shell("reinstall", "swift-protobuf", launchPath: "\(envPath)/brew")
         
         // Checkout grpc-swift repo
