@@ -44,17 +44,7 @@ final class ClientStreamingCallTests: BaseCallTest {
 
         let call = GClientStreamingCall(request: expectedRequests, closure: mockClient.test)
         call.execute()
-            .sink(receiveCompletion: {
-                switch $0 {
-                case .failure(let status):
-                    XCTFail("Unexpected status: " + status.localizedDescription)
-                case .finished:
-                    responseExpectation.fulfill()
-                }
-            }, receiveValue: { response in
-                XCTAssertEqual(response, expectedResponse)
-                responseExpectation.fulfill()
-            })
+            .sinkUnarySucceed(expectedResponse: expectedResponse, expectation: responseExpectation)
             .store(in: &cancellables)
 
         wait(for: [clientStreamingMock.expectation, responseExpectation], timeout: 0.1, enforceOrder: true)
@@ -78,17 +68,8 @@ final class ClientStreamingCallTests: BaseCallTest {
 
         let call = GClientStreamingCall(request: expectedRequests, closure: mockClient.test)
         call.execute()
-            .sink(receiveCompletion: {
-                switch $0 {
-                case .failure(let status):
-                    XCTAssertEqual(status, expectedResponse)
-                    errorExpectation.fulfill()
-                case .finished:
-                    XCTFail("Call should fail")
-                }
-            }, receiveValue: { _ in
-                XCTFail("Call should fail")
-            }).store(in: &cancellables)
+            .sinkUnaryFail(expectedResponse: expectedResponse, expectation: errorExpectation)
+            .store(in: &cancellables)
 
         wait(for: [clientStreamingMock.expectation, errorExpectation], timeout: 0.1, enforceOrder: true)
     }
