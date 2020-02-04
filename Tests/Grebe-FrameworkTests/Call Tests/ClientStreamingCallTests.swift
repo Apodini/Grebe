@@ -25,12 +25,14 @@ final class ClientStreamingCallTests: BaseCallTest {
     }
 
     func testOk() {
+        let requests = [EchoRequest(id: 0), EchoRequest(id: 1)]
         let expectedRequests = Publishers.Sequence<[EchoRequest], Error>(
-            sequence: [EchoRequest(id: 0), EchoRequest(id: 1)]
+            sequence: requests
         ).eraseToAnyPublisher()
         let expectedResponse = EchoResponse(id: 1)
 
         let clientStreamingMock = ClientStreamMock(
+            requests: requests,
             requestStream: expectedRequests,
             response: .success(expectedResponse)
         )
@@ -42,32 +44,31 @@ final class ClientStreamingCallTests: BaseCallTest {
 
         let call = GClientStreamingCall(request: expectedRequests, closure: mockClient.test)
         call.execute()
-            .sink(
-                receiveCompletion: { completion in
-                    switch completion {
-                    case .failure(let status):
-                        XCTFail("Unexpected status: " + status.localizedDescription)
-                    case .finished:
-                        responseExpectation.fulfill()
-                    }
-                },
-                receiveValue: { response in
-                    XCTAssert(response == expectedResponse)
+            .sink(receiveCompletion: {
+                switch $0 {
+                case .failure(let status):
+                    XCTFail("Unexpected status: " + status.localizedDescription)
+                case .finished:
                     responseExpectation.fulfill()
                 }
-            )
+            }, receiveValue: { response in
+                XCTAssertEqual(response, expectedResponse)
+                responseExpectation.fulfill()
+            })
             .store(in: &cancellables)
 
-        wait(for: [responseExpectation], timeout: 0.1, enforceOrder: true)
+        wait(for: [clientStreamingMock.expectation, responseExpectation], timeout: 0.1, enforceOrder: true)
     }
 
     func testFailedPrecondition() {
+        let requests = [EchoRequest(id: 0), EchoRequest(id: 1)]
         let expectedRequests = Publishers.Sequence<[EchoRequest], Error>(
-            sequence: [EchoRequest(id: 0), EchoRequest(id: 1)]
+            sequence: requests
         ).eraseToAnyPublisher()
         let expectedResponse: GRPCStatus = .init(code: .failedPrecondition, message: nil)
-        
+
         let clientStreamingMock = ClientStreamMock<EchoRequest, EchoResponse>(
+            requests: requests,
             requestStream: expectedRequests,
             response: .failure(expectedResponse)
         )
@@ -89,6 +90,6 @@ final class ClientStreamingCallTests: BaseCallTest {
                 XCTFail("Call should fail")
             }).store(in: &cancellables)
 
-        wait(for: [errorExpectation], timeout: 0.1, enforceOrder: true)
+        wait(for: [clientStreamingMock.expectation, errorExpectation], timeout: 0.1, enforceOrder: true)
     }
 }

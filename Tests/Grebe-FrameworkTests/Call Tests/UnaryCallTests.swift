@@ -46,7 +46,8 @@ final class UnaryCallTests: BaseCallTest {
             }, receiveValue: { response in
                 XCTAssertEqual(response, expectedResponse)
                 responseExpectation.fulfill()
-            }).store(in: &cancellables)
+            })
+            .store(in: &cancellables)
         
         wait(for: [unaryMock.expectation, responseExpectation], timeout: 0.1, enforceOrder: true)
     }

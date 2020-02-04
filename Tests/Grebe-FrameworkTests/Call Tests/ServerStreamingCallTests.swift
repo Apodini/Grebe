@@ -50,7 +50,6 @@ final class ServerStreamingCallTests: BaseCallTest {
                     case .failure(let status):
                         XCTFail("Unexpected status: " + status.localizedDescription)
                     case .finished:
-                        XCTAssertEqual(responses.count, receivedResponses.count)
                         XCTAssertEqual(responses, receivedResponses)
                     }
                 },

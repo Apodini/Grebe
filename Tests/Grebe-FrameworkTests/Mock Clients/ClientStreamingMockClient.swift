@@ -36,20 +36,31 @@ internal final class ClientStreamingMockClient<Request: Message & Equatable, Res
                 }
             }.whenSuccess { _ in }
 
+        var expectedRequests: [Request] = []
+
         networkCall.requestStream
             .sink(receiveCompletion: { [weak self] completion in
-                self?.channel.embeddedEventLoop.advanceTime(by: .nanoseconds(1))
+                XCTAssertEqual(expectedRequests, networkCall.requests)
                 switch completion {
                 case .failure:
                     unaryMockInboundHandler.respondWithStatus(.processingError)
+                    networkCall.expectation.fulfill()
                 case .finished:
+                    guard expectedRequests == networkCall.requests else {
+                        XCTFail("Could not match the network call to the next MockNetworkCall.")
+                        fatalError()
+                    }
+                    networkCall.expectation.fulfill()
+                    
                     DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
                         unaryMockInboundHandler.respondWithMock(networkCall.response)
                         self?.channel.embeddedEventLoop.advanceTime(by: .nanoseconds(1))
                         unaryMockInboundHandler.respondWithStatus(.ok)
                     }
                 }
-            }, receiveValue: { _ in })
+            }, receiveValue: { request in
+                expectedRequests.append(request)
+            })
             .store(in: &cancellables)
 
         return call

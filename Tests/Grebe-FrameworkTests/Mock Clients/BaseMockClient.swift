@@ -19,15 +19,17 @@ internal struct UnaryMock<Request: Message & Equatable, Response: Message> {
 }
 
 internal struct ClientStreamMock<Request: Message & Equatable, Response: Message> {
+    let requests: [Request]
     let requestStream: AnyPublisher<Request, Error>
     let response: Result<Response, GRPCStatus>
+    let expectation = XCTestExpectation(description: "Requests match the expected ClientStreamMock requests")
 }
 
 internal struct ServerStreamMock<Request: Message & Equatable, Response: Message> {
     let request: Request
     let responses: [Result<Response, GRPCStatus>]
     let responseStream: AnyPublisher<Response, GRPCStatus>
-    let expectation = XCTestExpectation(description: "Request matches the expected ServerStreamMock Request")
+    let expectation = XCTestExpectation(description: "Request matches the expected ServerStreamMock request")
 }
 
 internal struct BidirectionalStreamMock<Request: Message & Equatable, Response: Message> {
