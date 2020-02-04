@@ -20,7 +20,7 @@ internal class SetupCommand: IExecutableCommand {
         self.path = path
     }
     
-    // MARK: - ICommand
+    // MARK: - IExecutableCommand
     
     func run() throws {
         // Install protobuf via brew
@@ -42,6 +42,4 @@ internal class SetupCommand: IExecutableCommand {
         // Delete grpc-swift repo
         try FileManager.default.removeItem(atPath: repoPath)
     }
-    
-    // MARK: - Private Functions
 }

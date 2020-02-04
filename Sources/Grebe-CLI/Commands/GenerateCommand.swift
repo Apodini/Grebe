@@ -24,17 +24,19 @@ internal class GenerateCommand: IExecutableCommand {
         self.arguments = arguments
     }
 
-    // MARK: - ICommand
+    // MARK: - IExecutableCommand
 
     func run() throws {
-        try createDirectories()
-        try createDefaultFiles()
+        try generateSwiftPackage()
         try generateCode()
     }
 
-    // MARK: - Private Functions
-
     // MARK: - Create Swift Package
+
+    private func generateSwiftPackage() throws {
+        try createDirectories()
+        try createDefaultFiles()
+    }
 
     private func createDirectories() throws {
         try FileManager.default.createDirectory(
