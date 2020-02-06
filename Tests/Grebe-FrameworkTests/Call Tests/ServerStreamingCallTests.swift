@@ -48,7 +48,7 @@ final class ServerStreamingCallTests: BaseCallTest {
         responseExpectation.expectedFulfillmentCount = responses.count + 1
         
         let call = GServerStreamingCall(request: request, closure: mockClient.test)
-        var receivedResponses = [EchoResponse]()
+        var receivedResponses = [Response]()
         call.execute()
             .sink(
                 receiveCompletion: {

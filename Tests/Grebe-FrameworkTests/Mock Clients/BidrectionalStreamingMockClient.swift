@@ -15,14 +15,18 @@ internal final class BidrectionalStreamingMockClient<Request: Message & Equatabl
 
     var mockNetworkCalls: [BidirectionalStreamingMockCall] = []
 
-    func test(callOptions: CallOptions?) -> ClientStreamingCall<Request, Response> {
+    func test(
+        callOptions: CallOptions?,
+        handler: @escaping (Response) -> Void
+    ) -> BidirectionalStreamingCall<Request, Response> {
         let networkCall = mockNetworkCalls.removeFirst()
 
-        let call = ClientStreamingCall<Request, Response>(
+        let call = BidirectionalStreamingCall<Request, Response>(
             connection: connection,
             path: "/ok",
             callOptions: defaultCallOptions,
-            errorDelegate: nil
+            errorDelegate: nil,
+            handler: handler
         )
         channel.embeddedEventLoop.advanceTime(by: .nanoseconds(1))
 
@@ -52,21 +56,25 @@ internal final class BidrectionalStreamingMockClient<Request: Message & Equatabl
                     networkCall.expectation.fulfill()
 
                     DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
+                        // Send remaining reponses
+                        for response in responses {
+                            self?.channel.embeddedEventLoop.advanceTime(by: .nanoseconds(1))
+                            unaryMockInboundHandler.respondWithMock(response)
+                        }
+
                         self?.channel.embeddedEventLoop.advanceTime(by: .nanoseconds(1))
                         unaryMockInboundHandler.respondWithStatus(.ok)
                     }
                 }
             }, receiveValue: { request in
+                expectedRequests.append(request)
+
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
                     self.channel.embeddedEventLoop.advanceTime(by: .nanoseconds(1))
-                    
-                    guard !responses.isEmpty else {
-                        XCTFail("No response left for given request.")
-                        fatalError()
-                    }
+
+                    guard !responses.isEmpty else { return }
                     let response = responses.removeFirst()
                     unaryMockInboundHandler.respondWithMock(response)
-                    expectedRequests.append(request)
                 }
             })
             .store(in: &cancellables)
