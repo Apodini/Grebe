@@ -23,14 +23,19 @@ final class ClientStreamingCallTests: BaseCallTest {
         XCTAssert(mockClient.mockNetworkCalls.isEmpty)
         super.tearDown()
     }
-
+    
     func testOk() {
-        let requests = [EchoRequest(id: 0), EchoRequest(id: 1)]
-        let expectedResponse = EchoResponse(id: 1)
+        runTestOk(requests: (0...100).map(EchoRequest.init), response: EchoResponse(id: 1))
+    }
+    
+    func testEmptyRequestStream() {
+        runTestOk(requests: [], response: EchoResponse(id: 1))
+    }
 
+    private func runTestOk(requests: [Request], response: Response) {
         let clientStreamingMock = ClientStreamMock(
             requests: requests,
-            response: .success(expectedResponse)
+            response: .success(response)
         )
 
         mockClient.mockNetworkCalls = [clientStreamingMock]
@@ -43,18 +48,16 @@ final class ClientStreamingCallTests: BaseCallTest {
             closure: mockClient.test
         )
         call.execute()
-            .sinkUnarySucceed(expectedResponse: expectedResponse, expectation: responseExpectation)
+            .sinkUnarySucceed(expectedResponse: response, expectation: responseExpectation)
             .store(in: &cancellables)
 
         wait(for: [clientStreamingMock.expectation, responseExpectation], timeout: 0.1, enforceOrder: true)
     }
 
     func testFailedPrecondition() {
-        let requests = [EchoRequest(id: 0), EchoRequest(id: 1)]
         let expectedResponse: GRPCStatus = .init(code: .failedPrecondition, message: nil)
-
         let clientStreamingMock = ClientStreamMock<EchoRequest, EchoResponse>(
-            requests: requests,
+            requests: (0...1).map(EchoRequest.init),
             response: .failure(expectedResponse)
         )
 

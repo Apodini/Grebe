@@ -13,12 +13,7 @@ import XCTest
 internal final class BidrectionalStreamingMockClient<Request: Message & Equatable, Response: Message>: BaseMockClient {
     typealias BidirectionalStreamingMockCall = BidirectionalStreamMock<Request, Response>
 
-    var mockNetworkCalls: [BidirectionalStreamingMockCall]
-
-    init(mockNetworkCalls: [BidirectionalStreamingMockCall]) {
-        self.mockNetworkCalls = mockNetworkCalls
-        super.init()
-    }
+    var mockNetworkCalls: [BidirectionalStreamingMockCall] = []
 
     func test(callOptions: CallOptions?) -> ClientStreamingCall<Request, Response> {
         let networkCall = mockNetworkCalls.removeFirst()
