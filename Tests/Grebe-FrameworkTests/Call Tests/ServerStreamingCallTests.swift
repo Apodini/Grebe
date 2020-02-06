@@ -25,13 +25,19 @@ final class ServerStreamingCallTests: BaseCallTest {
     }
     
     func testOk() {
-        let expectedRequest = EchoRequest(id: 1)
-        let responses = [ EchoResponse(id: 0), EchoResponse(id: 1) ]
+        runTestOk(request: EchoRequest(id: 1), responses: (0...100).map(EchoResponse.init))
+    }
+    
+    func testEmptyResponseStream() {
+        runTestOk(request: EchoRequest(id: 1), responses: [])
+    }
+    
+    private func runTestOk(request: Request, responses: [Response]) {
         let expectedResponseStream = Publishers.Sequence<[EchoResponse], GRPCStatus>(
             sequence: responses
         ).eraseToAnyPublisher()
         let serverStreamingMock = ServerStreamMock(
-            request: expectedRequest,
+            request: request,
             responses: responses.map { .success($0) },
             responseStream: expectedResponseStream
         )
@@ -39,9 +45,9 @@ final class ServerStreamingCallTests: BaseCallTest {
         mockClient.mockNetworkCalls = [serverStreamingMock]
         
         let responseExpectation = XCTestExpectation(description: "Correct response count")
-        responseExpectation.expectedFulfillmentCount = responses.count
+        responseExpectation.expectedFulfillmentCount = responses.count + 1
         
-        let call = GServerStreamingCall(request: expectedRequest, closure: mockClient.test)
+        let call = GServerStreamingCall(request: request, closure: mockClient.test)
         var receivedResponses = [EchoResponse]()
         call.execute()
             .sink(
@@ -50,6 +56,7 @@ final class ServerStreamingCallTests: BaseCallTest {
                     case .failure(let status):
                         XCTFail("Unexpected status: " + status.localizedDescription)
                     case .finished:
+                        responseExpectation.fulfill()
                         XCTAssertEqual(responses, receivedResponses)
                     }
                 },
