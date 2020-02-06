@@ -22,7 +22,7 @@ internal struct ClientStreamMock<Request: Message & Equatable, Response: Message
     let requests: [Request]
     let response: Result<Response, GRPCStatus>
     let expectation = XCTestExpectation(description: "Requests match the expected ClientStreamMock requests")
-    
+
     var requestStream: AnyPublisher<Request, Error> {
         Publishers.Sequence<[Request], Error>(sequence: requests).eraseToAnyPublisher()
     }
@@ -36,18 +36,23 @@ internal struct ServerStreamMock<Request: Message & Equatable, Response: Message
 }
 
 internal struct BidirectionalStreamMock<Request: Message & Equatable, Response: Message> {
+    let requests: [Request]
+    var responses: [Result<Response, GRPCStatus>]
     let requestStream: AnyPublisher<Request, Error>
     let responseStream: AnyPublisher<Response, GRPCStatus>
+    let expectation = XCTestExpectation(description: "Requests match the expected BidirectionalStreamMock requests")
 }
 
 internal class BaseMockClient: GRPCClient {
     let channel = EmbeddedChannel()
     let connection: ClientConnection
     var defaultCallOptions: CallOptions = CallOptions()
+    var cancellables = Set<AnyCancellable>()
 
     init() {
-        let configuration = ClientConnection.Configuration(target: .socketAddress(.init(sockaddr_un.init())),
-                                                           eventLoopGroup: channel.eventLoop)
+        let configuration = ClientConnection.Configuration(
+            target: .socketAddress(.init(sockaddr_un.init())), eventLoopGroup: channel.eventLoop
+        )
         connection = ClientConnection(channel: channel, configuration: configuration)
     }
 }
@@ -57,13 +62,13 @@ internal class BaseMockClient: GRPCClient {
 internal class MockInboundHandler<Response: Message>: ChannelInboundHandler {
     public typealias InboundIn = Any
     public typealias InboundOut = GRPCClientResponsePart<Response>
-    
-    private var context: ChannelHandlerContext? = nil
-    
+
+    private var context: ChannelHandlerContext?
+
     public func handlerAdded(context: ChannelHandlerContext) {
         self.context = context
     }
-    
+
     func respondWithMock(_ mock: Result<Response, GRPCStatus>) {
         let response: GRPCClientResponsePart<Response>
         switch mock {
@@ -72,10 +77,10 @@ internal class MockInboundHandler<Response: Message>: ChannelInboundHandler {
         case let .failure(error):
             response = .status(error)
         }
-        
+
         context?.fireChannelRead(wrapInboundOut(response))
     }
-    
+
     func respondWithStatus(_ status: GRPCStatus) {
         context?.fireChannelRead(wrapInboundOut(.status(status)))
     }

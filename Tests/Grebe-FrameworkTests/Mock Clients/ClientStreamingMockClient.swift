@@ -15,7 +15,6 @@ internal final class ClientStreamingMockClient<Request: Message & Equatable, Res
     typealias ClientStreamingMockCall = ClientStreamMock<Request, Response>
 
     var mockNetworkCalls: [ClientStreamingMockCall] = []
-    var cancellables = Set<AnyCancellable>()
 
     func test(callOptions: CallOptions?) -> ClientStreamingCall<Request, Response> {
         let networkCall = mockNetworkCalls.removeFirst()

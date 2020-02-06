@@ -15,7 +15,6 @@ internal final class ServerStreamingMockClient<Request: Message & Equatable, Res
     typealias ServerStreamingMockCall = ServerStreamMock<Request, Response>
 
     var mockNetworkCalls: [ServerStreamingMockCall] = []
-    var cancellables = Set<AnyCancellable>()
 
     func test(
         _ request: Request,
