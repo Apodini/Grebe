@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import Logging
 import SPMUtility
 
 private let parser = ArgumentParser(usage: "-p <path>", overview: "Grebe Code Generator")

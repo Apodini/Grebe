@@ -20,9 +20,7 @@ let package = Package(
     ],
     targets: [
         .target(name: "Grebe-Framework", dependencies: ["GRPC"]),
-        .target(name: "Grebe-Generate", dependencies: [
-            "SPMUtility",
-            "SwiftProtobufPluginLibrary"]),
+        .target(name: "Grebe-Generate", dependencies: ["SPMUtility", "SwiftProtobufPluginLibrary"]),
         .target(name: "Grebe-CLI", dependencies: ["SPMUtility"]),
         .testTarget(name: "Grebe-FrameworkTests", dependencies: ["Grebe-Framework"]),
     ]
