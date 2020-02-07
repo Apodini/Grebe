@@ -59,6 +59,13 @@ internal class GenerateCommand: IExecutableCommand {
             atomically: true,
             encoding: .utf8
         )
+
+        let gitignore = Gitignore()
+        try gitignore.content.write(
+            toFile: basePath + gitignore.name,
+            atomically: true,
+            encoding: .utf8
+        )
     }
 
     // MARK: - Generate Code
