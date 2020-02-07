@@ -78,11 +78,14 @@ internal class GenerateCommand: IExecutableCommand {
 
     private func loadBuildExecutable() throws {
         // Clone Grebe-Framework Repo
+        print("Cloning Grebe-Framework...")
         try shell("git", "clone", frameworkRemoteURL, frameworkPath, "-v", "--progress")
 
         // Build Grebe-Generate executable
+        print("Building Grebe-Generate executable...")
         try shell(
             "swift", "build",
+            "--verbose",
             "--product", "Grebe-Generate",
             "--package-path", frameworkPath,
             "-c", "release"
@@ -105,6 +108,7 @@ internal class GenerateCommand: IExecutableCommand {
         let protoName = pathComponents.removeLast()
         let protoPath = pathComponents.joined(separator: "/")
 
+        print("Generating Swift protocol buffer files...")
         try shell(
             protoName, "--proto_path=\(protoPath)",
             "--grpc-swift_out=\(generatedDestinationPath)",
@@ -119,6 +123,7 @@ internal class GenerateCommand: IExecutableCommand {
         guard arguments.grebeGenerate else { return }
 
         // Generate Grebe code
+        print("Generating Grebe files...")
         try shell(
             "-p", arguments.protoPath,
             "-d", generatedDestinationPath,
