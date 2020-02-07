@@ -1,5 +1,5 @@
 //
-//  File.swift
+//  Gitignore.swift
 //
 //
 //  Created by Tim Mewe on 07.02.20.
