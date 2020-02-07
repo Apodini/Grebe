@@ -9,7 +9,7 @@ import Foundation
 
 internal class GenerateCommand: IExecutableCommand {
     private var basePath: String { arguments.destinationPath + "/Grebe" }
-    private var frameworkPath: String { basePath + "/Grebe-Framework" }
+    private var frameworkPath: String { basePath + "/.Grebe-Framework" }
     private var generatedDestinationPath: String { basePath + "/Sources/Grebe" }
     private let envPath = "/usr/local/bin"
     private let frameworkRemoteURL = "https://ge24zaz:Qojzon-jatxu8-saxvaq@bitbucket.ase.in.tum.de/scm/batimmewe/grebe-framework.git"
@@ -59,6 +59,13 @@ internal class GenerateCommand: IExecutableCommand {
             atomically: true,
             encoding: .utf8
         )
+
+        let gitignore = Gitignore()
+        try gitignore.content.write(
+            toFile: basePath + gitignore.name,
+            atomically: true,
+            encoding: .utf8
+        )
     }
 
     // MARK: - Generate Code
@@ -71,11 +78,14 @@ internal class GenerateCommand: IExecutableCommand {
 
     private func loadBuildExecutable() throws {
         // Clone Grebe-Framework Repo
-        try shell("git", "clone", frameworkRemoteURL, frameworkPath)
+        print("Cloning Grebe-Framework...")
+        try shell("git", "clone", frameworkRemoteURL, frameworkPath, "-v", "--progress")
 
         // Build Grebe-Generate executable
+        print("Building Grebe-Generate executable...")
         try shell(
             "swift", "build",
+            "--verbose",
             "--product", "Grebe-Generate",
             "--package-path", frameworkPath,
             "-c", "release"
@@ -98,6 +108,7 @@ internal class GenerateCommand: IExecutableCommand {
         let protoName = pathComponents.removeLast()
         let protoPath = pathComponents.joined(separator: "/")
 
+        print("Generating Swift protocol buffer files...")
         try shell(
             protoName, "--proto_path=\(protoPath)",
             "--grpc-swift_out=\(generatedDestinationPath)",
@@ -112,6 +123,7 @@ internal class GenerateCommand: IExecutableCommand {
         guard arguments.grebeGenerate else { return }
 
         // Generate Grebe code
+        print("Generating Grebe files...")
         try shell(
             "-p", arguments.protoPath,
             "-d", generatedDestinationPath,
