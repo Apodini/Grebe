@@ -11,9 +11,13 @@ import GRPC
 import NIO
 import SwiftProtobuf
 
-public protocol IClient {
+/// A Grebe client
+public protocol IGClient {
     associatedtype Client: GRPCClient
     
+    /// The `GRPCClient` this client is using
     var service: Client { get }
+    
+    /// The `EventLoopGroup` this client is using.
     var group: EventLoopGroup { get }
 }
