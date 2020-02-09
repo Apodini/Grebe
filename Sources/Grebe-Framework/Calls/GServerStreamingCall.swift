@@ -10,6 +10,7 @@ import Foundation
 import GRPC
 import SwiftProtobuf
 
+/// A server streaming Grebe call.
 public class GServerStreamingCall<Request: Message, Response: Message>: ICall {
     public typealias CallClosure = (
         _ request: Request,
@@ -17,10 +18,19 @@ public class GServerStreamingCall<Request: Message, Response: Message>: ICall {
         _ handler: @escaping (Response) -> Void
     ) -> GRPC.ServerStreamingCall<Request, Response>
     
+    /// The request message for the call.
     public var request: Request
     public let callClosure: CallClosure
     public let callOptions: CallOptions?
     
+    /**
+        Sets up an new server streaming Grebe call.
+     
+        - Parameters:
+           - request: The request message for the call.
+           - callOptions: Options to use for each service call.
+           - closure: The closure which contains the executable call.
+        */
     public init(
         request: Request,
         callOptions: CallOptions? = nil,
@@ -31,6 +41,12 @@ public class GServerStreamingCall<Request: Message, Response: Message>: ICall {
         self.callOptions = callOptions
     }
     
+    /**
+    Executes the Grebe server streaming call.
+
+    - Returns: A stream of `Response` elements. The response publisher may fail
+               with a `GRPCStatus` error.
+    */
     public func execute() -> AnyPublisher<Response, GRPCStatus> {
         let subject = PassthroughSubject<Response, GRPCStatus>()
         
