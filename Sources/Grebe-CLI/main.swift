@@ -27,6 +27,14 @@ private let destinationFilePath = parser.add(
     completion: .filename
 )
 
+private let executableFilePath = parser.add(
+    option: "--executable",
+    shortName: "-e",
+    kind: String.self,
+    usage: "The path of the generated executables",
+    completion: .filename
+)
+
 private let versionNumber = parser.add(
     option: "--version",
     shortName: "-v",
@@ -45,7 +53,7 @@ private let grpcGenerate = parser.add(
     option: "--swiftgrpc",
     shortName: "-s",
     kind: String.self,
-    usage: "Generate only gRPC-Swift files"
+    usage: "Gv"
 )
 
 // The first argument specifies the path of the executable file
@@ -55,12 +63,14 @@ do {
         let command = Command(rawValue: CommandLine.arguments.removeFirst()) else {
         throw CLIError.noCommand(expected: "setup or generate")
     }
-    
+
+    let result = try parser.parse(CommandLine.arguments)
+    let executablePath = result.get(executableFilePath) ?? "/usr/local/bin"
+
     switch command {
     case .setup:
-        try SetupCommand(path: currentPath).run()
+        try SetupCommand(path: currentPath, envPath: executablePath).run()
     case .generate:
-        let result = try parser.parse(CommandLine.arguments)
         guard let protoPath = result.get(protoFilePath) else {
             throw ArgumentParserError.expectedValue(option: "--proto")
         }
@@ -68,13 +78,14 @@ do {
         let version = result.get(versionNumber)
         let grebe = result.get(grebeGenerate)
         let grpc = result.get(grpcGenerate)
-        
+
         let generateAll = (grebe == nil && grpc == nil)
 
         let arguments = Arguments(
             protoPath: protoPath,
             destinationPath: destinationPath,
-            versionNumber: version ?? "1.0", //TODO: Get latest version number
+            executablePath: executablePath,
+            versionNumber: version ?? "1.0",
             grebeGenerate: grebe != nil ? true : generateAll,
             grpcGenerate: grpc != nil ? true : generateAll
         )

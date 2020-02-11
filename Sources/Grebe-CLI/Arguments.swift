@@ -10,6 +10,7 @@ import Foundation
 struct Arguments {
     let protoPath: String
     let destinationPath: String
+    let executablePath: String
     let versionNumber: String
     let grebeGenerate: Bool
     let grpcGenerate: Bool
