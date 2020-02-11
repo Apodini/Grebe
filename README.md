@@ -13,9 +13,9 @@ brew install grebe
 The recommended way to use Grebe is to first define an API using the [Protocol Buffer](https://developers.google.com/protocol-buffers/) language.
 
 ### Setting up Grebe
-To use Grebe you need to install the [Protocol Buffer Compiler](https://github.com/protocolbuffers/protobuf), the [Swift Protobuf Code Generator Plugin](https://github.com/apple/swift-protobuf) and [Swift gRPC](https://github.com/grpc/grpc-swift) plugins to generate the necessary support code. To do all this in one step, run the following command in your command line. Make sure to specify your search path.
+To use Grebe you need to install the [Protocol Buffer Compiler](https://github.com/protocolbuffers/protobuf), the [Swift Protobuf Code Generator Plugin](https://github.com/apple/swift-protobuf) and [Swift gRPC](https://github.com/grpc/grpc-swift) plugins to generate the necessary support code. To do all this in one step, run the following command in your command line. Make sure to specify your shell path.
 ```bash
-grebe setup -e <your search path>
+grebe setup -e <your shell path>
 ```
 
 ### Building the Grebe Swift-Package
@@ -35,7 +35,7 @@ This command will do the following:
 | -------------------- | -------------- | ---------------- | ------------------------------------------------ |
 | `-p`/`--proto`       | `String`       | ``               | The path of your proto file                      |
 | `-d`/`--destination` | `String`       | ``               | The path of the generated Swift Package          |
-| `-e`/`--executable`  | `String`       | `/usr/local/bin` | Your search path                                 |
+| `-e`/`--executable`  | `String`       | `/usr/local/bin` | Your shell path                                 |
 | `-v`/`--version`     | `Double`       | 1.0              | The version number of the Grebe-Generator Plugin |
 | `-g`/`--grebe`       | `true`/`false` | `true`           | Wether to generate only Grebe files              |
 | `-s`/`--swiftgrpc`   | `true`/`false` | `true`           | Wether to generate only gRPC-Swift files         |
