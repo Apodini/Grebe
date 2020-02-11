@@ -25,7 +25,7 @@ final class ServerStreamingCallTests: BaseCallTest {
     }
     
     func testOk() {
-        runTestOk(request: EchoRequest(id: 1), responses: (0...100).map(EchoResponse.init))
+        runTestOk(request: EchoRequest(id: 1), responses: (0...1).map(EchoResponse.init))
     }
     
     func testEmptyResponseStream() {
@@ -33,13 +33,9 @@ final class ServerStreamingCallTests: BaseCallTest {
     }
     
     private func runTestOk(request: Request, responses: [Response]) {
-        let expectedResponseStream = Publishers.Sequence<[EchoResponse], GRPCStatus>(
-            sequence: responses
-        ).eraseToAnyPublisher()
         let serverStreamingMock = ServerStreamMock(
             request: request,
-            responses: responses.map { .success($0) },
-            responseStream: expectedResponseStream
+            responses: responses.map { .success($0) }
         )
         
         mockClient.mockNetworkCalls = [serverStreamingMock]
@@ -73,13 +69,10 @@ final class ServerStreamingCallTests: BaseCallTest {
     func testFailedPrecondition() {
         let expectedRequest = EchoRequest(id: 1)
         let errorStatus: GRPCStatus = .init(code: .failedPrecondition, message: nil)
-        let expectedResponseStream = Fail<EchoResponse, GRPCStatus>(
-            error: errorStatus
-        ).eraseToAnyPublisher()
-        let serverStreamingMock = ServerStreamMock(
+        let serverStreamingMock = ServerStreamMock<Request, Response>(
             request: expectedRequest,
-            responses: [.failure(errorStatus)],
-            responseStream: expectedResponseStream
+            responses: [.failure(errorStatus)]
+//            responseStream: expectedResponseStream
         )
         
         mockClient.mockNetworkCalls = [serverStreamingMock]

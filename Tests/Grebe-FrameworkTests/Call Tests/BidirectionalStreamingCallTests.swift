@@ -31,11 +31,11 @@ final class BidirectionalStreamingCallTests: BaseCallTest {
             responses: (0...100).map(EchoResponse.init)
         )
     }
-    
+
     func testEmptyResponseStream() {
         runTestOk(requests: (0...1).map(EchoRequest.init), responses: [])
     }
-    
+
     func testEmptyRequestStream() {
         runTestOk(requests: [], responses: (0...1).map(EchoResponse.init))
     }
@@ -43,9 +43,7 @@ final class BidirectionalStreamingCallTests: BaseCallTest {
     private func runTestOk(requests: [Request], responses: [Response]) {
         let bidirectionalStreamingMock = BidirectionalStreamMock(
             requests: requests,
-            responses: responses.map { .success($0) },
-            requestStream: stream(elements: requests),
-            responseStream: stream(elements: responses)
+            responses: responses.map { .success($0) }
         )
 
         mockClient.mockNetworkCalls = [bidirectionalStreamingMock]

@@ -12,37 +12,6 @@ import XCTest
 
 @testable import GRPC
 
-internal struct UnaryMock<Request: Message & Equatable, Response: Message> {
-    let request: Request
-    let response: Result<Response, GRPCStatus>
-    let expectation = XCTestExpectation(description: "Request matches the expected UnaryMock Request")
-}
-
-internal struct ClientStreamMock<Request: Message & Equatable, Response: Message> {
-    let requests: [Request]
-    let response: Result<Response, GRPCStatus>
-    let expectation = XCTestExpectation(description: "Requests match the expected ClientStreamMock requests")
-
-    var requestStream: AnyPublisher<Request, Error> {
-        Publishers.Sequence<[Request], Error>(sequence: requests).eraseToAnyPublisher()
-    }
-}
-
-internal struct ServerStreamMock<Request: Message & Equatable, Response: Message> {
-    let request: Request
-    let responses: [Result<Response, GRPCStatus>]
-    let responseStream: AnyPublisher<Response, GRPCStatus>
-    let expectation = XCTestExpectation(description: "Request matches the expected ServerStreamMock request")
-}
-
-internal struct BidirectionalStreamMock<Request: Message & Equatable, Response: Message> {
-    let requests: [Request]
-    var responses: [Result<Response, GRPCStatus>]
-    let requestStream: AnyPublisher<Request, Error>
-    let responseStream: AnyPublisher<Response, GRPCStatus>
-    let expectation = XCTestExpectation(description: "Requests match the expected BidirectionalStreamMock requests")
-}
-
 internal class BaseMockClient: GRPCClient {
     let channel = EmbeddedChannel()
     let connection: ClientConnection
