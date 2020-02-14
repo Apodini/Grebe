@@ -1,5 +1,5 @@
 //
-//  UnaryCall.swift
+//  GUnaryCall.swift
 //
 //
 //  Created by Tim Mewe on 07.12.19.
@@ -11,7 +11,7 @@ import GRPC
 import SwiftProtobuf
 
 /// A unary Grebe call.
-/// 
+///
 /// The client sends a single request to the server and gets a single response back,
 /// just like a normal function call.
 ///
@@ -39,10 +39,9 @@ import SwiftProtobuf
 ///
 /// You can create a `GUnaryCall` like this:
 /// ```
-/// GUnaryCall(request: request, callOptions: callOptions, closure: echo)
+/// GUnaryCall(request: EchoRequest.with { $0.message = "hello"}, closure: echo)
 /// ```
 ///
-/// To run the call just call the `execute` method of the call.
 public class GUnaryCall<Request: Message, Response: Message>: ICall {
     public typealias CallClosure = (
         _ request: Request,

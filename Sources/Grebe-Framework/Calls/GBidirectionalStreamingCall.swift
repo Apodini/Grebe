@@ -1,5 +1,5 @@
 //
-//  BidirectionalStreamingCall.swift
+//  GBidirectionalStreamingCall.swift
 //
 //
 //  Created by Tim Mewe on 07.12.19.
@@ -17,6 +17,37 @@ import SwiftProtobuf
 /// oder they like: for example, the server could wait to receive all the client messages
 /// before writing its responses, or it could alternately read a message then write a
 /// message, or some other combination of reads and writes.
+///
+/// ### Example usage of `GBidirectionalStreamingCall`
+///
+/// Consider the following protobuf definition for a simple echo service.
+/// The service defines one bidirectional streaming RPC. You send a stream of messages and it
+/// echoes a stream of messages back to you.
+///
+/// ```proto
+/// syntax = "proto3";
+///
+/// service EchoService {
+///     rpc echo (stream EchoRequest) returns (stream EchoResponse);
+/// }
+///
+/// message EchoRequest {
+///     string message = 1;
+/// }
+///
+/// message EchoResponse {
+///     string message = 1;
+/// }
+///```
+///
+/// You can create a `GBidirectionalStreamingCall` like this:
+/// ```
+/// let requests = Publishers.Sequence<[EchoRequest], Error>(
+///     sequence: [EchoRequest.with { $0.message = "hello"}, EchoRequest.with { $0.message = "world"}]
+/// ).eraseToAnyPublisher()
+/// 
+/// GBidirectionalStreamingCall(request: requests, callOptions: callOptions, closure: echo)
+/// ```
 ///
 public class GBidirectionalStreamingCall<Request: Message, Response: Message>: ICall {
     public typealias CallClosure = (

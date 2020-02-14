@@ -12,6 +12,15 @@ import SwiftProtobuf
 import NIO
 
 /// Base protocol for a Grebe call to a gRPC service.
+///
+/// gRPC lets you define four kinds of service method:
+/// - Unary RPCs (`GUnaryCall`)
+/// - Server streaming RPCs (`GServerStreamingCall`)
+/// - Client streaming RPCs (`GClientStreamingCall`)
+/// - Bidirectional streaming RPCs (`GBidirectionalStreamingCall`)
+///
+/// To run an instance of `ICall`, call the `execute` method of the specific call.
+///
 public protocol ICall {
     /// The type of the request message for the call.
     associatedtype Request: Message

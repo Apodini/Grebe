@@ -1,5 +1,5 @@
 //
-//  ServerStreamingCall.swift
+//  GServerStreamingCall.swift
 //
 //
 //  Created by Tim Mewe on 07.12.19.
@@ -13,6 +13,33 @@ import SwiftProtobuf
 /// A server streaming Grebe call.
 /// 
 /// The client sends a request to the server and gets a sequence of response messages back.
+///
+/// ### Example usage of `GServerStreamingCall`
+///
+/// Consider the following protobuf definition for a simple echo service.
+/// The service defines one server streaming RPC. You send one message and it
+/// echoes a stream of messages back to you.
+///
+/// ```proto
+/// syntax = "proto3";
+///
+/// service EchoService {
+///     rpc echo (EchoRequest) returns (stream EchoResponse);
+/// }
+///
+/// message EchoRequest {
+///     string message = 1;
+/// }
+///
+/// message EchoResponse {
+///     string message = 1;
+/// }
+///```
+///
+/// You can create a `GServerStreamingCall` like this:
+/// ```
+/// GServerStreamingCall(request: EchoRequest.with { $0.message = "hello"}, closure: echo)
+/// ```
 ///
 public class GServerStreamingCall<Request: Message, Response: Message>: ICall {
     public typealias CallClosure = (
