@@ -34,7 +34,7 @@ struct ProtoMethod {
         guard components.count == 3 else { return nil } // We proceed only if we got all three
         
         // Parse Name
-        self.name = components[0].replacingOccurrences(of: " ", with: "") // Remove spaces
+        self.name = components[0].replacingOccurrences(of: " ", with: "").firstLowercased // Remove spaces
         
         // Parse Request
         // Format: stream EchoRequest) returns
