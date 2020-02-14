@@ -1,7 +1,9 @@
 # Grebe
 
-This repository contains a Swift-Combine gRPC API, a code generator and a CLI to setup and generate everything necessary to use Grebe.
-We intend only the CLI for public usage, because it abstracts all neccessary steps in simple command line commands. If you want to use the Swift-Combine gRPC API directly, please see the following [section](#swift-combine-grpc-api).
+This repository is intended to improve and simplify the the gRPC development workflow for iOS apps and provides a small wrapper to incorporate Swift Combine in gRPC. The Swift Package contains the following parts: 
+- A Swift Combine gRPC wrapper. Read more about it in [this section](#swift-combine-grpc-wrapper).
+- A code generator to generate Swift code using the previously stated library.
+- A CLI tool to simplify the development workflow. You can import the library without using the CLI tool. Read more about it in [this section](#building-the grebe-swift-package)
 
 ## Installation
 Grebe is currently only available via [Homebrew](https://brew.sh). To install run the following command in your command line:
@@ -18,8 +20,11 @@ To use Grebe you need to install the [Protocol Buffer Compiler](https://github.c
 grebe setup -e <your shell path>
 ```
 
-### Building the Grebe Swift-Package
-After you run the setup command described in the previous step you are ready to build the Swift-Package:
+### Building the Grebe Swift Package
+This step generates a Swift Package that contains the Protocol Buffer support code, the gRPC interface code and the Grebe interface code. It hides the complete `gRPC` implementation and exposes only the methods, services and message types defined in your proto file. You can easily intergrate it into your project via drag and drop. It is not part of the main target and therefore offers a clear public interface.
+
+After you run the setup command described in the previous step you are ready to build the Swift Package:
+
 ```bash
 grebe generate -p <proto file path>
 ```
@@ -27,7 +32,7 @@ grebe generate -p <proto file path>
 This command will do the following:
 1. Load the latest version of the Grebe code generator (unless otherwise stated) to generate Swift code which projects the service methods defined in your proto file to simple Swift methods using our library.
 2. Invoke the `protoc-gen-swift` and `protoc-gen-swiftgrpc` plugins on your proto file.
-3. Bundle all generated code in Swift-Package.
+3. Bundle all generated code in a Swift Package.
 
 #### Parameters
 
@@ -40,7 +45,7 @@ This command will do the following:
 | `-g`/`--grebe`       | `true`/`false` | `true`           | Wether to generate only Grebe files              |
 | `-s`/`--swiftgrpc`   | `true`/`false` | `true`           | Wether to generate only gRPC-Swift files         |
 
-### Using the generated Swift-Package
+### Using the generated Swift Package
 Just drag and drop the Swift-Package in your project and you are ready to go.
 
 #### Example
@@ -77,8 +82,9 @@ Now just call the generated method:
 echo(request: EchoRequest.with { $0.message = "hello"})
 ```
 
-## Swift-Combine gRPC API
-This library provides a [Swift-Combine](https://developer.apple.com/documentation/combine) integration for [Swift-gRPC](https://github.com/grpc/grpc-swift/tree/nio). It is based on the `nio`-implementation of `Swift-gRPC`. It supports all four gRPC API styles (Unary, Server Streaming, Client Streaming, and Bidirectional Streaming).
+## Swift Combine gRPC Wrapper
+This library provides a [Swift-Combine](https://developer.apple.com/documentation/combine) wrapper for [Swift-gRPC](https://github.com/grpc/grpc-swift/tree/nio). It is a generic abstraction
+layer above the `nio` layer provided by the `Swift-gRPC` implementation. It supports all four gRPC API styles (Unary, Server Streaming, Client Streaming, and Bidirectional Streaming).
 
 ### Example
 Again consider the following protobuf definition for a simple echo service.
