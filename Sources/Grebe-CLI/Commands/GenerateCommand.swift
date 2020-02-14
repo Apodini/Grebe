@@ -70,7 +70,7 @@ internal class GenerateCommand: IExecutableCommand {
     // MARK: - Generate Code
 
     private func generateCode() throws {
-        try loadBuildExecutable()
+//        try loadBuildExecutable()
         try generateGRPC()
         try generateGrebe()
     }
@@ -114,6 +114,7 @@ internal class GenerateCommand: IExecutableCommand {
             "--swift_out=\(generatedDestinationPath)",
             "--plugin=protoc-gen-grpc-swift=\(arguments.executablePath)/protoc-gen-grpc-swift",
             "--plugin=protoc-gen-swift=\(arguments.executablePath)/protoc-gen-swift",
+            "--swift_opt=Visibility=Public",
             launchPath: "\(arguments.executablePath)/protoc"
         )
     }
