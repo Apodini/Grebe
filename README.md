@@ -3,7 +3,7 @@
 This repository is intended to improve and simplify the the gRPC development workflow for iOS apps and provides a small wrapper to incorporate Swift Combine in gRPC. The Swift Package contains the following parts: 
 - A Swift Combine gRPC wrapper. Read more about it in [this section](#swift-combine-grpc-wrapper).
 - A code generator to generate Swift code using the previously stated library.
-- A CLI tool to simplify the development workflow. You can import the library without using the CLI tool. Read more about it in [this section](#building-the grebe-swift-package)
+- A CLI tool to simplify the development workflow. You can import the library without using the CLI tool. Read more about it in [this section](#building-the-grebe-swift-package)
 
 ## Installation
 Grebe is currently only available via [Homebrew](https://brew.sh). To install run the following command in your command line:
