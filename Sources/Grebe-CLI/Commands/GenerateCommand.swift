@@ -110,7 +110,7 @@ internal class GenerateCommand: IExecutableCommand {
         print("Generating Swift protocol buffer files...")
         try shell(
             protoName, "--proto_path=\(protoPath)",
-            "--grpc-swift_out=\(generatedDestinationPath)",
+            "--grpc-swift_out=Visibility=Public:\(generatedDestinationPath)",
             "--swift_out=\(generatedDestinationPath)",
             "--plugin=protoc-gen-grpc-swift=\(arguments.executablePath)/protoc-gen-grpc-swift",
             "--plugin=protoc-gen-swift=\(arguments.executablePath)/protoc-gen-swift",

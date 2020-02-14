@@ -22,11 +22,11 @@ internal struct PackageSwift: IWritableFile {
             // Products define the executables and libraries produced by a package, and make them visible to other packages.
             .library(
                 name: "Grebe",
-                targets: ["Grebe"]),
+                targets: ["Grebe"])
         ],
         dependencies: [
             // Dependencies declare other packages that this package depends on.
-            .package(url: "https://github.com/timmewe/grebe-framework.git", from: "\(version)"),
+            .package(url: "https://github.com/timmewe/grebe-framework.git", from: "\(version)")
         ],
         targets: [
             // Targets are the basic building blocks of a package. A target can define a module or a test suite.

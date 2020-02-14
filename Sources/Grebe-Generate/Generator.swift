@@ -35,7 +35,9 @@ class Generator {
         """)
 
         let moduleNames = [
-            "Grebe_Framework"
+            "Grebe_Framework",
+            "Combine",
+            "GRPC"
         ]
 
         for moduleName in moduleNames.sorted() {
