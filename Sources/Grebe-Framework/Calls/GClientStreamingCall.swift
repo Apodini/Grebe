@@ -11,6 +11,11 @@ import GRPC
 import SwiftProtobuf
 
 /// A client streaming Grebe call.
+/// 
+/// The client sends a sequence of request messages to the server. Once the client
+/// has finished writing the messages it waits for the server to read them and
+/// return its response
+///
 public class GClientStreamingCall<Request: Message, Response: Message>: ICall {
     public typealias CallClosure = (
         _ callOptions: CallOptions?

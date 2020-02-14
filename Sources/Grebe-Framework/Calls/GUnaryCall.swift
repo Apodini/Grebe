@@ -11,6 +11,38 @@ import GRPC
 import SwiftProtobuf
 
 /// A unary Grebe call.
+/// 
+/// The client sends a single request to the server and gets a single response back,
+/// just like a normal function call.
+///
+/// ### Example usage of `GUnaryCall`
+///
+/// Consider the following protobuf definition for a simple echo service.
+/// The service defines one unary RPC. You send one message and it
+/// echoes the message back to you.
+///
+/// ```proto
+/// syntax = "proto3";
+///
+/// service EchoService {
+///     rpc echo (EchoRequest) returns (EchoResponse);
+/// }
+///
+/// message EchoRequest {
+///     string message = 1;
+/// }
+///
+/// message EchoResponse {
+///     string message = 1;
+/// }
+///```
+///
+/// You can create a `GUnaryCall` like this:
+/// ```
+/// GUnaryCall(request: request, callOptions: callOptions, closure: echo)
+/// ```
+///
+/// To run the call just call the `execute` method of the call.
 public class GUnaryCall<Request: Message, Response: Message>: ICall {
     public typealias CallClosure = (
         _ request: Request,

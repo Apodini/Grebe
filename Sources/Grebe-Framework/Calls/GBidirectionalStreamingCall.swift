@@ -11,6 +11,13 @@ import GRPC
 import SwiftProtobuf
 
 /// A bidirectional streaming Grebe call.
+/// 
+/// Both sides, the client and the server, send a sequence of messages. The two streams
+/// operate independently, so clients and servers can read and write and whatever
+/// oder they like: for example, the server could wait to receive all the client messages
+/// before writing its responses, or it could alternately read a message then write a
+/// message, or some other combination of reads and writes.
+///
 public class GBidirectionalStreamingCall<Request: Message, Response: Message>: ICall {
     public typealias CallClosure = (
         _ callOptions: CallOptions?,

@@ -17,7 +17,7 @@ import SwiftProtobuf
 /// The `GRPCClient` is created at initialization. To hide the complexity of a `GRPCClient`
 /// the initializer takes a `ConnectionTarget` and `CallOptions` as only parameters.
 ///
-/// #### Example Usage
+/// ### Example Usage
 /// ```
 /// let client = GClient<EchoServiceServiceClient>(target: .hostAndPort("localhost", 62801))
 /// ```
