@@ -33,6 +33,7 @@ internal class GenerateCommand: IExecutableCommand {
     // MARK: - Create Swift Package
 
     private func generateSwiftPackage() throws {
+        print("Creating Swift Package...")
         try createDirectories()
         try createDefaultFiles()
     }
@@ -102,7 +103,7 @@ internal class GenerateCommand: IExecutableCommand {
 
     private func generateGRPC() throws {
         guard arguments.grpcGenerate else { return }
-
+        
         var pathComponents = arguments.protoPath.components(separatedBy: "/")
         let protoName = pathComponents.removeLast()
         let protoPath = pathComponents.joined(separator: "/")

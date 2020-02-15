@@ -45,14 +45,14 @@ private let versionNumber = parser.add(
 private let grebeGenerate = parser.add(
     option: "--grebe",
     shortName: "-g",
-    kind: String.self,
+    kind: Bool.self,
     usage: "Generate only Grebe files"
 )
 
 private let grpcGenerate = parser.add(
     option: "--swiftgrpc",
     shortName: "-s",
-    kind: String.self,
+    kind: Bool.self,
     usage: "Gv"
 )
 
@@ -72,6 +72,7 @@ do {
         try SetupCommand(path: currentPath, envPath: executablePath).run()
     case .generate:
         guard let protoPath = result.get(protoFilePath) else {
+            print("No proto file found!")
             throw ArgumentParserError.expectedValue(option: "--proto")
         }
         let destinationPath = result.get(destinationFilePath) ?? currentPath
