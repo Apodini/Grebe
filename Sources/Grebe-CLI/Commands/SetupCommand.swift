@@ -37,7 +37,7 @@ internal class SetupCommand: IExecutableCommand {
         try shell("reinstall", "swift-protobuf", launchPath: "\(envPath)/brew")
 
         // Checkout grpc-swift repo
-        try shell("git", "clone", "--single-branch", "--branch", "nio", grpcURL, repoPath)
+        try shell("git", "clone", "--single-branch", "--branch", "nio", grpcURL, repoPath, "-v", "--progress")
 
         // Make plugins
         try shell("make", "plugins", "--directory", repoPath)
