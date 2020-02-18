@@ -11,7 +11,7 @@ internal class GenerateCommand: IExecutableCommand {
     private var basePath: String { arguments.destinationPath + "/Grebe" }
     private var frameworkPath: String { basePath + "/.Grebe-Framework" }
     private var generatedDestinationPath: String { basePath + "/Sources/Grebe" }
-    private let frameworkRemoteURL = "https://ge24zaz:Qojzon-jatxu8-saxvaq@bitbucket.ase.in.tum.de/scm/batimmewe/grebe-framework.git"
+    private let frameworkRemoteURL = "https://github.com/grebe-framework.git"
 
     // MARK: - External Dependencies
 
