@@ -6,10 +6,11 @@ This repository is intended to improve and simplify the the gRPC development wor
 - A CLI tool to simplify the development workflow. You can import the library without using the CLI tool. Read more about it in [this section](#building-the-grebe-swift-package)
 
 ## Installation
-Grebe is currently only available via [Homebrew](https://brew.sh). To install run the following command in your command line:
+The Grebe CLI executable is currently only available via [Homebrew](https://brew.sh). To install run the following command in your command line:
 ```bash
 brew install grebe
 ```
+Of course you can simply clone the repository or install it via the [Swift Package Manager](https://swift.org/package-manager/).
 
 ## Usage
 The recommended way to use Grebe is to first define an API using the [Protocol Buffer](https://developers.google.com/protocol-buffers/) language.
