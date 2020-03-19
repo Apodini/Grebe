@@ -24,7 +24,7 @@ internal struct PackageSwift: IWritableFile {
         ],
         dependencies: [
             // Dependencies declare other packages that this package depends on.
-            .package(url: "https://github.com/timmewe/grebe-framework.git", from: Version("\(version)"))
+            .package(url: "https://github.com/Apodini/Grebe", from: Version("\(version)"))
         ],
         targets: [
             // Targets are the basic building blocks of a package. A target can define a module or a test suite.
