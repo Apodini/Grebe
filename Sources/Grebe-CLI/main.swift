@@ -86,7 +86,7 @@ do {
             protoPath: protoPath,
             destinationPath: destinationPath,
             executablePath: executablePath,
-            versionNumber: version ?? "1.0",
+            versionNumber: version ?? "1.0.0",
             grebeGenerate: grebe != nil ? true : generateAll,
             grpcGenerate: grpc != nil ? true : generateAll
         )

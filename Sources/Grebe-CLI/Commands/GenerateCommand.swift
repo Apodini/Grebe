@@ -8,9 +8,9 @@
 import Foundation
 
 internal class GenerateCommand: IExecutableCommand {
-    private var basePath: String { arguments.destinationPath + "/Grebe" }
-    private var frameworkPath: String { basePath + "/.Grebe-Framework" }
-    private var generatedDestinationPath: String { basePath + "/Sources/Grebe" }
+    private var basePath: String { arguments.destinationPath + "/Grebe-Generated" }
+    private var frameworkPath: String { basePath + "/.Grebe" }
+    private var generatedDestinationPath: String { basePath + "/Sources/Grebe-Generated" }
     private let frameworkRemoteURL = "https://github.com/Apodini/Grebe.git"
 
     // MARK: - External Dependencies
@@ -28,6 +28,7 @@ internal class GenerateCommand: IExecutableCommand {
     func run() throws {
         try generateSwiftPackage()
         try generateCode()
+        try buildDependencies()
     }
 
     // MARK: - Create Swift Package
@@ -40,7 +41,7 @@ internal class GenerateCommand: IExecutableCommand {
 
     private func createDirectories() throws {
         try FileManager.default.createDirectory(
-            atPath: basePath + "/Sources/Grebe",
+            atPath: generatedDestinationPath,
             withIntermediateDirectories: true
         )
     }
@@ -71,7 +72,7 @@ internal class GenerateCommand: IExecutableCommand {
     // MARK: - Generate Code
 
     private func generateCode() throws {
-        try loadBuildExecutable()
+//        try loadBuildExecutable()
         try generateGRPC()
         try generateGrebe()
     }
@@ -103,7 +104,7 @@ internal class GenerateCommand: IExecutableCommand {
 
     private func generateGRPC() throws {
         guard arguments.grpcGenerate else { return }
-        
+
         var pathComponents = arguments.protoPath.components(separatedBy: "/")
         let protoName = pathComponents.removeLast()
         let protoPath = pathComponents.joined(separator: "/")
@@ -129,6 +130,17 @@ internal class GenerateCommand: IExecutableCommand {
             "-p", arguments.protoPath,
             "-d", generatedDestinationPath,
             launchPath: "\(arguments.executablePath)/grebe-generate"
+        )
+    }
+
+    // MARK: - Build Dependencies
+
+    private func buildDependencies() throws {
+        print("Building package dependencies...")
+        try shell(
+            "swift", "build",
+            "--verbose",
+            "--package-path", basePath
         )
     }
 }
