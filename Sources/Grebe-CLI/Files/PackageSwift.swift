@@ -16,6 +16,9 @@ internal struct PackageSwift: IWritableFile {
 
     let package = Package(
         name: "Grebe-Generated",
+        platforms: [
+            .macOS(.v10_15), .iOS(.v13), .tvOS(.v13), .watchOS(.v6),
+        ],
         products: [
             .library(name: "Grebe-Generated", targets: ["Grebe-Generated"])
         ],
@@ -23,7 +26,7 @@ internal struct PackageSwift: IWritableFile {
             .package(url: "https://github.com/Apodini/Grebe", from: Version("\(version)"))
         ],
         targets: [
-            .target(name: "Grebe-Generated", dependencies: ["Grebe"])
+            .target(name: "Grebe-Generated", dependencies: ["Grebe-Framework"])
         ]
     )
     """
