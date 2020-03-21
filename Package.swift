@@ -14,7 +14,7 @@ let package = Package(
         .executable(name: "Grebe-CLI", targets: ["Grebe-CLI"])
     ],
     dependencies: [
-        .package(url: "https://github.com/grpc/grpc-swift.git", from: "1.0.0-alpha.7"),
+        .package(url: "https://github.com/grpc/grpc-swift.git", .exact("1.0.0-alpha.8")),
         .package(url: "https://github.com/apple/swift-package-manager.git", from: "0.5.0"),
         .package(url: "https://github.com/apple/swift-protobuf.git", from: "1.7.0"),
     ],
