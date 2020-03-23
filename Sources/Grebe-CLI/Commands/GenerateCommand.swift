@@ -72,7 +72,7 @@ internal class GenerateCommand: IExecutableCommand {
     // MARK: - Generate Code
 
     private func generateCode() throws {
-//        try loadBuildExecutable()
+        try loadBuildExecutable()
         try generateGRPC()
         try generateGrebe()
     }
@@ -129,7 +129,7 @@ internal class GenerateCommand: IExecutableCommand {
         try shell(
             "-p", arguments.protoPath,
             "-d", generatedDestinationPath,
-            launchPath: "\(arguments.executablePath)/grebe-generate"
+            launchPath: "\(arguments.executablePath)/protoc-gen-grebe-swift"
         )
     }
 

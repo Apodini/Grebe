@@ -10,13 +10,7 @@ import Foundation
 extension Generator {
     internal func printGrebe() {
         println()
-//        printClientProtocolConformance()
-        println()
         printGrebeImplementation()
-    }
-
-    private func printClientProtocolConformance() {
-        println("extension \(serviceClassName): GRPCClientInitializable {}")
     }
 
     private func printGrebeImplementation() {
