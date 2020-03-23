@@ -78,7 +78,7 @@ internal class GenerateCommand: IExecutableCommand {
     }
 
     private func loadBuildExecutable() throws {
-//         Clone Grebe-Framework Repo
+        // Clone Grebe-Framework Repo
         print("Cloning Grebe-Framework...")
         try shell("git", "clone", frameworkRemoteURL, frameworkPath, "-v", "--progress")
 

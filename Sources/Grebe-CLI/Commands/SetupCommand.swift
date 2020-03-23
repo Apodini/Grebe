@@ -31,13 +31,16 @@ internal class SetupCommand: IExecutableCommand {
         If not you can download it here: https://brew.sh
         """)
         // Install protobuf via brew
+        print("Installing Protobuf...")
         try shell("reinstall", "protobuf", launchPath: "\(envPath)/brew")
 
         // Install swift protobuf via brew
+        print("Installing Swift Protobuf...")
         try shell("reinstall", "swift-protobuf", launchPath: "\(envPath)/brew")
 
         // Checkout grpc-swift repo
-        try shell("git", "clone", "--single-branch", "--branch", "nio", grpcURL, repoPath, "-v", "--progress")
+        print("Making gRPC-Swift plugins")
+        try shell("git", "clone", "--single-branch", "--branch", "1.0.0-alpha.8", grpcURL, repoPath, "-v", "--progress")
 
         // Make plugins
         try shell("make", "plugins", "--directory", repoPath)

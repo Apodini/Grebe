@@ -47,7 +47,7 @@ This command will do the following:
 | `-s`/`--swiftgrpc`   | `true`/`false` | `true`           | Wether to generate only gRPC-Swift files         |
 
 ### Using the generated Swift Package
-Drag the package folder  into your Xcode project. Then click the Plus button in the "Link Binary with Libraries" section, locate the package in the modal dialog, select the gray library icon inside the package, and add this one.
+Drag the package folder  into your Xcode project. Then click the Plus button in the "Link Binary with Libraries" section, locate the package in the modal dialog, select the gray library icon inside the package, and add this one. In all files you would like to use the package import `Grebe_Generated`.
 
 #### Example
 Consider the following protobuf definition for a simple echo service. The service defines one unary RPC. You send one message and it echoes the message back to you.
