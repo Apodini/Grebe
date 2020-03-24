@@ -1,0 +1,5 @@
+- name: Publish Jazzy Docs
+  uses: Steven0351/publish-jazzy-docs@v1.1.1
+  with:
+    # Personal access token
+    personal_access_token: 6b236a4d07cefc6b81898bfc6436185e1f52d494
