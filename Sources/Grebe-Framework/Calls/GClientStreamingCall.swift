@@ -10,13 +10,13 @@ import Foundation
 import GRPC
 import SwiftProtobuf
 
-/// A client streaming Grebe call.
+/// #### A client streaming Grebe call.
 ///
 /// The client sends a sequence of request messages to the server. Once the client
 /// has finished writing the messages it waits for the server to read them and
 /// return its response
 ///
-/// ### Example usage of `GClientStreamingCall`
+/// ##### Example usage of `GClientStreamingCall`
 ///
 /// Consider the following protobuf definition for a simple echo service.
 /// The service defines one client streaming RPC. You send a stream of messages and it
@@ -36,14 +36,14 @@ import SwiftProtobuf
 /// message EchoResponse {
 ///     string message = 1;
 /// }
-///```
+/// ```
 ///
 /// You can create a `GClientStreamingCall` like this:
 /// ```
 /// let requests = Publishers.Sequence<[EchoRequest], Error>(
 ///     sequence: [EchoRequest.with { $0.message = "hello"}, EchoRequest.with { $0.message = "world"}]
 /// ).eraseToAnyPublisher()
-/// 
+///
 /// GClientStreamingCall(request: requests, callOptions: callOptions, closure: echo)
 /// ```
 ///

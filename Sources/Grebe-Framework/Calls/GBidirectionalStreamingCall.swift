@@ -10,15 +10,15 @@ import Foundation
 import GRPC
 import SwiftProtobuf
 
-/// A bidirectional streaming Grebe call.
-/// 
+/// #### A bidirectional streaming Grebe call.
+///
 /// Both sides, the client and the server, send a sequence of messages. The two streams
 /// operate independently, so clients and servers can read and write and whatever
 /// oder they like: for example, the server could wait to receive all the client messages
 /// before writing its responses, or it could alternately read a message then write a
 /// message, or some other combination of reads and writes.
 ///
-/// ### Example usage of `GBidirectionalStreamingCall`
+/// ##### Example usage of `GBidirectionalStreamingCall`
 ///
 /// Consider the following protobuf definition for a simple echo service.
 /// The service defines one bidirectional streaming RPC. You send a stream of messages and it
@@ -38,14 +38,14 @@ import SwiftProtobuf
 /// message EchoResponse {
 ///     string message = 1;
 /// }
-///```
+/// ```
 ///
 /// You can create a `GBidirectionalStreamingCall` like this:
 /// ```
 /// let requests = Publishers.Sequence<[EchoRequest], Error>(
 ///     sequence: [EchoRequest.with { $0.message = "hello"}, EchoRequest.with { $0.message = "world"}]
 /// ).eraseToAnyPublisher()
-/// 
+///
 /// GBidirectionalStreamingCall(request: requests, callOptions: callOptions, closure: echo)
 /// ```
 ///

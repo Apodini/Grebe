@@ -10,12 +10,11 @@ import Foundation
 import GRPC
 import SwiftProtobuf
 
-/// A unary Grebe call.
+/// #### A unary Grebe call.
 ///
-/// The client sends a single request to the server and gets a single response back,
-/// just like a normal function call.
+/// The client sends a single request to the server and gets a single response back, just like a normal function call.
 ///
-/// ### Example usage of `GUnaryCall`
+/// ##### Example usage of `GUnaryCall`
 ///
 /// Consider the following protobuf definition for a simple echo service.
 /// The service defines one unary RPC. You send one message and it
@@ -35,13 +34,14 @@ import SwiftProtobuf
 /// message EchoResponse {
 ///     string message = 1;
 /// }
-///```
+/// ```
 ///
 /// You can create a `GUnaryCall` like this:
 /// ```
 /// GUnaryCall(request: EchoRequest.with { $0.message = "hello"}, closure: echo)
 /// ```
 ///
+
 public class GUnaryCall<Request: Message, Response: Message>: ICall {
     public typealias CallClosure = (
         _ request: Request,

@@ -1,6 +1,6 @@
 //
 //  ICall.swift
-//  
+//
 //
 //  Created by Tim Mewe on 07.12.19.
 //
@@ -11,7 +11,7 @@ import GRPC
 import SwiftProtobuf
 import NIO
 
-/// Base protocol for a Grebe call to a gRPC service.
+/// #### Base protocol for a Grebe call to a gRPC service.
 ///
 /// gRPC lets you define four kinds of service method:
 /// - Unary RPCs (`GUnaryCall`)

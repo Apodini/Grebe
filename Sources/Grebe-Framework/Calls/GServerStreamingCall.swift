@@ -10,11 +10,11 @@ import Foundation
 import GRPC
 import SwiftProtobuf
 
-/// A server streaming Grebe call.
-/// 
+/// #### A server streaming Grebe call.
+///
 /// The client sends a request to the server and gets a sequence of response messages back.
 ///
-/// ### Example usage of `GServerStreamingCall`
+/// ##### Example usage of `GServerStreamingCall`
 ///
 /// Consider the following protobuf definition for a simple echo service.
 /// The service defines one server streaming RPC. You send one message and it
@@ -34,7 +34,7 @@ import SwiftProtobuf
 /// message EchoResponse {
 ///     string message = 1;
 /// }
-///```
+/// ```
 ///
 /// You can create a `GServerStreamingCall` like this:
 /// ```
