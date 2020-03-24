@@ -1,4 +1,4 @@
-name: PublishDocumentation
+name: PublishDocs
 on: [push]
 jobs:
   deploy_docs:
