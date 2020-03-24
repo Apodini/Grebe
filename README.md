@@ -8,7 +8,7 @@ This repository is intended to improve and simplify the gRPC development workflo
 ## Installation
 You can install the Grebe CLI executable via [Homebrew](https://brew.sh). To install run the following command in your command line:
 ```bash
-brew install grebe
+brew install apodini/tap/grebe
 ```
 Of course you can simply clone the repository or install it via the [Swift Package Manager](https://swift.org/package-manager/).
 

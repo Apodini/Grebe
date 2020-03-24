@@ -11,7 +11,7 @@ let package = Package(
     products: [
         .library(name: "Grebe-Framework", targets: ["Grebe-Framework"]),
         .executable(name: "Grebe-Generate", targets: ["Grebe-Generate"]),
-        .executable(name: "Grebe-CLI", targets: ["Grebe-CLI"])
+        .executable(name: "grebe", targets: ["Grebe-CLI"])
     ],
     dependencies: [
         .package(url: "https://github.com/grpc/grpc-swift.git", .exact("1.0.0-alpha.8")),
