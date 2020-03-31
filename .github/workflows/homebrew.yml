@@ -1,0 +1,13 @@
+name: UpdateTap
+on: [push]
+jobs:
+  deployTap:
+    runs-on: macOS-latest
+    steps:
+    - uses: garden-io/update-homebrew-action@v1
+      with:
+        packageName: 'grebe'
+        templatePath: '/grebe.rb'
+        tapRepo: 'apodini/homebrew-tap'
+        srcRepo: 'apodini/Grebe'
+        authToken: ${{ secrets.GITHUB_TOKEN }}
