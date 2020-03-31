@@ -8,6 +8,6 @@ jobs:
       with:
         packageName: 'grebe'
         templatePath: '/grebe.rb'
-        tapRepo: 'apodini/homebrew-tap'
-        srcRepo: 'apodini/Grebe'
-        authToken: ${{ secrets.GITHUB_TOKEN }}
+        tapRepo: 'Apodini/homebrew-tap'
+        srcRepo: 'Apodini/Grebe'
+        authToken: ${{ secrets.ACCESS_TOKEN }}
