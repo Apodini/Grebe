@@ -15,14 +15,13 @@ let package = Package(
     ],
     dependencies: [
         .package(url: "https://github.com/grpc/grpc-swift.git", .exact("1.0.0-alpha.8")),
-        .package(url: "https://github.com/apple/swift-package-manager.git", from: "0.5.0"),
         .package(url: "https://github.com/apple/swift-protobuf.git", from: "1.7.0"),
         .package(url: "https://github.com/apple/swift-argument-parser", .upToNextMinor(from: "0.0.1"))
     ],
     targets: [
         .target(name: "Grebe-Framework", dependencies: ["GRPC"]),
-        .target(name: "Grebe-Generate", dependencies: ["SPMUtility", "SwiftProtobufPluginLibrary", "ArgumentParser"]),
-        .target(name: "Grebe-CLI", dependencies: ["SPMUtility", "ArgumentParser"]),
+        .target(name: "Grebe-Generate", dependencies: ["SwiftProtobufPluginLibrary", "ArgumentParser"]),
+        .target(name: "Grebe-CLI", dependencies: ["ArgumentParser"]),
         .testTarget(name: "Grebe-FrameworkTests", dependencies: ["Grebe-Framework"]),
     ]
 )
