@@ -10,7 +10,7 @@ jobs:
     - uses: garden-io/update-homebrew-action@v1
       with:
         packageName: 'grebe'
-        templatePath: '/grebe.rb'
+        templatePath: 'grebe.rb'
         tapRepo: 'Apodini/homebrew-tap'
         srcRepo: 'Apodini/Grebe'
         authToken: ${{ secrets.HOMEBREW }}
