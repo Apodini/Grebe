@@ -121,4 +121,4 @@ call.execute()
 Grebe is licensed under the MIT License. See [License](https://github.com/Apodini/Grebe/blob/develop/LICENSE) for more information.
 
 ## Contributing
-Contributions to this projects are welcome. Please make sure to the [contribution guidelines](https://github.com/Apodini/.github/blob/master/contributing.md) first.
+Contributions to this projects are welcome. Please make sure to read the [contribution guidelines](https://github.com/Apodini/.github/blob/master/contributing.md) first.
