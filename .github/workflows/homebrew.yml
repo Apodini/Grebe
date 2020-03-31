@@ -4,6 +4,9 @@ jobs:
   deployTap:
     runs-on: macOS-latest
     steps:
+    - uses: webfactory/ssh-agent@v0.2.0
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
     - uses: garden-io/update-homebrew-action@v1
       with:
         packageName: 'grebe'
