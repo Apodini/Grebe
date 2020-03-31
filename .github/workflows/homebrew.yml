@@ -10,4 +10,4 @@ jobs:
         templatePath: '/grebe.rb'
         tapRepo: 'Apodini/homebrew-tap'
         srcRepo: 'Apodini/Grebe'
-        authToken: ${{ secrets.ACCESS_TOKEN }}
+        authToken: ${{ secrets.HOMEBREW }}
