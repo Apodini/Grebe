@@ -15,7 +15,7 @@ import SwiftProtobuf
 ///
 /// This client encapsulates a `GRPCClient` that conforms to `GRPCClientInitializable`.
 /// The `GRPCClient` is created at initialization. To hide the complexity of a `GRPCClient`
-/// the initializer takes a `ConnectionTarget` and `CallOptions` as only parameters.
+/// the initializer only takes a `ConnectionTarget` and `CallOptions` as parameters.
 ///
 /// ##### Example Usage
 /// ```
