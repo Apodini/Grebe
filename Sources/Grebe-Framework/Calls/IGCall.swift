@@ -21,7 +21,7 @@ import NIO
 ///
 /// To run an instance of `ICall`, call the `execute` method of the specific call.
 ///
-public protocol ICall {
+public protocol IGCall {
     /// The type of the request message for the call.
     associatedtype Request: Message
     /// The type of the response message for the call.

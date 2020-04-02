@@ -41,7 +41,7 @@ import SwiftProtobuf
 /// GServerStreamingCall(request: EchoRequest.with { $0.message = "hello"}, closure: echo)
 /// ```
 ///
-public class GServerStreamingCall<Request: Message, Response: Message>: ICall {
+public class GServerStreamingCall<Request: Message, Response: Message>: IGCall {
     public typealias CallClosure = (
         _ request: Request,
         _ callOptions: CallOptions?,

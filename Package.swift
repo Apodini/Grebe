@@ -1,4 +1,4 @@
-// swift-tools-version:5.1
+// swift-tools-version:5.2
 // The swift-tools-version declares the minimum version of Swift required to build this package.
 
 import PackageDescription
@@ -14,14 +14,34 @@ let package = Package(
         .executable(name: "grebe", targets: ["Grebe-CLI"])
     ],
     dependencies: [
-        .package(url: "https://github.com/grpc/grpc-swift.git", .exact("1.0.0-alpha.8")),
-        .package(url: "https://github.com/apple/swift-protobuf.git", from: "1.7.0"),
-        .package(url: "https://github.com/apple/swift-argument-parser", .upToNextMinor(from: "0.0.1"))
+        .package(name: "GRPC",
+                 url: "https://github.com/grpc/grpc-swift.git",
+                 .exact("1.0.0-alpha.8")
+        ),
+        .package(name: "SwiftProtobuf",
+                 url: "https://github.com/apple/swift-protobuf.git",
+                 from: "1.7.0"
+        ),
+        .package(name: "swift-argument-parser",
+                 url: "https://github.com/apple/swift-argument-parser",
+                 .upToNextMinor(from: "0.0.1")
+        )
     ],
     targets: [
-        .target(name: "Grebe-Framework", dependencies: ["GRPC"]),
-        .target(name: "Grebe-Generate", dependencies: ["SwiftProtobufPluginLibrary", "ArgumentParser"]),
-        .target(name: "Grebe-CLI", dependencies: ["ArgumentParser"]),
-        .testTarget(name: "Grebe-FrameworkTests", dependencies: ["Grebe-Framework"]),
+        .target(name: "Grebe-Framework", dependencies: [.product(name: "GRPC", package: "GRPC")]),
+        .target(
+            name: "Grebe-Generate",
+            dependencies: [
+                .product(name: "ArgumentParser", package: "swift-argument-parser"),
+                .product(name: "SwiftProtobufPluginLibrary", package: "SwiftProtobuf")
+            ]
+        ),
+        .target(
+            name: "Grebe-CLI",
+            dependencies: [
+                .product(name: "ArgumentParser", package: "swift-argument-parser")
+            ]
+        ),
+        .testTarget(name: "Grebe-FrameworkTests", dependencies: ["Grebe-Framework"])
     ]
 )
