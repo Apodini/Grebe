@@ -8,5 +8,5 @@ jobs:
       uses: dawidd6/action-homebrew-bump-formula@v2
       with:
         token: ${{ secrets.HOMEBREW }}
-        formula: Apodini/homebrew-tap/grebe.rb
+        formula: apodini/tap/grebe
         force: false
