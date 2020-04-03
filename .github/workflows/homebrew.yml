@@ -1,16 +1,12 @@
-name: UpdateTap
+name: Update Hombrew Tap
 on: [push]
 jobs:
   deployTap:
     runs-on: macOS-latest
     steps:
-    - uses: webfactory/ssh-agent@v0.2.0
+    - name: Update Homebrew formula
+      uses: dawidd6/action-homebrew-bump-formula@v2
       with:
-        ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
-    - uses: garden-io/update-homebrew-action@v1
-      with:
-        packageName: 'grebe'
-        templatePath: 'support/grebe.rb'
-        tapRepo: 'Apodini/homebrew-tap'
-        srcRepo: 'Apodini/Grebe'
-        authToken: ${{ secrets.HOMEBREW }}
+        token: ${{ secrets.HOMEBREW }}
+        formula: Apodini/homebrew-tap/grebe.rb
+        force: false
