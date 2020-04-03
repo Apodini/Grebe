@@ -1,5 +1,8 @@
 name: Update Hombrew Tap
-on: [push]
+on:
+  push:
+    tags:
+      - '*'
 jobs:
   deployTap:
     runs-on: ubuntu-latest
