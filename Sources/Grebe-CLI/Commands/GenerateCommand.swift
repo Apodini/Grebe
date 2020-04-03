@@ -72,7 +72,7 @@ internal class GenerateCommand: IExecutableCommand {
     // MARK: - Generate Code
 
     private func generateCode() throws {
-//        try loadBuildExecutable()
+        try loadBuildExecutable()
         try generateGRPC()
         try generateGrebe()
     }
