@@ -5,7 +5,7 @@ name: Create Release
 on:
   push:
     tags:
-      - 'v*.*.*'
+      - '*.*.*'
 
 jobs:
   build:
