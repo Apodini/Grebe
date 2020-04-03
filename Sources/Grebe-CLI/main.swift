@@ -26,7 +26,7 @@ extension Grebe {
         @Option(name: .shortAndLong, help: "Path to a PATH directory")
         var pathDirectory: String?
         
-        @Option(name: .shortAndLong, default: "1.0.0", help: "Version number of Grebe Code Generator")
+        @Option(name: .shortAndLong, default: "0.0.3", help: "Version number of Grebe Code Generator")
         var versionNumber: String
         
         @Option(name: .shortAndLong, default: true, help: "Generate gRPC-Swift files")
