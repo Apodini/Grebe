@@ -2,7 +2,7 @@ name: Update Hombrew Tap
 on: [push]
 jobs:
   deployTap:
-    runs-on: macOS-latest
+    runs-on: ubuntu-latest
     steps:
     - name: Update Homebrew formula
       uses: dawidd6/action-homebrew-bump-formula@v2
