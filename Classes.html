@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Classes  Reference</title>
+    <link rel="stylesheet" type="text/css" href="css/jazzy.css" />
+    <link rel="stylesheet" type="text/css" href="css/highlight.css" />
+    <meta charset="utf-8">
+    <script src="js/jquery.min.js" defer></script>
+    <script src="js/jazzy.js" defer></script>
+    
+    <script src="js/lunr.min.js" defer></script>
+    <script src="js/typeahead.jquery.js" defer></script>
+    <script src="js/jazzy.search.js" defer></script>
+  </head>
+  <body>
+
+    <a name="//apple_ref/swift/Section/Classes" class="dashAnchor"></a>
+
+    <a title="Classes  Reference"></a>
+
+    <header class="header">
+      <p class="header-col header-col--primary">
+        <a class="header-link" href="index.html">
+          Grebe_Framework Docs
+        </a>
+         (95% documented)
+      </p>
+    
+      <p class="header-col--secondary">
+        <form role="search" action="search.json">
+          <input type="text" placeholder="Search documentation" data-typeahead>
+        </form>
+      </p>
+    
+    
+    </header>
+
+    <p class="breadcrumbs">
+      <a class="breadcrumb" href="index.html">Grebe_Framework Reference</a>
+      <img class="carat" src="img/carat.png" />
+      Classes  Reference
+    </p>
+
+    <div class="content-wrapper">
+      <nav class="navigation">
+        <ul class="nav-groups">
+          <li class="nav-group-name">
+            <a class="nav-group-name-link" href="Guides.html">Guides</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="readme.html">README</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a class="nav-group-name-link" href="Classes.html">Classes</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Classes/GBidirectionalStreamingCall.html">GBidirectionalStreamingCall</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Classes/GClient.html">GClient</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Classes/GClientStreamingCall.html">GClientStreamingCall</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Classes/GServerStreamingCall.html">GServerStreamingCall</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Classes/GUnaryCall.html">GUnaryCall</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a class="nav-group-name-link" href="Protocols.html">Protocols</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Protocols/GRPCClientInitializable.html">GRPCClientInitializable</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Protocols/ICall.html">ICall</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Protocols/IGClient.html">IGClient</a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+      <article class="main-content">
+
+        <section class="section">
+          <div class="section-content top-matter">
+            <h1>Classes</h1>
+            <p>The following classes are available globally.</p>
+
+          </div>
+        </section>
+
+        <section class="section">
+          <div class="section-content">
+            <div class="task-group">
+              <ul class="item-container">
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:15Grebe_Framework27GBidirectionalStreamingCallC"></a>
+                    <a name="//apple_ref/swift/Class/GBidirectionalStreamingCall" class="dashAnchor"></a>
+                    <a class="token" href="#/s:15Grebe_Framework27GBidirectionalStreamingCallC">GBidirectionalStreamingCall</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <h4 id='a-bidirectional-streaming-grebe-call' class='heading'>A bidirectional streaming Grebe call.</h4>
+
+<p>Both sides, the client and the server, send a sequence of messages. The two streams
+operate independently, so clients and servers can read and write and whatever
+oder they like: for example, the server could wait to receive all the client messages
+before writing its responses, or it could alternately read a message then write a
+message, or some other combination of reads and writes.</p>
+<h5 id='example-usage-of-code-gbidirectionalstreamingcall-code' class='heading'>Example usage of <code>GBidirectionalStreamingCall</code></h5>
+
+<p>Consider the following protobuf definition for a simple echo service.
+The service defines one bidirectional streaming RPC. You send a stream of messages and it
+echoes a stream of messages back to you.</p>
+<pre class="highlight protobuf"><code><span class="na">syntax</span> <span class="o">=</span> <span class="s">"proto3"</span><span class="p">;</span>
+
+<span class="kd">service</span> <span class="n">EchoService</span> <span class="p">{</span>
+    <span class="k">rpc</span> <span class="n">echo</span> <span class="p">(</span><span class="n">stream</span> <span class="n">EchoRequest</span><span class="p">)</span> <span class="k">returns</span> <span class="p">(</span><span class="n">stream</span> <span class="n">EchoResponse</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kd">message</span> <span class="nc">EchoRequest</span> <span class="p">{</span>
+    <span class="kt">string</span> <span class="kd">message</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kd">message</span> <span class="nc">EchoResponse</span> <span class="p">{</span>
+    <span class="kt">string</span> <span class="kd">message</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre>
+
+<p>You can create a <code>GBidirectionalStreamingCall</code> like this:</p>
+<pre class="highlight swift"><code><span class="k">let</span> <span class="nv">requests</span> <span class="o">=</span> <span class="kt">Publishers</span><span class="o">.</span><span class="kt">Sequence</span><span class="o">&lt;</span><span class="p">[</span><span class="kt">EchoRequest</span><span class="p">],</span> <span class="kt">Error</span><span class="o">&gt;</span><span class="p">(</span>
+    <span class="nv">sequence</span><span class="p">:</span> <span class="p">[</span><span class="kt">EchoRequest</span><span class="o">.</span><span class="n">with</span> <span class="p">{</span> <span class="nv">$0</span><span class="o">.</span><span class="n">message</span> <span class="o">=</span> <span class="s">"hello"</span><span class="p">},</span> <span class="kt">EchoRequest</span><span class="o">.</span><span class="n">with</span> <span class="p">{</span> <span class="nv">$0</span><span class="o">.</span><span class="n">message</span> <span class="o">=</span> <span class="s">"world"</span><span class="p">}]</span>
+<span class="p">)</span><span class="o">.</span><span class="nf">eraseToAnyPublisher</span><span class="p">()</span>
+
+<span class="kt">GBidirectionalStreamingCall</span><span class="p">(</span><span class="nv">request</span><span class="p">:</span> <span class="n">requests</span><span class="p">,</span> <span class="nv">callOptions</span><span class="p">:</span> <span class="n">callOptions</span><span class="p">,</span> <span class="nv">closure</span><span class="p">:</span> <span class="n">echo</span><span class="p">)</span>
+</code></pre>
+
+                        <a href="Classes/GBidirectionalStreamingCall.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">GBidirectionalStreamingCall</span><span class="o">&lt;</span><span class="kt">Request</span><span class="p">,</span> <span class="kt">Response</span><span class="o">&gt;</span> <span class="p">:</span> <span class="kt"><a href="Protocols/ICall.html">ICall</a></span> <span class="k">where</span> <span class="kt">Request</span> <span class="p">:</span> <span class="kt">Message</span><span class="p">,</span> <span class="kt">Response</span> <span class="p">:</span> <span class="kt">Message</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:15Grebe_Framework20GClientStreamingCallC"></a>
+                    <a name="//apple_ref/swift/Class/GClientStreamingCall" class="dashAnchor"></a>
+                    <a class="token" href="#/s:15Grebe_Framework20GClientStreamingCallC">GClientStreamingCall</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <h4 id='a-client-streaming-grebe-call' class='heading'>A client streaming Grebe call.</h4>
+
+<p>The client sends a sequence of request messages to the server. Once the client
+has finished writing the messages it waits for the server to read them and
+return its response</p>
+<h5 id='example-usage-of-code-gclientstreamingcall-code' class='heading'>Example usage of <code>GClientStreamingCall</code></h5>
+
+<p>Consider the following protobuf definition for a simple echo service.
+The service defines one client streaming RPC. You send a stream of messages and it
+sends one messages back to you.</p>
+<pre class="highlight protobuf"><code><span class="na">syntax</span> <span class="o">=</span> <span class="s">"proto3"</span><span class="p">;</span>
+
+<span class="kd">service</span> <span class="n">EchoService</span> <span class="p">{</span>
+    <span class="k">rpc</span> <span class="n">echo</span> <span class="p">(</span><span class="n">stream</span> <span class="n">EchoRequest</span><span class="p">)</span> <span class="k">returns</span> <span class="p">(</span><span class="n">EchoResponse</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kd">message</span> <span class="nc">EchoRequest</span> <span class="p">{</span>
+    <span class="kt">string</span> <span class="kd">message</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kd">message</span> <span class="nc">EchoResponse</span> <span class="p">{</span>
+    <span class="kt">string</span> <span class="kd">message</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre>
+
+<p>You can create a <code>GClientStreamingCall</code> like this:</p>
+<pre class="highlight swift"><code><span class="k">let</span> <span class="nv">requests</span> <span class="o">=</span> <span class="kt">Publishers</span><span class="o">.</span><span class="kt">Sequence</span><span class="o">&lt;</span><span class="p">[</span><span class="kt">EchoRequest</span><span class="p">],</span> <span class="kt">Error</span><span class="o">&gt;</span><span class="p">(</span>
+    <span class="nv">sequence</span><span class="p">:</span> <span class="p">[</span><span class="kt">EchoRequest</span><span class="o">.</span><span class="n">with</span> <span class="p">{</span> <span class="nv">$0</span><span class="o">.</span><span class="n">message</span> <span class="o">=</span> <span class="s">"hello"</span><span class="p">},</span> <span class="kt">EchoRequest</span><span class="o">.</span><span class="n">with</span> <span class="p">{</span> <span class="nv">$0</span><span class="o">.</span><span class="n">message</span> <span class="o">=</span> <span class="s">"world"</span><span class="p">}]</span>
+<span class="p">)</span><span class="o">.</span><span class="nf">eraseToAnyPublisher</span><span class="p">()</span>
+
+<span class="kt">GClientStreamingCall</span><span class="p">(</span><span class="nv">request</span><span class="p">:</span> <span class="n">requests</span><span class="p">,</span> <span class="nv">callOptions</span><span class="p">:</span> <span class="n">callOptions</span><span class="p">,</span> <span class="nv">closure</span><span class="p">:</span> <span class="n">echo</span><span class="p">)</span>
+</code></pre>
+
+                        <a href="Classes/GClientStreamingCall.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">GClientStreamingCall</span><span class="o">&lt;</span><span class="kt">Request</span><span class="p">,</span> <span class="kt">Response</span><span class="o">&gt;</span> <span class="p">:</span> <span class="kt"><a href="Protocols/ICall.html">ICall</a></span> <span class="k">where</span> <span class="kt">Request</span> <span class="p">:</span> <span class="kt">Message</span><span class="p">,</span> <span class="kt">Response</span> <span class="p">:</span> <span class="kt">Message</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:15Grebe_Framework20GServerStreamingCallC"></a>
+                    <a name="//apple_ref/swift/Class/GServerStreamingCall" class="dashAnchor"></a>
+                    <a class="token" href="#/s:15Grebe_Framework20GServerStreamingCallC">GServerStreamingCall</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <h4 id='a-server-streaming-grebe-call' class='heading'>A server streaming Grebe call.</h4>
+
+<p>The client sends a request to the server and gets a sequence of response messages back.</p>
+<h5 id='example-usage-of-code-gserverstreamingcall-code' class='heading'>Example usage of <code>GServerStreamingCall</code></h5>
+
+<p>Consider the following protobuf definition for a simple echo service.
+The service defines one server streaming RPC. You send one message and it
+echoes a stream of messages back to you.</p>
+<pre class="highlight protobuf"><code><span class="na">syntax</span> <span class="o">=</span> <span class="s">"proto3"</span><span class="p">;</span>
+
+<span class="kd">service</span> <span class="n">EchoService</span> <span class="p">{</span>
+    <span class="k">rpc</span> <span class="n">echo</span> <span class="p">(</span><span class="n">EchoRequest</span><span class="p">)</span> <span class="k">returns</span> <span class="p">(</span><span class="n">stream</span> <span class="n">EchoResponse</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kd">message</span> <span class="nc">EchoRequest</span> <span class="p">{</span>
+    <span class="kt">string</span> <span class="kd">message</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kd">message</span> <span class="nc">EchoResponse</span> <span class="p">{</span>
+    <span class="kt">string</span> <span class="kd">message</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre>
+
+<p>You can create a <code>GServerStreamingCall</code> like this:</p>
+<pre class="highlight swift"><code><span class="kt">GServerStreamingCall</span><span class="p">(</span><span class="nv">request</span><span class="p">:</span> <span class="kt">EchoRequest</span><span class="o">.</span><span class="n">with</span> <span class="p">{</span> <span class="nv">$0</span><span class="o">.</span><span class="n">message</span> <span class="o">=</span> <span class="s">"hello"</span><span class="p">},</span> <span class="nv">closure</span><span class="p">:</span> <span class="n">echo</span><span class="p">)</span>
+</code></pre>
+
+                        <a href="Classes/GServerStreamingCall.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">GServerStreamingCall</span><span class="o">&lt;</span><span class="kt">Request</span><span class="p">,</span> <span class="kt">Response</span><span class="o">&gt;</span> <span class="p">:</span> <span class="kt"><a href="Protocols/ICall.html">ICall</a></span> <span class="k">where</span> <span class="kt">Request</span> <span class="p">:</span> <span class="kt">Message</span><span class="p">,</span> <span class="kt">Response</span> <span class="p">:</span> <span class="kt">Message</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:15Grebe_Framework10GUnaryCallC"></a>
+                    <a name="//apple_ref/swift/Class/GUnaryCall" class="dashAnchor"></a>
+                    <a class="token" href="#/s:15Grebe_Framework10GUnaryCallC">GUnaryCall</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <h4 id='a-unary-grebe-call' class='heading'>A unary Grebe call.</h4>
+
+<p>The client sends a single request to the server and gets a single response back, just like a normal function call.</p>
+<h5 id='example-usage-of-code-gunarycall-code' class='heading'>Example usage of <code>GUnaryCall</code></h5>
+
+<p>Consider the following protobuf definition for a simple echo service.
+The service defines one unary RPC. You send one message and it
+echoes the message back to you.</p>
+<pre class="highlight protobuf"><code><span class="na">syntax</span> <span class="o">=</span> <span class="s">"proto3"</span><span class="p">;</span>
+
+<span class="kd">service</span> <span class="n">EchoService</span> <span class="p">{</span>
+    <span class="k">rpc</span> <span class="n">echo</span> <span class="p">(</span><span class="n">EchoRequest</span><span class="p">)</span> <span class="k">returns</span> <span class="p">(</span><span class="n">EchoResponse</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kd">message</span> <span class="nc">EchoRequest</span> <span class="p">{</span>
+    <span class="kt">string</span> <span class="kd">message</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kd">message</span> <span class="nc">EchoResponse</span> <span class="p">{</span>
+    <span class="kt">string</span> <span class="kd">message</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre>
+
+<p>You can create a <code>GUnaryCall</code> like this:</p>
+<pre class="highlight swift"><code><span class="kt">GUnaryCall</span><span class="p">(</span><span class="nv">request</span><span class="p">:</span> <span class="kt">EchoRequest</span><span class="o">.</span><span class="n">with</span> <span class="p">{</span> <span class="nv">$0</span><span class="o">.</span><span class="n">message</span> <span class="o">=</span> <span class="s">"hello"</span><span class="p">},</span> <span class="nv">closure</span><span class="p">:</span> <span class="n">echo</span><span class="p">)</span>
+</code></pre>
+
+                        <a href="Classes/GUnaryCall.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">GUnaryCall</span><span class="o">&lt;</span><span class="kt">Request</span><span class="p">,</span> <span class="kt">Response</span><span class="o">&gt;</span> <span class="p">:</span> <span class="kt"><a href="Protocols/ICall.html">ICall</a></span> <span class="k">where</span> <span class="kt">Request</span> <span class="p">:</span> <span class="kt">Message</span><span class="p">,</span> <span class="kt">Response</span> <span class="p">:</span> <span class="kt">Message</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:15Grebe_Framework7GClientC"></a>
+                    <a name="//apple_ref/swift/Class/GClient" class="dashAnchor"></a>
+                    <a class="token" href="#/s:15Grebe_Framework7GClientC">GClient</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Implementation of <code><a href="Protocols/IGClient.html">IGClient</a></code>.</p>
+
+                        <a href="Classes/GClient.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">GClient</span><span class="o">&lt;</span><span class="kt">Client</span><span class="o">&gt;</span> <span class="p">:</span> <span class="kt"><a href="Protocols/IGClient.html">IGClient</a></span> <span class="k">where</span> <span class="kt">Client</span> <span class="p">:</span> <span class="kt"><a href="Protocols/GRPCClientInitializable.html">GRPCClientInitializable</a></span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+      </article>
+    </div>
+    <section class="footer">
+      <p>&copy; 2020 <a class="link" href="" target="_blank" rel="external">Tim Mewe</a>. All rights reserved. (Last updated: 2020-04-03)</p>
+      <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.13.2</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
+    </section>
+  </body>
+</div>
+</html>

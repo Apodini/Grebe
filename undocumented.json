@@ -1,0 +1,19 @@
+{
+  "warnings": [
+    {
+      "file": "/Users/runner/runners/2.165.2/work/Grebe/Grebe/Sources/Grebe-Framework/Client/GRPCClientInitializable.swift",
+      "line": 14,
+      "symbol": "GRPCClientInitializable.init(connection:defaultCallOptions:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/runners/2.165.2/work/Grebe/Grebe/Sources/Grebe-Framework/Client/IGClient.swift",
+      "line": 25,
+      "symbol": "IGClient.Client",
+      "symbol_kind": "source.lang.swift.decl.associatedtype",
+      "warning": "undocumented"
+    }
+  ],
+  "source_directory": "/Users/runner/runners/2.165.2/work/Grebe/Grebe"
+}

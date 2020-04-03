@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>README  Reference</title>
+    <link rel="stylesheet" type="text/css" href="css/jazzy.css" />
+    <link rel="stylesheet" type="text/css" href="css/highlight.css" />
+    <meta charset="utf-8">
+    <script src="js/jquery.min.js" defer></script>
+    <script src="js/jazzy.js" defer></script>
+    
+    <script src="js/lunr.min.js" defer></script>
+    <script src="js/typeahead.jquery.js" defer></script>
+    <script src="js/jazzy.search.js" defer></script>
+  </head>
+  <body>
+
+
+    <a title="README  Reference"></a>
+
+    <header class="header">
+      <p class="header-col header-col--primary">
+        <a class="header-link" href="index.html">
+          Grebe_Framework Docs
+        </a>
+         (95% documented)
+      </p>
+    
+      <p class="header-col--secondary">
+        <form role="search" action="search.json">
+          <input type="text" placeholder="Search documentation" data-typeahead>
+        </form>
+      </p>
+    
+    
+    </header>
+
+    <p class="breadcrumbs">
+      <a class="breadcrumb" href="index.html">Grebe_Framework Reference</a>
+      <img class="carat" src="img/carat.png" />
+      README  Reference
+    </p>
+
+    <div class="content-wrapper">
+      <nav class="navigation">
+        <ul class="nav-groups">
+          <li class="nav-group-name">
+            <a class="nav-group-name-link" href="Guides.html">Guides</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="readme.html">README</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a class="nav-group-name-link" href="Classes.html">Classes</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Classes/GBidirectionalStreamingCall.html">GBidirectionalStreamingCall</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Classes/GClient.html">GClient</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Classes/GClientStreamingCall.html">GClientStreamingCall</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Classes/GServerStreamingCall.html">GServerStreamingCall</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Classes/GUnaryCall.html">GUnaryCall</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a class="nav-group-name-link" href="Protocols.html">Protocols</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Protocols/GRPCClientInitializable.html">GRPCClientInitializable</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Protocols/ICall.html">ICall</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Protocols/IGClient.html">IGClient</a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+      <article class="main-content">
+
+        <section class="section">
+          <div class="section-content top-matter">
+            
+            <h1 id='grebe' class='heading'>Grebe</h1>
+
+<p>This repository is intended to improve and simplify the gRPC development workflow for iOS apps and provides a small wrapper to incorporate Swift Combine in gRPC. The Swift Package contains the following parts: </p>
+
+<ul>
+<li>A Swift Combine gRPC wrapper. Read more about it in <a href="#swift-combine-grpc-wrapper">this section</a>.</li>
+<li>A code generator to generate Swift code using the previously stated library.</li>
+<li>A CLI tool to simplify the development workflow. You can import the library without using the CLI tool. Read more about it in <a href="#building-the-grebe-swift-package">this section</a></li>
+</ul>
+<h2 id='installation' class='heading'>Installation</h2>
+
+<p>You can install the Grebe CLI executable via <a href="https://brew.sh">Homebrew</a>. To install run the following command in your command line:</p>
+<pre class="highlight shell"><code>brew install apodini/tap/grebe
+</code></pre>
+
+<p>Of course you can simply clone the repository or install it via the <a href="https://swift.org/package-manager/">Swift Package Manager</a>.</p>
+<h2 id='usage' class='heading'>Usage</h2>
+
+<p>The recommended way to use Grebe is to first define an API using the <a href="https://developers.google.com/protocol-buffers/">Protocol Buffer</a> language.</p>
+<h3 id='setting-up-grebe' class='heading'>Setting up Grebe</h3>
+
+<p>To use Grebe you need to install the <a href="https://github.com/protocolbuffers/protobuf">Protocol Buffer Compiler</a>, the <a href="https://github.com/apple/swift-protobuf">Swift Protobuf Code Generator Plugin</a> and <a href="https://github.com/grpc/grpc-swift">Swift gRPC</a> plugins to generate the necessary support code. To do all this in one step, run the following command in your command line. Make sure to specify your shell path.</p>
+<pre class="highlight shell"><code>grebe setup -e &lt;your shell path&gt;
+</code></pre>
+<h3 id='building-the-grebe-swift-package' class='heading'>Building the Grebe Swift Package</h3>
+
+<p>This step generates a Swift Package that contains the Protocol Buffer support code, the gRPC interface code and the Grebe interface code. It hides the complete <code>gRPC</code> implementation and exposes only the methods, services and message types defined in your proto file. You can easily intergrate it into your project via drag and drop. It is not part of the main target and therefore offers a clear public interface.</p>
+
+<p>After you run the setup command described in the previous step you are ready to build the Swift Package:</p>
+<pre class="highlight shell"><code>grebe generate -p &lt;proto file path&gt;
+</code></pre>
+
+<p>This command will do the following:</p>
+
+<ol>
+<li>Load the latest version of the Grebe code generator (unless otherwise stated) to generate Swift code which projects the service methods defined in your proto file to simple Swift methods using our library.</li>
+<li>Invoke the <code>protoc-gen-swift</code> and <code>protoc-gen-swiftgrpc</code> plugins on your proto file.</li>
+<li>Bundle all generated code in a Swift Package.</li>
+</ol>
+<h4 id='parameters' class='heading'>Parameters</h4>
+
+<table><thead>
+<tr>
+<th>Flag</th>
+<th>Values</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code>-p</code>/<code>--proto</code></td>
+<td><code>String</code></td>
+<td>&ldquo;</td>
+<td>The path of your proto file</td>
+</tr>
+<tr>
+<td><code>-d</code>/<code>--destination</code></td>
+<td><code>String</code></td>
+<td>&rdquo;</td>
+<td>The path of the generated Swift Package</td>
+</tr>
+<tr>
+<td><code>-e</code>/<code>--executable</code></td>
+<td><code>String</code></td>
+<td><code>/usr/local/bin</code></td>
+<td>Your shell path</td>
+</tr>
+<tr>
+<td><code>-v</code>/<code>--version</code></td>
+<td><code>Double</code></td>
+<td>1.0</td>
+<td>The version number of the Grebe-Generator Plugin</td>
+</tr>
+<tr>
+<td><code>-g</code>/<code>--grebe</code></td>
+<td><code>true</code>/<code>false</code></td>
+<td><code>true</code></td>
+<td>Wether to generate only Grebe files</td>
+</tr>
+<tr>
+<td><code>-s</code>/<code>--swiftgrpc</code></td>
+<td><code>true</code>/<code>false</code></td>
+<td><code>true</code></td>
+<td>Wether to generate only gRPC-Swift files</td>
+</tr>
+</tbody></table>
+<h3 id='using-the-generated-swift-package' class='heading'>Using the generated Swift Package</h3>
+
+<p>Drag the package folder  into your Xcode project. Then click the Plus button in the &ldquo;Link Binary with Libraries&rdquo; section, locate the package in the modal dialog, select the gray library icon inside the package, and add this one. In all files you would like to use the package import <code>Grebe_Generated</code>.</p>
+<h4 id='example' class='heading'>Example</h4>
+
+<p>Consider the following protobuf definition for a simple echo service. The service defines one unary RPC. You send one message and it echoes the message back to you.</p>
+<pre class="highlight protobuf"><code><span class="na">syntax</span> <span class="o">=</span> <span class="s">"proto3"</span><span class="p">;</span>
+
+<span class="kd">service</span> <span class="n">EchoService</span> <span class="p">{</span>
+  <span class="k">rpc</span> <span class="n">echo</span> <span class="p">(</span><span class="n">EchoRequest</span><span class="p">)</span> <span class="k">returns</span> <span class="p">(</span><span class="n">EchoResponse</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kd">message</span> <span class="nc">EchoRequest</span> <span class="p">{</span>
+  <span class="kt">string</span> <span class="kd">message</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kd">message</span> <span class="nc">EchoResponse</span> <span class="p">{</span>
+  <span class="kt">string</span> <span class="kd">message</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre>
+
+<p>The code generator will create following Swift file:</p>
+<pre class="highlight swift"><code><span class="kd">extension</span> <span class="kt">EchoServiceService</span><span class="p">:</span> <span class="kt">GRPCClientInitializable</span> <span class="p">{</span>
+  <span class="kd">func</span> <span class="nf">echo</span><span class="p">(</span>
+    <span class="nv">request</span><span class="p">:</span> <span class="kt">EchoRequest</span><span class="p">,</span> 
+    <span class="nv">callOptions</span><span class="p">:</span> <span class="kt">CallOptions</span><span class="p">?</span> <span class="o">=</span> <span class="n">defaultCallOptions</span>
+  <span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">AnyPublisher</span><span class="o">&lt;</span><span class="kt">EchoResponse</span><span class="p">,</span> <span class="kt">GRPCStatus</span><span class="o">&gt;</span> <span class="p">{</span>
+    <span class="kt">GUnaryCall</span><span class="p">(</span><span class="nv">request</span><span class="p">:</span> <span class="n">request</span><span class="p">,</span> <span class="nv">callOptions</span><span class="p">:</span> <span class="n">callOptions</span><span class="p">,</span> <span class="nv">closure</span><span class="p">:</span> <span class="n">echo</span><span class="p">)</span><span class="o">.</span><span class="nf">execute</span><span class="p">()</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre>
+
+<p>Now just call the generated method:</p>
+<pre class="highlight swift"><code><span class="nf">echo</span><span class="p">(</span><span class="nv">request</span><span class="p">:</span> <span class="kt">EchoRequest</span><span class="o">.</span><span class="n">with</span> <span class="p">{</span> <span class="nv">$0</span><span class="o">.</span><span class="n">message</span> <span class="o">=</span> <span class="s">"hello"</span><span class="p">})</span>
+</code></pre>
+<h2 id='swift-combine-grpc-wrapper' class='heading'>Swift Combine gRPC Wrapper</h2>
+
+<p>This library provides a <a href="https://developer.apple.com/documentation/combine">Swift-Combine</a> wrapper for <a href="https://github.com/grpc/grpc-swift/tree/nio">Swift-gRPC</a>. It is a generic abstraction
+layer above the <code>nio</code> layer provided by the <code>Swift-gRPC</code> implementation. It supports all four gRPC API styles (Unary, Server Streaming, Client Streaming, and Bidirectional Streaming).</p>
+<h3 id='example' class='heading'>Example</h3>
+
+<p>Again consider the following protobuf definition for a simple echo service.</p>
+<pre class="highlight protobuf"><code><span class="na">syntax</span> <span class="o">=</span> <span class="s">"proto3"</span><span class="p">;</span>
+
+<span class="kd">service</span> <span class="n">EchoService</span> <span class="p">{</span>
+  <span class="k">rpc</span> <span class="n">echo</span> <span class="p">(</span><span class="n">EchoRequest</span><span class="p">)</span> <span class="k">returns</span> <span class="p">(</span><span class="n">EchoResponse</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kd">message</span> <span class="nc">EchoRequest</span> <span class="p">{</span>
+  <span class="kt">string</span> <span class="kd">message</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kd">message</span> <span class="nc">EchoResponse</span> <span class="p">{</span>
+  <span class="kt">string</span> <span class="kd">message</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre>
+
+<p>Let&rsquo;s set up the client:</p>
+<pre class="highlight swift"><code><span class="k">let</span> <span class="nv">client</span> <span class="o">=</span> <span class="kt">GClient</span><span class="o">&lt;</span><span class="kt">EchoServiceServiceClient</span><span class="o">&gt;</span><span class="p">(</span><span class="nv">target</span><span class="p">:</span> <span class="o">.</span><span class="nf">hostAndPort</span><span class="p">(</span><span class="s">"localhost"</span><span class="p">,</span> <span class="mi">62801</span><span class="p">))</span>
+</code></pre>
+
+<p>To call the service, create a <code><a href="Classes/GUnaryCall.html">GUnaryCall</a></code> and use it&rsquo;s <code>execute</code> method. You provide it with a <code>EchoRequest</code> and get back a stream <code>AnyPublisher&lt;EchoResponse, GRPCStatus</code> of responses (in this case only one) from the server.</p>
+<pre class="highlight swift"><code><span class="k">let</span> <span class="nv">call</span> <span class="o">=</span> <span class="kt">GUnaryCall</span><span class="p">(</span><span class="nv">request</span><span class="p">:</span> <span class="kt">EchoRequest</span><span class="o">.</span><span class="n">with</span> <span class="p">{</span> <span class="nv">$0</span><span class="o">.</span><span class="n">message</span> <span class="o">=</span> <span class="s">"hello"</span><span class="p">},</span> <span class="nv">closure</span><span class="p">:</span> <span class="n">client</span><span class="o">.</span><span class="n">service</span><span class="o">.</span><span class="n">echo</span><span class="p">)</span>
+<span class="n">call</span><span class="o">.</span><span class="nf">execute</span><span class="p">()</span>
+</code></pre>
+<h2 id='license' class='heading'>License</h2>
+
+<p>Grebe is licensed under</p>
+<h2 id='contributing' class='heading'>Contributing</h2>
+
+<p>Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change. Please make sure to update tests as appropriate.</p>
+
+          </div>
+        </section>
+
+
+      </article>
+    </div>
+    <section class="footer">
+      <p>&copy; 2020 <a class="link" href="" target="_blank" rel="external">Tim Mewe</a>. All rights reserved. (Last updated: 2020-04-03)</p>
+      <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.13.2</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
+    </section>
+  </body>
+</div>
+</html>

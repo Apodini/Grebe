@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Protocols  Reference</title>
+    <link rel="stylesheet" type="text/css" href="css/jazzy.css" />
+    <link rel="stylesheet" type="text/css" href="css/highlight.css" />
+    <meta charset="utf-8">
+    <script src="js/jquery.min.js" defer></script>
+    <script src="js/jazzy.js" defer></script>
+    
+    <script src="js/lunr.min.js" defer></script>
+    <script src="js/typeahead.jquery.js" defer></script>
+    <script src="js/jazzy.search.js" defer></script>
+  </head>
+  <body>
+
+    <a name="//apple_ref/swift/Section/Protocols" class="dashAnchor"></a>
+
+    <a title="Protocols  Reference"></a>
+
+    <header class="header">
+      <p class="header-col header-col--primary">
+        <a class="header-link" href="index.html">
+          Grebe_Framework Docs
+        </a>
+         (95% documented)
+      </p>
+    
+      <p class="header-col--secondary">
+        <form role="search" action="search.json">
+          <input type="text" placeholder="Search documentation" data-typeahead>
+        </form>
+      </p>
+    
+    
+    </header>
+
+    <p class="breadcrumbs">
+      <a class="breadcrumb" href="index.html">Grebe_Framework Reference</a>
+      <img class="carat" src="img/carat.png" />
+      Protocols  Reference
+    </p>
+
+    <div class="content-wrapper">
+      <nav class="navigation">
+        <ul class="nav-groups">
+          <li class="nav-group-name">
+            <a class="nav-group-name-link" href="Guides.html">Guides</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="readme.html">README</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a class="nav-group-name-link" href="Classes.html">Classes</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Classes/GBidirectionalStreamingCall.html">GBidirectionalStreamingCall</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Classes/GClient.html">GClient</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Classes/GClientStreamingCall.html">GClientStreamingCall</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Classes/GServerStreamingCall.html">GServerStreamingCall</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Classes/GUnaryCall.html">GUnaryCall</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a class="nav-group-name-link" href="Protocols.html">Protocols</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Protocols/GRPCClientInitializable.html">GRPCClientInitializable</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Protocols/ICall.html">ICall</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Protocols/IGClient.html">IGClient</a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+      <article class="main-content">
+
+        <section class="section">
+          <div class="section-content top-matter">
+            <h1>Protocols</h1>
+            <p>The following protocols are available globally.</p>
+
+          </div>
+        </section>
+
+        <section class="section">
+          <div class="section-content">
+            <div class="task-group">
+              <ul class="item-container">
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:15Grebe_Framework5ICallP"></a>
+                    <a name="//apple_ref/swift/Protocol/ICall" class="dashAnchor"></a>
+                    <a class="token" href="#/s:15Grebe_Framework5ICallP">ICall</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <h4 id='base-protocol-for-a-grebe-call-to-a-grpc-service' class='heading'>Base protocol for a Grebe call to a gRPC service.</h4>
+
+<p>gRPC lets you define four kinds of service method:</p>
+
+<ul>
+<li>Unary RPCs (<code><a href="Classes/GUnaryCall.html">GUnaryCall</a></code>)</li>
+<li>Server streaming RPCs (<code><a href="Classes/GServerStreamingCall.html">GServerStreamingCall</a></code>)</li>
+<li>Client streaming RPCs (<code><a href="Classes/GClientStreamingCall.html">GClientStreamingCall</a></code>)</li>
+<li>Bidirectional streaming RPCs (<code><a href="Classes/GBidirectionalStreamingCall.html">GBidirectionalStreamingCall</a></code>)</li>
+</ul>
+
+<p>To run an instance of <code>ICall</code>, call the <code>execute</code> method of the specific call.</p>
+
+                        <a href="Protocols/ICall.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">ICall</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:15Grebe_Framework23GRPCClientInitializableP"></a>
+                    <a name="//apple_ref/swift/Protocol/GRPCClientInitializable" class="dashAnchor"></a>
+                    <a class="token" href="#/s:15Grebe_Framework23GRPCClientInitializableP">GRPCClientInitializable</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Classes conforming to this protocol can create a <code>GRPCClient</code> using a <code>ClientConnection</code>
+and <code>CallOptions</code>.</p>
+
+                        <a href="Protocols/GRPCClientInitializable.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">GRPCClientInitializable</span> <span class="p">:</span> <span class="kt">GRPCClient</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:15Grebe_Framework8IGClientP"></a>
+                    <a name="//apple_ref/swift/Protocol/IGClient" class="dashAnchor"></a>
+                    <a class="token" href="#/s:15Grebe_Framework8IGClientP">IGClient</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <h4 id='a-grebe-client' class='heading'>A Grebe client</h4>
+
+<p>This client encapsulates a <code>GRPCClient</code> that conforms to <code><a href="Protocols/GRPCClientInitializable.html">GRPCClientInitializable</a></code>.
+The <code>GRPCClient</code> is created at initialization. To hide the complexity of a <code>GRPCClient</code>
+the initializer takes a <code>ConnectionTarget</code> and <code>CallOptions</code> as only parameters.</p>
+<h5 id='example-usage' class='heading'>Example Usage</h5>
+<pre class="highlight swift"><code><span class="k">let</span> <span class="nv">client</span> <span class="o">=</span> <span class="kt">GClient</span><span class="o">&lt;</span><span class="kt">EchoServiceServiceClient</span><span class="o">&gt;</span><span class="p">(</span><span class="nv">target</span><span class="p">:</span> <span class="o">.</span><span class="nf">hostAndPort</span><span class="p">(</span><span class="s">"localhost"</span><span class="p">,</span> <span class="mi">62801</span><span class="p">))</span>
+</code></pre>
+
+                        <a href="Protocols/IGClient.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">IGClient</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+      </article>
+    </div>
+    <section class="footer">
+      <p>&copy; 2020 <a class="link" href="" target="_blank" rel="external">Tim Mewe</a>. All rights reserved. (Last updated: 2020-04-03)</p>
+      <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.13.2</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
+    </section>
+  </body>
+</div>
+</html>
