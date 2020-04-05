@@ -41,10 +41,10 @@ This command will do the following:
 | -------------------- | -------------- | ---------------- | ------------------------------------------------ |
 | `-p`/`--proto`       | `String`       | ``               | The path of your proto file                      |
 | `-d`/`--destination` | `String`       | ``               | The path of the generated Swift Package          |
-| `-e`/`--executable`  | `String`       | `/usr/local/bin` | Your shell path                                 |
+| `-e`/`--pathDirectory`  | `String`       | `/usr/local/bin` | Your shell path                                 |
 | `-v`/`--version`     | `Double`       | 1.0              | The version number of the Grebe-Generator Plugin |
-| `-g`/`--grebe`       | `true`/`false` | `true`           | Wether to generate only Grebe files              |
-| `-s`/`--swiftgrpc`   | `true`/`false` | `true`           | Wether to generate only gRPC-Swift files         |
+| `-g`/`--grebeGenerate`       | `true`/`false` | `true`           | Wether to generate only Grebe files              |
+| `-s`/`--swiftGrpcGenerate`   | `true`/`false` | `true`           | Wether to generate only gRPC-Swift files         |
 
 ### Using the generated Swift Package
 Drag the package folder  into your Xcode project. Then click the Plus button in the "Link Binary with Libraries" section, locate the package in the modal dialog, select the gray library icon inside the package, and add this one. In all files you would like to use the package import `Grebe_Generated`.

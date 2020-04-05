@@ -18,31 +18,31 @@ struct Grebe: ParsableCommand {
 extension Grebe {
     struct Generate: ParsableCommand {
         @Option(name: .shortAndLong, help: "Path to the proto file")
-        var protoFilePath: String
+        var proto: String
         
         @Option(name: .shortAndLong, help: "Path of the generated Swift Package")
-        var destinationFilePath: String
+        var destination: String
         
         @Option(name: .shortAndLong, help: "Path to a PATH directory")
         var pathDirectory: String?
         
         @Option(name: .shortAndLong, default: "0.0.3", help: "Version number of Grebe Code Generator")
-        var versionNumber: String
+        var version: String
         
         @Option(name: .shortAndLong, default: true, help: "Generate gRPC-Swift files")
         var grebeGenerate: Bool
         
         @Option(name: .shortAndLong, default: true, help: "Generate Grebe files")
-        var grpcGenerate: Bool
+        var swiftGrpcGenerate: Bool
         
         func run() {
             let arguments = Arguments(
-                protoPath: protoFilePath,
-                destinationPath: destinationFilePath,
+                protoPath: proto,
+                destinationPath: destination,
                 executablePath: pathDirectory ?? "/usr/local/bin",
-                versionNumber: versionNumber,
+                versionNumber: version,
                 grebeGenerate: grebeGenerate,
-                grpcGenerate: grpcGenerate
+                grpcGenerate: swiftGrpcGenerate
             )
             
             do {
