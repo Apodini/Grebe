@@ -28,12 +28,12 @@ public protocol IGCall {
     associatedtype Response: Message
     /// The type of the call closure for the call.
     associatedtype CallClosure
-    
+
     /// The closure which contains the executable call.
     var callClosure: CallClosure { get }
     /// Options to use for each service call.
     var callOptions: CallOptions? { get }
-    
+
     /// Executes the current call
     func execute() -> AnyPublisher<Response, GRPCStatus>
 }

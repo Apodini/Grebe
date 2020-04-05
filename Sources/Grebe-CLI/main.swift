@@ -19,22 +19,22 @@ extension Grebe {
     struct Generate: ParsableCommand {
         @Option(name: .shortAndLong, help: "Path to the proto file")
         var proto: String
-        
+
         @Option(name: .shortAndLong, help: "Path of the generated Swift Package")
         var destination: String
-        
+
         @Option(name: .shortAndLong, help: "Path to a PATH directory")
         var pathDirectory: String?
-        
+
         @Option(name: .shortAndLong, default: "0.0.3", help: "Version number of Grebe Code Generator")
         var version: String
-        
+
         @Option(name: .shortAndLong, default: true, help: "Generate gRPC-Swift files")
         var grebeGenerate: Bool
-        
+
         @Option(name: .shortAndLong, default: true, help: "Generate Grebe files")
         var swiftGrpcGenerate: Bool
-        
+
         func run() {
             let arguments = Arguments(
                 protoPath: proto,
@@ -44,7 +44,7 @@ extension Grebe {
                 grebeGenerate: grebeGenerate,
                 grpcGenerate: swiftGrpcGenerate
             )
-            
+
             do {
                 try GenerateCommand(arguments: arguments).run()
             } catch {
@@ -52,11 +52,11 @@ extension Grebe {
             }
         }
     }
-    
+
     struct Setup: ParsableCommand {
         @Option(name: .shortAndLong, help: "Path to a PATH directory")
         var pathDirectory: String?
-        
+
         func run() {
             do {
                 try SetupCommand(

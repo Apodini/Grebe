@@ -14,6 +14,6 @@ import XCTest
 class BaseCallTest: XCTestCase {
     typealias Request = EchoRequest
     typealias Response = EchoResponse
-    
+
     internal var cancellables: Set<AnyCancellable> = []
 }

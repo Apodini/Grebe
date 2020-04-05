@@ -47,12 +47,12 @@ public class GServerStreamingCall<Request: Message, Response: Message>: IGCall {
         _ callOptions: CallOptions?,
         _ handler: @escaping (Response) -> Void
     ) -> GRPC.ServerStreamingCall<Request, Response>
-    
+
     /// The request message for the call.
     public var request: Request
     public let callClosure: CallClosure
     public let callOptions: CallOptions?
-    
+
     /**
         Sets up an new server streaming Grebe call.
      
@@ -70,7 +70,7 @@ public class GServerStreamingCall<Request: Message, Response: Message>: IGCall {
         self.callClosure = closure
         self.callOptions = callOptions
     }
-    
+
     /**
     Executes the Grebe server streaming call.
 
@@ -79,15 +79,15 @@ public class GServerStreamingCall<Request: Message, Response: Message>: IGCall {
     */
     public func execute() -> AnyPublisher<Response, GRPCStatus> {
         let subject = PassthroughSubject<Response, GRPCStatus>()
-        
+
         let call = callClosure(request, callOptions) { response in
             subject.send(response)
         }
-        
+
         call.status.whenSuccess {
             subject.send(completion: $0.code == .ok ? .finished : .failure($0))
         }
-        
+
         return subject.eraseToAnyPublisher()
     }
 }

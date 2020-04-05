@@ -5,6 +5,8 @@
 //  Created by Tim Mewe on 14.01.20.
 //
 
+// swiftlint:disable line_length
+
 import Foundation
 
 extension Generator {
@@ -20,25 +22,25 @@ extension Generator {
             self.method = method
             println()
             switch method.stramingType {
-                case .unary:
-                    println("public func \(method.name)(request: \(method.request), callOptions: CallOptions? = nil) -> AnyPublisher<\(method.response), GRPCStatus> {")
-                    indent()
-                    println("return GUnaryCall(request: request, callOptions: callOptions ?? defaultCallOptions, closure: \(method.callClosure)).execute()")
+            case .unary:
+                println("public func \(method.name)(request: \(method.request), callOptions: CallOptions? = nil) -> AnyPublisher<\(method.response), GRPCStatus> {")
+                indent()
+                println("return GUnaryCall(request: request, callOptions: callOptions ?? defaultCallOptions, closure: \(method.callClosure)).execute()")
 
-                case .serverStreaming:
-                    println("public func \(method.name)(request: \(method.request), callOptions: CallOptions? = nil) -> AnyPublisher<\(method.response), GRPCStatus> {")
-                    indent()
-                    println("return GServerStreamingCall(request: request, callOptions: callOptions ?? defaultCallOptions, closure: \(method.callClosure)).execute()")
+            case .serverStreaming:
+                println("public func \(method.name)(request: \(method.request), callOptions: CallOptions? = nil) -> AnyPublisher<\(method.response), GRPCStatus> {")
+                indent()
+                println("return GServerStreamingCall(request: request, callOptions: callOptions ?? defaultCallOptions, closure: \(method.callClosure)).execute()")
 
-                case .clientStreaming:
-                    println("public func \(method.name)(request: AnyPublisher<\(method.request),Error> , callOptions: CallOptions? = nil) -> AnyPublisher<\(method.response), GRPCStatus> {")
-                    indent()
-                    println("return GClientStreamingCall(request: request, callOptions: callOptions ?? defaultCallOptions, closure: \(method.callClosure)).execute()")
+            case .clientStreaming:
+                println("public func \(method.name)(request: AnyPublisher<\(method.request),Error> , callOptions: CallOptions? = nil) -> AnyPublisher<\(method.response), GRPCStatus> {")
+                indent()
+                println("return GClientStreamingCall(request: request, callOptions: callOptions ?? defaultCallOptions, closure: \(method.callClosure)).execute()")
 
-                case .bidirectionalStreaming:
-                    println("public func \(method.name)(request: AnyPublisher<\(method.request),Error> , callOptions: CallOptions? = nil) -> AnyPublisher<\(method.response), GRPCStatus> {")
-                    indent()
-                    println("return GBidirectionalStreamingCall(requests: request, callOptions: callOptions ?? defaultCallOptions, closure: \(method.callClosure)).execute()")
+            case .bidirectionalStreaming:
+                println("public func \(method.name)(request: AnyPublisher<\(method.request),Error> , callOptions: CallOptions? = nil) -> AnyPublisher<\(method.response), GRPCStatus> {")
+                indent()
+                println("return GBidirectionalStreamingCall(requests: request, callOptions: callOptions ?? defaultCallOptions, closure: \(method.callClosure)).execute()")
             }
             outdent()
             println("}")

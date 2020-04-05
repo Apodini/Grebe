@@ -11,10 +11,10 @@ import Foundation
 struct Generate: ParsableCommand {
     @Option(name: .shortAndLong, help: "Path to the proto file")
     var protoFilePath: String
-    
+
     @Option(name: .shortAndLong, help: "Path to the generated Swift file")
     var destinationFilePath: String
-    
+
     func run() {
         let tool = CommandLineTool(protoPath: protoFilePath, destinationPath: destinationFilePath)
         do {

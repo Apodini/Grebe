@@ -10,18 +10,18 @@ import Foundation
 struct ProtoService {
     let name: String
     var methods = [ProtoMethod]()
-    
+
     init?(content: String) {
         let array = content.components(separatedBy: "{") // Seperate service name and methods
-        
+
         // Parse Name
         guard let declaration = array.first else { return nil }
         self.name = declaration
             .replacingOccurrences(of: "service", with: "") // Remove the service declaration
             .replacingOccurrences(of: " ", with: "") // Remove spaces
-        
+
         print("\nFound Service: \(self.name)")
-        
+
         // Parse functions
         guard let methodsContent = array.last else { return }
         self.methods = methodsContent

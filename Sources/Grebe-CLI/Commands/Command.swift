@@ -12,11 +12,11 @@ internal protocol IExecutableCommand {
 }
 
 extension IExecutableCommand {
-    internal func moveFile(from: String, to: String) throws {
-        if FileManager.default.fileExists(atPath: to) {
-            try FileManager.default.removeItem(atPath: to)
+    internal func moveFile(from: String, to path: String) throws {
+        if FileManager.default.fileExists(atPath: path) {
+            try FileManager.default.removeItem(atPath: path)
         }
-        try FileManager.default.moveItem(atPath: from, toPath: to)
+        try FileManager.default.moveItem(atPath: from, toPath: path)
     }
 }
 

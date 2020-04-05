@@ -10,21 +10,21 @@ import Foundation
 public final class CommandLineTool {
     private let protoPath: String
     private let destinationPath: String
-    
+
     public init(protoPath: String, destinationPath: String) {
         self.protoPath = protoPath
         self.destinationPath = destinationPath
     }
-    
+
     public func run() throws {
         let protoName = splitPath(pathname: protoPath).base
         let protoString = try String(contentsOfFile: protoPath)
         let protoFile = ProtoFile(name: protoName, content: protoString)
         let generator = Generator(protoFile)
-        
+
         try writeFile(name: protoName, content: generator.code)
     }
-    
+
     private func writeFile(name: String, content: String) throws {
         let outputFile = outputFileName(name: name, path: destinationPath)
         try content.write(
@@ -33,13 +33,14 @@ public final class CommandLineTool {
             encoding: .utf8
         )
     }
-    
+
     private func outputFileName(name: String, path: String) -> String {
         let ext = name + "." + "grebe" + ".swift"
         return path + "/" + ext
     }
-    
+
     // from apple/swift-protobuf/Sources/protoc-gen-swift/StringUtils.swift
+    // swiftlint:disable large_tuple
     private func splitPath(pathname: String) -> (dir: String, base: String, suffix: String) {
         var dir = ""
         var base = ""
@@ -49,16 +50,16 @@ public final class CommandLineTool {
         #else
             let pathnameChars = pathname.characters
         #endif
-        for c in pathnameChars {
-            if c == "/" {
-                dir += base + suffix + String(c)
+        for char in pathnameChars {
+            if char == "/" {
+                dir += base + suffix + String(char)
                 base = ""
                 suffix = ""
-            } else if c == "." {
+            } else if char == "." {
                 base += suffix
-                suffix = String(c)
+                suffix = String(char)
             } else {
-                suffix += String(c)
+                suffix += String(char)
             }
         }
         #if swift(>=3.2)

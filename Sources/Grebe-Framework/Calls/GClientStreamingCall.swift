@@ -91,12 +91,14 @@ public class GClientStreamingCall<Request: Message, Response: Message>: IGCall {
         request
             .sink(receiveCompletion: { completion in
                 switch completion {
-                    case .finished: call.sendEnd(promise: nil)
-                    case .failure: _ = call.cancel()
+                case .finished:
+                    call.sendEnd(promise: nil)
+                case .failure:
+                    _ = call.cancel()
                 }
-            }) { message in
+            }, receiveValue: { message in
                 call.sendMessage(message, promise: nil)
-            }
+            })
             .store(in: &cancellables)
 
         call.response.whenSuccess {

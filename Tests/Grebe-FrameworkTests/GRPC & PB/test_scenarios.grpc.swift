@@ -26,7 +26,6 @@ import NIO
 import NIOHTTP1
 import SwiftProtobuf
 
-
 /// Usage: instantiate UnaryMockServiceClient, then call methods of this protocol to make API calls.
 internal protocol UnaryMockService {
   func ok(_ request: EchoRequest, callOptions: CallOptions?) -> UnaryCall<EchoRequest, EchoResponse>
@@ -256,4 +255,3 @@ extension BidirectionalStreamingMockProvider {
     }
   }
 }
-

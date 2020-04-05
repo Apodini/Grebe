@@ -25,7 +25,7 @@ internal final class UnaryMockClient<Request: Message & Equatable, Response: Mes
             fatalError()
         }
         networkCall.expectation.fulfill()
-        
+
         // Create our UnaryCall and advance the EventLoop to register all nescessary ChannelHanders
         let call = UnaryCall<Request, Response>(
             connection: connection,
@@ -35,7 +35,7 @@ internal final class UnaryMockClient<Request: Message & Equatable, Response: Mes
             errorDelegate: nil
         )
         channel.embeddedEventLoop.advanceTime(by: .nanoseconds(1))
-        
+
         // Creates a subchannel for handling HTTP2 Streams with the following setup:
         //                                                 [I] ↓↑ [O]
         // GRPCClientChannelHandler<EchoRequest, EchoResponse> ↓↑ GRPCClientChannelHandler<EchoRequest, EchoResponse> [handler0]
@@ -55,17 +55,17 @@ internal final class UnaryMockClient<Request: Message & Equatable, Response: Mes
                 }
             }.whenSuccess { _ in }
         channel.embeddedEventLoop.advanceTime(by: .nanoseconds(1))
-        
+
         // State after injecting our UnaryMockInboundHandler:
         //                                                 [I] ↓↑ [O]
         // GRPCClientChannelHandler<EchoRequest, EchoResponse> ↓↑ GRPCClientChannelHandler<EchoRequest, EchoResponse> [handler0]
         //               UnaryMockInboundHandler<EchoResponse> ↓↑                                                     [handler3]
         // GRPCClientUnaryResponseChannelHandler<EchoResponse> ↓↑                                                     [handler1]
         //             UnaryRequestChannelHandler<EchoRequest> ↓↑                                                     [handler2]
-        
+
         // Trigger our `fireChannelRead` that is going to propagate inbound.
         unaryMockInboundHandler.respondWithMock(networkCall.response)
-        
+
         return call
     }
 }

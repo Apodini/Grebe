@@ -23,13 +23,13 @@ import SwiftProtobuf
 /// ```
 public protocol IGClient {
     associatedtype Client: GRPCClientInitializable
-    
+
     /// The `GRPCClient` this client is using
     var service: Client { get }
-    
+
     /// The `EventLoopGroup` this client is using.
     var group: EventLoopGroup { get }
-    
+
     /**
      Creates a Grebe client
      

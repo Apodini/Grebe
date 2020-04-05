@@ -23,11 +23,11 @@ final class ClientStreamingCallTests: BaseCallTest {
         XCTAssert(mockClient.mockNetworkCalls.isEmpty)
         super.tearDown()
     }
-    
+
     func testOk() {
         runTestOk(requests: (0...100).map(EchoRequest.init), response: EchoResponse(id: 1))
     }
-    
+
     func testEmptyRequestStream() {
         runTestOk(requests: [], response: EchoResponse(id: 1))
     }

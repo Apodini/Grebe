@@ -10,19 +10,19 @@ import Foundation
 internal class SetupCommand: IExecutableCommand {
     private let grpcURL = "https://github.com/grpc/grpc-swift/"
     private var repoPath: String { envPath + "/grpc-swift" }
-    
+
     // MARK: - External Dependencies
-    
+
     private let envPath: String
-    
+
     // MARK: - Lifecycle
-    
+
     init(envPath: String) {
         self.envPath = envPath
     }
-    
+
     // MARK: - IExecutableCommand
-    
+
     func run() throws {
         print("""
         We use Homebrew to install Grebe. Please make sure you have Homebrew installed.

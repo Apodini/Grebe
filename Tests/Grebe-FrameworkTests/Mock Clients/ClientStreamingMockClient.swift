@@ -50,7 +50,7 @@ internal final class ClientStreamingMockClient<Request: Message & Equatable, Res
                         fatalError()
                     }
                     networkCall.expectation.fulfill()
-                    
+
                     DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
                         unaryMockInboundHandler.respondWithMock(networkCall.response)
                         self?.channel.embeddedEventLoop.advanceTime(by: .nanoseconds(1))

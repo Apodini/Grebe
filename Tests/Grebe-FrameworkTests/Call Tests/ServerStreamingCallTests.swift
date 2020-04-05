@@ -13,36 +13,36 @@ import XCTest
 
 final class ServerStreamingCallTests: BaseCallTest {
     private var mockClient: ServerStreamingMockClient<Request, Response> = ServerStreamingMockClient()
-    
+
     override func setUp() {
         mockClient.mockNetworkCalls = []
         super.setUp()
     }
-    
+
     override func tearDown() {
         XCTAssert(mockClient.mockNetworkCalls.isEmpty)
         super.tearDown()
     }
-    
+
     func testOk() {
         runTestOk(request: EchoRequest(id: 1), responses: (0...1).map(EchoResponse.init))
     }
-    
+
     func testEmptyResponseStream() {
         runTestOk(request: EchoRequest(id: 1), responses: [])
     }
-    
+
     private func runTestOk(request: Request, responses: [Response]) {
         let serverStreamingMock = ServerStreamMock(
             request: request,
             responses: responses.map { .success($0) }
         )
-        
+
         mockClient.mockNetworkCalls = [serverStreamingMock]
-        
+
         let responseExpectation = XCTestExpectation(description: "Correct response count")
         responseExpectation.expectedFulfillmentCount = responses.count + 1
-        
+
         let call = GServerStreamingCall(request: request, closure: mockClient.test)
         var receivedResponses = [Response]()
         call.execute()
@@ -62,10 +62,10 @@ final class ServerStreamingCallTests: BaseCallTest {
                 }
             )
             .store(in: &cancellables)
-        
+
         wait(for: [serverStreamingMock.expectation, responseExpectation], timeout: 0.1, enforceOrder: true)
     }
-    
+
     func testFailedPrecondition() {
         let expectedRequest = EchoRequest(id: 1)
         let errorStatus: GRPCStatus = .init(code: .failedPrecondition, message: nil)
@@ -74,10 +74,10 @@ final class ServerStreamingCallTests: BaseCallTest {
             responses: [.failure(errorStatus)]
 //            responseStream: expectedResponseStream
         )
-        
+
         mockClient.mockNetworkCalls = [serverStreamingMock]
         let errorExpectation = XCTestExpectation(description: "Correct Error")
-        
+
         let call = GServerStreamingCall(request: expectedRequest, closure: mockClient.test)
         call.execute()
             .sink(receiveCompletion: {
@@ -91,7 +91,7 @@ final class ServerStreamingCallTests: BaseCallTest {
             }, receiveValue: { _ in
                 XCTFail("Call should fail")
             }).store(in: &cancellables)
-        
+
         wait(for: [serverStreamingMock.expectation, errorExpectation], timeout: 0.1, enforceOrder: true)
     }
 }

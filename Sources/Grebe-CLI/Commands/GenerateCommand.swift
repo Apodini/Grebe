@@ -82,7 +82,7 @@ internal class GenerateCommand: IExecutableCommand {
     private func loadBuildExecutable() throws {
         // Check if executable with specific version already exists
         guard !FileManager.default.fileExists(atPath: grebeExecutablePath) else { return }
-        
+
         // Clone Grebe-Framework Repo
         print("Cloning Grebe-Framework...")
         try shell(
