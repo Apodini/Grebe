@@ -10,8 +10,8 @@ import SwiftProtobufPluginLibrary
 class Generator {
     private var printer: CodePrinter
     internal var file: ProtoFile
-    internal var service: ProtoService // context during generation
-    internal var method: ProtoMethod // context during generation
+    internal var service: ProtoService? // context during generation
+    internal var method: ProtoMethod? // context during generation
 
     init(_ file: ProtoFile) {
         self.file = file
@@ -67,6 +67,6 @@ class Generator {
 
 extension Generator {
     internal var serviceClassName: String {
-        service.name + "ServiceClient"
+        service?.name ?? "" + "ServiceClient"
     }
 }

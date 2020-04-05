@@ -16,7 +16,12 @@ extension Generator {
     private func printGrebeImplementation() {
         println("extension \(serviceClassName): GRPCClientInitializable {")
         indent()
-        for method in service.methods {
+        
+        guard let methods = service?.methods else {
+            return
+        }
+        
+        for method in methods {
             self.method = method
             println()
             switch method.stramingType {
