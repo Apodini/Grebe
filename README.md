@@ -16,9 +16,9 @@ Of course you can simply clone the repository or install it via the [Swift Packa
 The recommended way to use Grebe is to first define an API using the [Protocol Buffer](https://developers.google.com/protocol-buffers/) language.
 
 ### Setting up Grebe
-To use Grebe you need to install the [Protocol Buffer Compiler](https://github.com/protocolbuffers/protobuf), the [Swift Protobuf Code Generator Plugin](https://github.com/apple/swift-protobuf) and [Swift gRPC](https://github.com/grpc/grpc-swift) plugins to generate the necessary support code. To do all this in one step, run the following command in your command line. Make sure to specify your shell path.
+To use Grebe you need to install the [Protocol Buffer Compiler](https://github.com/protocolbuffers/protobuf), the [Swift Protobuf Code Generator Plugin](https://github.com/apple/swift-protobuf) and [Swift gRPC](https://github.com/grpc/grpc-swift) plugins to generate the necessary support code. To do all this in one step, run the following command in your command line. Make sure to specify a directory that is part of your `PATH` environment variable.
 ```bash
-grebe setup -e <your shell path>
+grebe setup -p <your shell path>
 ```
 
 ### Building the Grebe Swift Package
