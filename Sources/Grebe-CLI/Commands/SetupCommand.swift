@@ -9,17 +9,15 @@ import Foundation
 
 internal class SetupCommand: IExecutableCommand {
     private let grpcURL = "https://github.com/grpc/grpc-swift/"
-    private var repoPath: String { path + "grpc-swift" }
+    private var repoPath: String { envPath + "/grpc-swift" }
     
     // MARK: - External Dependencies
     
-    private let path: String
     private let envPath: String
     
     // MARK: - Lifecycle
     
-    init(path: String, envPath: String) {
-        self.path = path
+    init(envPath: String) {
         self.envPath = envPath
     }
     

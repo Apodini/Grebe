@@ -54,16 +54,12 @@ extension Grebe {
     }
     
     struct Setup: ParsableCommand {
-        @Option(name: .shortAndLong, help: "Path to the temporary download directory")
-        var downloadPath: String
-        
         @Option(name: .shortAndLong, help: "Path to a PATH directory")
         var pathDirectory: String?
         
         func run() {
             do {
                 try SetupCommand(
-                    path: downloadPath,
                     envPath: pathDirectory ?? "/usr/local/bin"
                 ).run()
             } catch {
