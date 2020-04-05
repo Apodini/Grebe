@@ -12,6 +12,7 @@ internal class GenerateCommand: IExecutableCommand {
     private var frameworkPath: String { basePath + "/.Grebe" }
     private var generatedDestinationPath: String { basePath + "/Sources/Grebe-Generated" }
     private let frameworkRemoteURL = "https://github.com/Apodini/Grebe.git"
+    private let grebeExecutablePath: String
 
     // MARK: - External Dependencies
 
@@ -21,6 +22,7 @@ internal class GenerateCommand: IExecutableCommand {
 
     internal init(arguments: Arguments) {
         self.arguments = arguments
+        grebeExecutablePath = "\(arguments.executablePath)/protoc-gen-grebe-swift-\(arguments.versionNumber)"
     }
 
     // MARK: - IExecutableCommand
@@ -78,9 +80,15 @@ internal class GenerateCommand: IExecutableCommand {
     }
 
     private func loadBuildExecutable() throws {
+        // Check if executable with specific version already exists
+        guard !FileManager.default.fileExists(atPath: grebeExecutablePath) else { return }
+        
         // Clone Grebe-Framework Repo
         print("Cloning Grebe-Framework...")
-        try shell("git", "clone", frameworkRemoteURL, frameworkPath, "-v", "--progress")
+        try shell(
+            "git", "clone", "--branch", arguments.versionNumber,
+            frameworkRemoteURL, frameworkPath, "-v", "--progress"
+        )
 
         // Build Grebe-Generate executable
         print("Building Grebe-Generate executable...")
@@ -95,7 +103,7 @@ internal class GenerateCommand: IExecutableCommand {
         // Add executable to path
         try moveFile(
             from: "\(frameworkPath)/.build/release/Grebe-Generate",
-            to: "\(arguments.executablePath)/protoc-gen-grebe-swift"
+            to: grebeExecutablePath
         )
 
         // Delete Grebe-Framework Repo
@@ -129,7 +137,7 @@ internal class GenerateCommand: IExecutableCommand {
         try shell(
             "-p", arguments.protoPath,
             "-d", generatedDestinationPath,
-            launchPath: "\(arguments.executablePath)/protoc-gen-grebe-swift"
+            launchPath: grebeExecutablePath
         )
     }
 
