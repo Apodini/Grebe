@@ -16,7 +16,7 @@ public class GClient<Client: GRPCClientInitializable>: IGClient {
     public let service: Client
     public let group: EventLoopGroup
 
-    required public init(target: ConnectionTarget, callOptions: CallOptions = CallOptions()) {
+    public required init(target: ConnectionTarget, callOptions: CallOptions = CallOptions()) {
         self.group = PlatformSupport.makeEventLoopGroup(loopCount: 1)
 
         let config = ClientConnection.Configuration(target: target, eventLoopGroup: group)

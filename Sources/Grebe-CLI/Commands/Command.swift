@@ -58,7 +58,7 @@ internal enum CLIError: Error {
 
 extension CLIError: LocalizedError {
     public var errorDescription: String? {
-        return description
+        description
     }
 }
 

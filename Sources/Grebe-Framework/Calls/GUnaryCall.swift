@@ -79,7 +79,9 @@ public class GUnaryCall<Request: Message, Response: Message>: IGCall {
      */
     public func execute() -> AnyPublisher<Response, GRPCStatus> {
         let future = Future<Response, GRPCStatus> { [weak self] promise in
-            guard let strongself = self else { return }
+            guard let strongself = self else {
+                return
+            }
 
             let call = strongself
                 .callClosure(strongself.request, strongself.callOptions)

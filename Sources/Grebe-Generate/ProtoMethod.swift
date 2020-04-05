@@ -31,7 +31,9 @@ struct ProtoMethod {
         let components = removeRpcContent.components(separatedBy: "(") // Seperates name, request & response
         // Format: Send  -  stream EchoRequest) returns    -  stream EchoResponse);
 
-        guard components.count == 3 else { return nil } // We proceed only if we got all three
+        guard components.count == 3 else {
+            return nil
+        } // We proceed only if we got all three
 
         // Parse Name
         self.name = components[0].replacingOccurrences(of: " ", with: "").firstLowercased // Remove spaces
@@ -44,7 +46,9 @@ struct ProtoMethod {
             requestPart = requestPart.replacingOccurrences(of: "stream ", with: "")
             // Format: EchoRequest) returns
         }
-        guard let req = requestPart.components(separatedBy: ")").first else { return nil }
+        guard let req = requestPart.components(separatedBy: ")").first else {
+            return nil
+        }
         self.request = req
 
         // Parse Response
@@ -65,6 +69,6 @@ struct ProtoMethod {
 
 extension StringProtocol {
     var firstLowercased: String {
-        return prefix(1).lowercased() + dropFirst()
+        prefix(1).lowercased() + dropFirst()
     }
 }

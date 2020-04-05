@@ -15,7 +15,9 @@ struct ProtoService {
         let array = content.components(separatedBy: "{") // Seperate service name and methods
 
         // Parse Name
-        guard let declaration = array.first else { return nil }
+        guard let declaration = array.first else {
+            return nil
+        }
         self.name = declaration
             .replacingOccurrences(of: "service", with: "") // Remove the service declaration
             .replacingOccurrences(of: " ", with: "") // Remove spaces
@@ -23,7 +25,10 @@ struct ProtoService {
         print("\nFound Service: \(self.name)")
 
         // Parse functions
-        guard let methodsContent = array.last else { return }
+        guard let methodsContent = array.last else {
+            return
+        }
+        
         self.methods = methodsContent
             .split(separator: ";") // Seperates each method
             .map(String.init) // Map to String

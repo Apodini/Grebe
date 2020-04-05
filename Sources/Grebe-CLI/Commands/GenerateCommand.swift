@@ -81,23 +81,35 @@ internal class GenerateCommand: IExecutableCommand {
 
     private func loadBuildExecutable() throws {
         // Check if executable with specific version already exists
-        guard !FileManager.default.fileExists(atPath: grebeExecutablePath) else { return }
+        guard !FileManager.default.fileExists(atPath: grebeExecutablePath) else {
+            return
+        }
 
         // Clone Grebe-Framework Repo
         print("Cloning Grebe-Framework...")
         try shell(
-            "git", "clone", "--branch", arguments.versionNumber,
-            frameworkRemoteURL, frameworkPath, "-v", "--progress"
+            "git",
+            "clone",
+            "--branch",
+            arguments.versionNumber,
+            frameworkRemoteURL,
+            frameworkPath,
+            "-v",
+            "--progress"
         )
 
         // Build Grebe-Generate executable
         print("Building Grebe-Generate executable...")
         try shell(
-            "swift", "build",
+            "swift",
+            "build",
             "--verbose",
-            "--product", "Grebe-Generate",
-            "--package-path", frameworkPath,
-            "-c", "release"
+            "--product",
+            "Grebe-Generate",
+            "--package-path",
+            frameworkPath,
+            "-c",
+            "release"
         )
 
         // Add executable to path
@@ -111,7 +123,9 @@ internal class GenerateCommand: IExecutableCommand {
     }
 
     private func generateGRPC() throws {
-        guard arguments.grpcGenerate else { return }
+        guard arguments.grpcGenerate else {
+            return
+        }
 
         var pathComponents = arguments.protoPath.components(separatedBy: "/")
         let protoName = pathComponents.removeLast()
@@ -119,7 +133,8 @@ internal class GenerateCommand: IExecutableCommand {
 
         print("Generating Swift protocol buffer files...")
         try shell(
-            protoName, "--proto_path=\(protoPath)",
+            protoName,
+            "--proto_path=\(protoPath)",
             "--grpc-swift_out=Visibility=Public:\(generatedDestinationPath)",
             "--swift_out=\(generatedDestinationPath)",
             "--plugin=protoc-gen-grpc-swift=\(arguments.executablePath)/protoc-gen-grpc-swift",
@@ -130,13 +145,17 @@ internal class GenerateCommand: IExecutableCommand {
     }
 
     private func generateGrebe() throws {
-        guard arguments.grebeGenerate else { return }
+        guard arguments.grebeGenerate else {
+            return
+        }
 
         // Generate Grebe code
         print("Generating Grebe files...")
         try shell(
-            "-p", arguments.protoPath,
-            "-d", generatedDestinationPath,
+            "-p",
+            arguments.protoPath,
+            "-d",
+            generatedDestinationPath,
             launchPath: grebeExecutablePath
         )
     }
@@ -146,9 +165,11 @@ internal class GenerateCommand: IExecutableCommand {
     private func buildDependencies() throws {
         print("Building package dependencies...")
         try shell(
-            "swift", "build",
+            "swift",
+            "build",
             "--verbose",
-            "--package-path", basePath
+            "--package-path",
+            basePath
         )
     }
 }

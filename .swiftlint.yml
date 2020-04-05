@@ -3,6 +3,9 @@
 # Copyright © 2018 Paul Schmiedmayer. All rights reserved.
 # The opt_in_rules also include all rules that are enabled by default to provide a good overview of all rules.
 
+excluded:
+  - Test/Grebe-FrameworkTests/GRPC\ &\ PB
+
 disabled_rules:
   - discouraged_optional_collection # TODO: Enable as soon as https://github.com/realm/SwiftLint/issues/2298 is closed.
     # Prefer empty collection over optional collection.

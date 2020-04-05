@@ -5,8 +5,6 @@
 //  Created by Tim Mewe on 14.01.20.
 //
 
-// swiftlint:disable line_length
-
 import Foundation
 
 extension Generator {
