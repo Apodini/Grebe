@@ -36,12 +36,12 @@ extension Generator {
                 println("return GServerStreamingCall(request: request, callOptions: callOptions ?? defaultCallOptions, closure: \(method.callClosure)).execute()")
 
             case .clientStreaming:
-                println("public func \(method.name)(request: AnyPublisher<\(method.request),Error> , callOptions: CallOptions? = nil) -> AnyPublisher<\(method.response), GRPCStatus> {")
+                println("public func \(method.name)(request: AnyPublisher<\(method.request),Error>, callOptions: CallOptions? = nil) -> AnyPublisher<\(method.response), GRPCStatus> {")
                 indent()
                 println("return GClientStreamingCall(request: request, callOptions: callOptions ?? defaultCallOptions, closure: \(method.callClosure)).execute()")
 
             case .bidirectionalStreaming:
-                println("public func \(method.name)(request: AnyPublisher<\(method.request),Error> , callOptions: CallOptions? = nil) -> AnyPublisher<\(method.response), GRPCStatus> {")
+                println("public func \(method.name)(request: AnyPublisher<\(method.request),Error>, callOptions: CallOptions? = nil) -> AnyPublisher<\(method.response), GRPCStatus> {")
                 indent()
                 println("return GBidirectionalStreamingCall(requests: request, callOptions: callOptions ?? defaultCallOptions, closure: \(method.callClosure)).execute()")
             }
