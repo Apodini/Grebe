@@ -7,16 +7,16 @@
 
 import Foundation
 
-public final class CommandLineTool {
+internal final class CommandLineTool {
     private let protoPath: String
     private let destinationPath: String
 
-    public init(protoPath: String, destinationPath: String) {
+    internal init(protoPath: String, destinationPath: String) {
         self.protoPath = protoPath
         self.destinationPath = destinationPath
     }
 
-    public func run() throws {
+    internal func run() throws {
         let protoName = splitPath(pathname: protoPath).base
         let protoString = try String(contentsOfFile: protoPath)
         let protoFile = ProtoFile(name: protoName, content: protoString)

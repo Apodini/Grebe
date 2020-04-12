@@ -25,7 +25,7 @@ internal final class ServerStreamingMockClient<Request: Message & Equatable, Res
 
         guard networkCall.request == request else {
             XCTFail("Could not match the network call to the next MockNetworkCall.")
-            fatalError()
+            fatalError("Could not match the network call to the next MockNetworkCall.")
         }
         networkCall.expectation.fulfill()
 
@@ -46,7 +46,9 @@ internal final class ServerStreamingMockClient<Request: Message & Equatable, Res
                 subchannel.pipeline.handler(type: GRPCClientChannelHandler<Request, Response>.self).map { clientChannelHandler in
                     subchannel.pipeline.addHandler(unaryMockInboundHandler, position: .after(clientChannelHandler))
                 }
-            }.whenSuccess { _ in }
+            }
+            .whenSuccess { _ in }
+
         channel.embeddedEventLoop.advanceTime(by: .nanoseconds(1))
 
         networkCall.responseStream

@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct ProtoMethod {
+internal struct ProtoMethod {
     let name: String
     let request: String
     let response: String

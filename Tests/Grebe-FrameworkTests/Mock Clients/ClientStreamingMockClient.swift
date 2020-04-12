@@ -33,7 +33,8 @@ internal final class ClientStreamingMockClient<Request: Message & Equatable, Res
                 subchannel.pipeline.handler(type: GRPCClientChannelHandler<Request, Response>.self).map { clientChannelHandler in
                     subchannel.pipeline.addHandler(unaryMockInboundHandler, position: .after(clientChannelHandler))
                 }
-            }.whenSuccess { _ in }
+            }
+        .whenSuccess { _ in }
 
         var expectedRequests: [Request] = []
 
@@ -47,7 +48,7 @@ internal final class ClientStreamingMockClient<Request: Message & Equatable, Res
                 case .finished:
                     guard expectedRequests == networkCall.requests else {
                         XCTFail("Could not match the network call to the next MockNetworkCall.")
-                        fatalError()
+                        fatalError("Could not match the network call to the next MockNetworkCall.")
                     }
                     networkCall.expectation.fulfill()
 

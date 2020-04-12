@@ -52,11 +52,10 @@ internal final class UnaryMockServiceClient: GRPCClient, UnaryMockService {
   ///   - callOptions: Call options; `self.defaultCallOptions` is used if `nil`.
   /// - Returns: A `UnaryCall` with futures for the metadata, status and response.
   internal func ok(_ request: EchoRequest, callOptions: CallOptions? = nil) -> UnaryCall<EchoRequest, EchoResponse> {
-    return self.makeUnaryCall(path: "/UnaryMock/Ok",
+    self.makeUnaryCall(path: "/UnaryMock/Ok",
                               request: request,
                               callOptions: callOptions ?? self.defaultCallOptions)
   }
-
 }
 
 /// Usage: instantiate ServerStreamingMockServiceClient, then call methods of this protocol to make API calls.
@@ -86,12 +85,11 @@ internal final class ServerStreamingMockServiceClient: GRPCClient, ServerStreami
   ///   - handler: A closure called when each response is received from the server.
   /// - Returns: A `ServerStreamingCall` with futures for the metadata and status.
   internal func ok(_ request: EchoRequest, callOptions: CallOptions? = nil, handler: @escaping (EchoResponse) -> Void) -> ServerStreamingCall<EchoRequest, EchoResponse> {
-    return self.makeServerStreamingCall(path: "/ServerStreamingMock/Ok",
+    self.makeServerStreamingCall(path: "/ServerStreamingMock/Ok",
                                         request: request,
                                         callOptions: callOptions ?? self.defaultCallOptions,
                                         handler: handler)
   }
-
 }
 
 /// Usage: instantiate ClientStreamingMockServiceClient, then call methods of this protocol to make API calls.
@@ -122,10 +120,9 @@ internal final class ClientStreamingMockServiceClient: GRPCClient, ClientStreami
   ///   - callOptions: Call options; `self.defaultCallOptions` is used if `nil`.
   /// - Returns: A `ClientStreamingCall` with futures for the metadata, status and response.
   internal func ok(callOptions: CallOptions? = nil) -> ClientStreamingCall<EchoRequest, EchoResponse> {
-    return self.makeClientStreamingCall(path: "/ClientStreamingMock/Ok",
+    self.makeClientStreamingCall(path: "/ClientStreamingMock/Ok",
                                         callOptions: callOptions ?? self.defaultCallOptions)
   }
-
 }
 
 /// Usage: instantiate BidirectionalStreamingMockServiceClient, then call methods of this protocol to make API calls.
@@ -157,11 +154,10 @@ internal final class BidirectionalStreamingMockServiceClient: GRPCClient, Bidire
   ///   - handler: A closure called when each response is received from the server.
   /// - Returns: A `ClientStreamingCall` with futures for the metadata and status.
   internal func ok(callOptions: CallOptions? = nil, handler: @escaping (EchoResponse) -> Void) -> BidirectionalStreamingCall<EchoRequest, EchoResponse> {
-    return self.makeBidirectionalStreamingCall(path: "/BidirectionalStreamingMock/Ok",
+    self.makeBidirectionalStreamingCall(path: "/BidirectionalStreamingMock/Ok",
                                                callOptions: callOptions ?? self.defaultCallOptions,
                                                handler: handler)
   }
-
 }
 
 /// To build a server, implement a class that conforms to this protocol.
@@ -170,15 +166,14 @@ internal protocol UnaryMockProvider: CallHandlerProvider {
 }
 
 extension UnaryMockProvider {
-  internal var serviceName: String { return "UnaryMock" }
+  internal var serviceName: String { "UnaryMock" }
 
   /// Determines, calls and returns the appropriate request handler, depending on the request's method.
   /// Returns nil for methods not handled by this service.
   internal func handleMethod(_ methodName: String, callHandlerContext: CallHandlerContext) -> GRPCCallHandler? {
     switch methodName {
     case "Ok":
-      return UnaryCallHandler(callHandlerContext: callHandlerContext) { context in
-        return { request in
+      return UnaryCallHandler(callHandlerContext: callHandlerContext) { context in { request in
           self.ok(request: request, context: context)
         }
       }
@@ -194,15 +189,14 @@ internal protocol ServerStreamingMockProvider: CallHandlerProvider {
 }
 
 extension ServerStreamingMockProvider {
-  internal var serviceName: String { return "ServerStreamingMock" }
+  internal var serviceName: String { "ServerStreamingMock" }
 
   /// Determines, calls and returns the appropriate request handler, depending on the request's method.
   /// Returns nil for methods not handled by this service.
   internal func handleMethod(_ methodName: String, callHandlerContext: CallHandlerContext) -> GRPCCallHandler? {
     switch methodName {
     case "Ok":
-      return ServerStreamingCallHandler(callHandlerContext: callHandlerContext) { context in
-        return { request in
+      return ServerStreamingCallHandler(callHandlerContext: callHandlerContext) { context in { request in
           self.ok(request: request, context: context)
         }
       }
@@ -218,7 +212,7 @@ internal protocol ClientStreamingMockProvider: CallHandlerProvider {
 }
 
 extension ClientStreamingMockProvider {
-  internal var serviceName: String { return "ClientStreamingMock" }
+  internal var serviceName: String { "ClientStreamingMock" }
 
   /// Determines, calls and returns the appropriate request handler, depending on the request's method.
   /// Returns nil for methods not handled by this service.
@@ -226,7 +220,7 @@ extension ClientStreamingMockProvider {
     switch methodName {
     case "Ok":
       return ClientStreamingCallHandler(callHandlerContext: callHandlerContext) { context in
-        return self.ok(context: context)
+        self.ok(context: context)
       }
 
     default: return nil
@@ -240,7 +234,7 @@ internal protocol BidirectionalStreamingMockProvider: CallHandlerProvider {
 }
 
 extension BidirectionalStreamingMockProvider {
-  internal var serviceName: String { return "BidirectionalStreamingMock" }
+  internal var serviceName: String { "BidirectionalStreamingMock" }
 
   /// Determines, calls and returns the appropriate request handler, depending on the request's method.
   /// Returns nil for methods not handled by this service.
@@ -248,7 +242,7 @@ extension BidirectionalStreamingMockProvider {
     switch methodName {
     case "Ok":
       return BidirectionalStreamingCallHandler(callHandlerContext: callHandlerContext) { context in
-        return self.ok(context: context)
+        self.ok(context: context)
       }
 
     default: return nil

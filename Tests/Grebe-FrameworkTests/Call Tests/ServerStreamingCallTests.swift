@@ -80,18 +80,25 @@ final class ServerStreamingCallTests: BaseCallTest {
 
         let call = GServerStreamingCall(request: expectedRequest, closure: mockClient.test)
         call.execute()
-            .sink(receiveCompletion: {
-                switch $0 {
-                case .failure(let status):
-                    XCTAssertEqual(status, errorStatus)
-                    errorExpectation.fulfill()
-                case .finished:
+            .sink(
+                receiveCompletion: {
+                    switch $0 {
+                    case .failure(let status):
+                        XCTAssertEqual(status, errorStatus)
+                        errorExpectation.fulfill()
+                    case .finished:
+                        XCTFail("Call should fail")
+                    }
+                }, receiveValue: { _ in
                     XCTFail("Call should fail")
                 }
-            }, receiveValue: { _ in
-                XCTFail("Call should fail")
-            }).store(in: &cancellables)
+            )
+            .store(in: &cancellables)
 
-        wait(for: [serverStreamingMock.expectation, errorExpectation], timeout: 0.1, enforceOrder: true)
+        wait(
+            for: [serverStreamingMock.expectation, errorExpectation],
+            timeout: 0.1,
+            enforceOrder: true
+        )
     }
 }

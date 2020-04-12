@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct ProtoService {
+internal struct ProtoService {
     let name: String
     var methods = [ProtoMethod]()
 

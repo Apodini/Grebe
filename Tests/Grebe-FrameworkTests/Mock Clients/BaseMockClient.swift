@@ -15,7 +15,7 @@ import XCTest
 internal class BaseMockClient: GRPCClient {
     let channel = EmbeddedChannel()
     let connection: ClientConnection
-    var defaultCallOptions: CallOptions = CallOptions()
+    var defaultCallOptions = CallOptions()
     var cancellables = Set<AnyCancellable>()
 
     init() {
@@ -29,12 +29,12 @@ internal class BaseMockClient: GRPCClient {
 /// MockInboundHandler
 /// Allows us to inject mock responses into the subchannel pipeline setup by a Call.
 internal class MockInboundHandler<Response: Message>: ChannelInboundHandler {
-    public typealias InboundIn = Any
-    public typealias InboundOut = GRPCClientResponsePart<Response>
+    typealias InboundIn = Any
+    typealias InboundOut = GRPCClientResponsePart<Response>
 
     private var context: ChannelHandlerContext?
 
-    public func handlerAdded(context: ChannelHandlerContext) {
+    func handlerAdded(context: ChannelHandlerContext) {
         self.context = context
     }
 

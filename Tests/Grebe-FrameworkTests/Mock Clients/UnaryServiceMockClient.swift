@@ -5,9 +5,9 @@
 //  Created by Tim Mewe on 10.01.20.
 //
 
-import XCTest
 import NIO
 import SwiftProtobuf
+import XCTest
 
 @testable import GRPC
 
@@ -22,7 +22,7 @@ internal final class UnaryMockClient<Request: Message & Equatable, Response: Mes
         // Check if the Request correspons to the expected Response
         guard networkCall.request == request else {
             XCTFail("Could not match the network call to the next MockNetworkCall.")
-            fatalError()
+            fatalError("Could not match the network call to the next MockNetworkCall.")
         }
         networkCall.expectation.fulfill()
 
@@ -53,7 +53,8 @@ internal final class UnaryMockClient<Request: Message & Equatable, Response: Mes
                 subchannel.pipeline.handler(type: GRPCClientChannelHandler<Request, Response>.self).map { clientChannelHandler in
                     subchannel.pipeline.addHandler(unaryMockInboundHandler, position: .after(clientChannelHandler))
                 }
-            }.whenSuccess { _ in }
+            }
+            .whenSuccess { _ in }
         channel.embeddedEventLoop.advanceTime(by: .nanoseconds(1))
 
         // State after injecting our UnaryMockInboundHandler:

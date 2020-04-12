@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct ProtoFile {
+internal struct ProtoFile {
     let name: String
     var services = [ProtoService]()
 

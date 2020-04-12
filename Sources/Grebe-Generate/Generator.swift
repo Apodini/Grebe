@@ -7,7 +7,7 @@
 
 import SwiftProtobufPluginLibrary
 
-class Generator {
+internal class Generator {
     private var printer: CodePrinter
     internal var file: ProtoFile
     internal var service: ProtoService? // context during generation
@@ -20,7 +20,7 @@ class Generator {
         printMain()
     }
 
-    public var code: String {
+    var code: String {
         printer.content
     }
 

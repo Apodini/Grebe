@@ -22,6 +22,7 @@ import SwiftProtobuf
 /// let client = GClient<EchoServiceServiceClient>(target: .hostAndPort("localhost", 62801))
 /// ```
 public protocol IGClient {
+    /// A `GRPCClient` that conforms to `GRPCClientInitializable`
     associatedtype Client: GRPCClientInitializable
 
     /// The `GRPCClient` this client is using

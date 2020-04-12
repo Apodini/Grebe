@@ -36,7 +36,8 @@ internal final class BidrectionalStreamingMockClient<Request: Message & Equatabl
                 subchannel.pipeline.handler(type: GRPCClientChannelHandler<Request, Response>.self).map { clientChannelHandler in
                     subchannel.pipeline.addHandler(unaryMockInboundHandler, position: .after(clientChannelHandler))
                 }
-            }.whenSuccess { _ in }
+            }
+            .whenSuccess { _ in }
 
         var expectedRequests: [Request] = []
         var responses = networkCall.responses
@@ -51,7 +52,7 @@ internal final class BidrectionalStreamingMockClient<Request: Message & Equatabl
                 case .finished:
                     guard expectedRequests == networkCall.requests else {
                         XCTFail("Could not match the network call to the next MockNetworkCall.")
-                        fatalError()
+                        fatalError("Could not match the network call to the next MockNetworkCall.")
                     }
                     networkCall.expectation.fulfill()
 
@@ -72,7 +73,9 @@ internal final class BidrectionalStreamingMockClient<Request: Message & Equatabl
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
                     self.channel.embeddedEventLoop.advanceTime(by: .nanoseconds(1))
 
-                    guard !responses.isEmpty else { return }
+                    guard !responses.isEmpty else {
+                        return
+                    }
                     let response = responses.removeFirst()
                     unaryMockInboundHandler.respondWithMock(response)
                 }

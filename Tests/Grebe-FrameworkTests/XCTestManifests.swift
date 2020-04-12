@@ -1,8 +1,9 @@
 import XCTest
 
 #if !canImport(ObjectiveC)
+/// All test cases
 public func allTests() -> [XCTestCaseEntry] {
-    return [
+    [
         testCase(Grebe_FrameworkTests.allTests)
     ]
 }

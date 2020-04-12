@@ -73,8 +73,8 @@ extension EchoRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementati
   }
 
   static func ==(lhs: EchoRequest, rhs: EchoRequest) -> Bool {
-    if lhs.id != rhs.id {return false}
-    if lhs.unknownFields != rhs.unknownFields {return false}
+    if lhs.id != rhs.id { return false }
+    if lhs.unknownFields != rhs.unknownFields { return false }
     return true
   }
 }
@@ -102,8 +102,8 @@ extension EchoResponse: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementat
   }
 
   static func ==(lhs: EchoResponse, rhs: EchoResponse) -> Bool {
-    if lhs.id != rhs.id {return false}
-    if lhs.unknownFields != rhs.unknownFields {return false}
+    if lhs.id != rhs.id { return false }
+    if lhs.unknownFields != rhs.unknownFields { return false }
     return true
   }
 }
