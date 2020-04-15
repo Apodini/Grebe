@@ -67,6 +67,6 @@ internal class Generator {
 
 extension Generator {
     internal var serviceClassName: String {
-        service?.name ?? "" + "ServiceClient"
+        (service?.name ?? "") + "ServiceClient"
     }
 }
