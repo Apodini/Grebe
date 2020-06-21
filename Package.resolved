@@ -2,12 +2,12 @@
   "object": {
     "pins": [
       {
-        "package": "GRPC",
+        "package": "grpc-swift",
         "repositoryURL": "https://github.com/grpc/grpc-swift.git",
         "state": {
           "branch": null,
-          "revision": "58762bae04f54978e09032306225ddffc9c0fc5a",
-          "version": "1.0.0-alpha.8"
+          "revision": "dca180f7f7f3bdd495d294ca2a463a82b5e33900",
+          "version": "1.0.0-alpha.13"
         }
       },
       {
@@ -15,13 +15,13 @@
         "repositoryURL": "https://github.com/apple/swift-argument-parser",
         "state": {
           "branch": null,
-          "revision": "8d31a0905c346a45c87773ad50862b5b3df8dff6",
-          "version": "0.0.4"
+          "revision": "3d79b2b5a2e5af52c14e462044702ea7728f5770",
+          "version": "0.1.0"
         }
       },
       {
         "package": "swift-log",
-        "repositoryURL": "https://github.com/apple/swift-log",
+        "repositoryURL": "https://github.com/apple/swift-log.git",
         "state": {
           "branch": null,
           "revision": "74d7b91ceebc85daf387ebb206003f78813f71aa",
@@ -42,8 +42,8 @@
         "repositoryURL": "https://github.com/apple/swift-nio-http2.git",
         "state": {
           "branch": null,
-          "revision": "82eb3fa0974b838358ee46bc6c5381e5ae5de6b9",
-          "version": "1.11.0"
+          "revision": "c5d10f4165128c3d0cc0e3c0f0a8ef55947a73a6",
+          "version": "1.12.2"
         }
       },
       {

@@ -14,21 +14,27 @@ let package = Package(
         .executable(name: "grebe", targets: ["Grebe-CLI"])
     ],
     dependencies: [
-        .package(name: "GRPC",
-                 url: "https://github.com/grpc/grpc-swift.git",
-                 .exact("1.0.0-alpha.8")
+        .package(
+            url: "https://github.com/grpc/grpc-swift.git",
+            from: "1.0.0-alpha.13"
         ),
-        .package(name: "SwiftProtobuf",
-                 url: "https://github.com/apple/swift-protobuf.git",
-                 from: "1.7.0"
+        .package(
+            name: "SwiftProtobuf",
+            url: "https://github.com/apple/swift-protobuf.git",
+            from: "1.7.0"
         ),
-        .package(name: "swift-argument-parser",
-                 url: "https://github.com/apple/swift-argument-parser",
-                 .upToNextMinor(from: "0.0.1")
+        .package(
+            url: "https://github.com/apple/swift-argument-parser",
+            .upToNextMinor(from: "0.1.0")
         )
     ],
     targets: [
-        .target(name: "Grebe-Framework", dependencies: [.product(name: "GRPC", package: "GRPC")]),
+        .target(
+            name: "Grebe-Framework",
+            dependencies: [
+                .product(name: "GRPC", package: "grpc-swift")
+            ]
+        ),
         .target(
             name: "Grebe-Generate",
             dependencies: [
@@ -42,6 +48,11 @@ let package = Package(
                 .product(name: "ArgumentParser", package: "swift-argument-parser")
             ]
         ),
-        .testTarget(name: "Grebe-FrameworkTests", dependencies: ["Grebe-Framework"])
+        .testTarget(
+            name: "Grebe-FrameworkTests",
+            dependencies: [
+                .target(name: "Grebe-Framework")
+            ]
+        )
     ]
 )

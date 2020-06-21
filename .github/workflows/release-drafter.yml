@@ -1,0 +1,20 @@
+name: Release Drafter
+
+on:
+  push:
+    branches:
+      - release
+
+jobs:
+  update_release_draft:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: release-drafter/release-drafter@v5
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Notify Example Project
+        run: |
+          curl -XPOST -u "${{ secrets.PAT_USERNAME}}:${{secrets.ACCESS_TOKEN}}"\
+          -H "Accept: application/vnd.github.everest-preview+json"\
+          -H "Content-Type: application/json" https://api.github.com/repos/YOURNAME/APPLICATION_NAME/dispatches --data '{"event_type": "build_application"}'
+

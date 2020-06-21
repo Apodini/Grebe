@@ -47,7 +47,7 @@ import SwiftProtobuf
 /// GClientStreamingCall(request: requests, callOptions: callOptions, closure: echo)
 /// ```
 ///
-public class GClientStreamingCall<Request: Message, Response: Message>: IGCall {
+public class GClientStreamingCall<Request: Message & GRPCPayload, Response: Message & GRPCPayload>: IGCall {
     public typealias CallClosure = (
         _ callOptions: CallOptions?
     ) -> GRPC.ClientStreamingCall<Request, Response>
