@@ -49,7 +49,7 @@ import SwiftProtobuf
 /// GBidirectionalStreamingCall(request: requests, callOptions: callOptions, closure: echo)
 /// ```
 ///
-public class GBidirectionalStreamingCall<Request: Message & GRPCPayload, Response: Message & GRPCPayload>: IGCall {
+public class GBidirectionalStreamingCall<Request: GRPCPayload, Response: GRPCPayload>: IGCall {
     public typealias CallClosure = (
         _ callOptions: CallOptions?,
         _ handler: @escaping (Response) -> Void

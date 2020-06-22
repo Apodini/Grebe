@@ -42,7 +42,7 @@ import SwiftProtobuf
 /// ```
 ///
 
-public class GUnaryCall<Request: Message & GRPCPayload, Response: Message & GRPCPayload>: IGCall {
+public class GUnaryCall<Request: GRPCPayload, Response: GRPCPayload>: IGCall {
     public typealias CallClosure = (
         _ request: Request,
         _ callOptions: CallOptions?

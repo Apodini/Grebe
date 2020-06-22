@@ -23,9 +23,9 @@ import NIO
 ///
 public protocol IGCall {
     /// The type of the request message for the call.
-    associatedtype Request: Message
+    associatedtype Request: GRPCPayload
     /// The type of the response message for the call.
-    associatedtype Response: Message
+    associatedtype Response: GRPCPayload
     /// The type of the call closure for the call.
     associatedtype CallClosure
 
